@@ -1,6 +1,6 @@
 # CHANGELOG:
 
-Date is in YYYY/MM/DD format.
+``Date is in YYYY/MM/DD format.``
 
 **v.A.B.C**
 
@@ -11,6 +11,8 @@ Date is in YYYY/MM/DD format.
 **C**: Refactoring / Tiny Feature
 
 **D**: Patch / Very Minor Thing
+
+
 
 ## [v.0.1.7] - 2024-04-05
 

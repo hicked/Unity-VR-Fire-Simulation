@@ -1,4 +1,5 @@
-# NEXT STEPS:
+# ROADMAP:
+## SOFTWARE
 -   Create a basic environment for testing smoke and fire physics
 -   Display environment on headset
 -   Establish working flame and (mostly) smoke physics
@@ -7,10 +8,11 @@
     -   Eye Tracking
     -   Gyroscopes
         -   Head positionning
+    -   ...
 -   Modeling a more realistic environment
 -   Photogrammetry (in order to apply to any area)
 
-## Mechanical aspects
+## HARDWARE
 ... To be determined
 
 **Use ``~~`` to ~~cross out~~ tasks**
