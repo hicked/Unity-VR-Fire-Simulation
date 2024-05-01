@@ -11,7 +11,7 @@
     -   ...
 -   Modeling a more realistic environment
 -   Photogrammetry (in order to apply to any area)
--   **TEST**
+
 ## HARDWARE
 ... To be determined
 
