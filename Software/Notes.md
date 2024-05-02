@@ -24,7 +24,7 @@ Note `LogicScript` is the name of the `.cs` and you have to give your *game obje
 **IT FINDS THE *FIRST* OBJECT WITH THE TAG**
 <br><br>
 
-Game Objects can have multiple layer, and you can see for which layer it collides. This will be important for the wheelchair as there can be a side layer, front later etc to see where the colision is, and thus determine which `velocity = 0`.
+-   Game Objects can have multiple layer, and you can see for which layer it collides. This will be important for the wheelchair as there can be a side layer, front later etc to see where the colision is, and thus determine which `velocity = 0`.
 <br><br>
 
-`using UnityEngine.UI;` to import UI objects if you want to make a reference to one. Same goes for `UnityEngine.SceneManagement`.
+-   `using UnityEngine.UI;` to import UI objects if you want to make a reference to one. Same goes for `UnityEngine.SceneManagement`.
