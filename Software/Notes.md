@@ -18,9 +18,7 @@ Will need this for the smoke physics since we want the smoke to move at the same
 <br><br>
 
 -   If you want to call a function from a script, from a game object, but the object is not static (aka spawns, and gets deleted), you cant hardcore saying which one you would like to use, since the source changes consistently, so you have to find the script from the object each time it runs. TLDR: This is if you need to find a component of a game object **DURING** runtime:<br>
-First initialize the script object: `public LogicScript logic;`
-<br>
-
+First initialize the script object: `public LogicScript logic;`<br>
 Then let `logic = GameObject.FindGameObjectWithTag("logicScript").getComponent<LogicScript>();` This entire line RETURNS a **game object**. <br>
 Note `LogicScript` is the name of the `.cs` and you have to give your *game object* a *Tag* named `LogicScript`.<br>
 **IT FINDS THE *FIRST* OBJECT WITH THE TAG**
