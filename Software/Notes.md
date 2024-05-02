@@ -15,15 +15,18 @@ Will need this for the smoke physics since we want the smoke to move at the same
 
 -   `Destroy()`: Used to delete game object. Don't want to leak memory, or have infinite smoke generating, which will eventually lag.
 -   **`Debug.log()`** **IMPORTANT**: Like a `print` or `console.log()` should be used for debugging.
-<br>
-<br>
+<br><br>
+
 -   If you want to call a function from a script, from a game object, but the object is not static (aka spawns, and gets deleted), you cant hardcore saying which one you would like to use, since the source changes consistently, so you have to find the script from the object each time it runs. TLDR: This is if you need to find a component of a game object **DURING** runtime:<br>
 First initialize the script object: `public LogicScript logic;`
 <br>
+
 Then let `logic = GameObject.FindGameObjectWithTag("logicScript").getComponent<LogicScript>();` This entire line RETURNS a **game object**. <br>
 Note `LogicScript` is the name of the `.cs` and you have to give your *game object* a *Tag* named `LogicScript`.<br>
 **IT FINDS THE *FIRST* OBJECT WITH THE TAG**
 <br><br>
+
 Game Objects can have multiple layer, and you can see for which layer it collides. This will be important for the wheelchair as there can be a side layer, front later etc to see where the colision is, and thus determine which `velocity = 0`.
 <br><br>
+
 `using UnityEngine.UI;` to import UI objects if you want to make a reference to one. Same goes for `UnityEngine.SceneManagement`.
