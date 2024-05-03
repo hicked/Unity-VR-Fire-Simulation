@@ -30,3 +30,9 @@ Note `LogicScript` is the name of the `.cs` and you have to give your *game obje
 -   `using UnityEngine.UI;` to import UI objects if you want to make a reference to one. Same goes for `UnityEngine.SceneManagement`.
 
 -   Always make visual components children, and add scripts to the parent
+
+-   We can use `Physics material` assets to change the bounciness, dynamic/static friction for the wheels of the wheelchair under the rigid body parameters.
+
+-   `isTrigger` makes it so there is no physical collision, only a trigger created when it gets hit (ghost collider)
+
+-   `isKinematic`: Don't let it move (immovable object)
