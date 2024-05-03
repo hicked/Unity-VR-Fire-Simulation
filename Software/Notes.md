@@ -2,7 +2,7 @@
 Will probably only have one scene in that case
 - Project section contains all assets/ressources you can use in the game. Importing is always an option
 - Hierarchy contains `game objects` these can be anything, they are containers with a position, rotation and scale. Sub game objects can are components, like the objects physics, the way it acts, colour etc. Sub-objects ALWAYS have the same position as their parent, so if youre doing something like flappy bird, you should have a game object bird, and then two subobject pngs, one for the bird, one for the wing, where if you move BIRD, both objects will move. You want the objects to be seperate since the wing will move (if you flap)
-- Each subcomponent (appears in inspector) cannot talk to each other. You need to set up a public reference w/ `public "OBJTYPE" "OBJNAME"` so like if you have a physics game object, and you want to CHANGE its physics with a key input, youd have to do `public rigidBodyPhysics wheelChair;` and then `wheelChair.velocity += 10`. Obv this will be more difficult with vectors. Any public variable/object will be able to be changed in the unity inspector.
+- Each subcomponent (appears in inspector) cannot talk to each other. You need to set up a public reference w/ `public "OBJTYPE" "OBJNAME"` so like if you have a physics game object, and you want to CHANGE its physics with a key input, youd have to do `public rigidBodyPhysics wheelChair;` and then `wheelChair.velocity += 10`. Obv this will be more difficult with vectors. Any public variable/object will be able to be changed in the unity inspector. This CAN be an issue since anywhwere in the code you can edit this property, so good practice is to leave the variable private, but sure the prefix `[SerializeField]` to make it public to ONLY the game object.
 <br><br>
 -   If you want to update something based on time, and not framerate (default loop) use `* Time.deltaTime` to scale it.
 Will need this for the smoke physics since we want the smoke to move at the same speed, and not go faster if the framerate is higher -> since the loop executes more times.
@@ -28,3 +28,5 @@ Note `LogicScript` is the name of the `.cs` and you have to give your *game obje
 <br><br>
 
 -   `using UnityEngine.UI;` to import UI objects if you want to make a reference to one. Same goes for `UnityEngine.SceneManagement`.
+
+-   Always make visual components children, and add scripts to the parent
