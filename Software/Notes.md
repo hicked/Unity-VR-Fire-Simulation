@@ -36,3 +36,7 @@ Note `LogicScript` is the name of the `.cs` and you have to give your *game obje
 -   `isTrigger` makes it so there is no physical collision, only a trigger created when it gets hit (ghost collider)
 
 -   `isKinematic`: Don't let it move (immovable object)
+
+-   `Movement types:`<br>`Instantaneous`: Goes through walls, instant. <br>`Kinematic`: Goes through walls, delayed.<br>`Velocity tracking`: Keeps rigid body, delayed.
+
+-   Use `Poke Interactor` specifically for buttons/sliders.
