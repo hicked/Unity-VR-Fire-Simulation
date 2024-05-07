@@ -1,6 +1,9 @@
 # ROADMAP:
 ## SOFTWARE
--   Create a basic environment for testing smoke and fire physics
+-   ~~Create a basic environment for testing smoke and fire physics~~
+    -   Door Prefab (PUSH ONLY)
+        -   Button
+    -   Pull (swing)
 -   Display environment on headset
 -   Establish working flame and (mostly) smoke physics
 -   Implement basic controls (teleportation)
