@@ -5,9 +5,11 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     [SerializeField] private float baseSpeedMultiplier = 2f;
-    [SerializeField] private float sprintMultiplier = 3.5f;
-    [SerializeField] private float playerCollisionRadius = 1f;
+    [SerializeField] private float sprintSpeedMultiplier = 3.5f;
+    [SerializeField] private float playerCollisionRadius = 0.2f;
+    [SerializeField] private float playerHeight = 2f;
     [SerializeField] private float maxDistance = 0.2f;
+    [SerializeField] private LayerMask layerForCollisions; 
 
 
     private void start() {
@@ -18,36 +20,40 @@ public class Player : MonoBehaviour
     void Update() {
         Vector3 inputVector = new Vector3(0f, 0f, 0f);
         Debug.Log(canMove(Vector3.forward));
-        if (Input.GetKey(KeyCode.W) && canMove(Vector3.forward)) {
+        if (Input.GetKey(KeyCode.W) && canMove(transform.forward)) {
             Debug.Log("pressing w and can move");
-            inputVector += Vector3.forward;
+            inputVector += transform.forward;
         }
-        if (Input.GetKey(KeyCode.A) && canMove(Vector3.left)) {
-            inputVector += Vector3.left;
+        if (Input.GetKey(KeyCode.A) && canMove(-transform.right)) {
+            inputVector -= transform.right;
         }
-        if (Input.GetKey(KeyCode.S) && canMove(Vector3.back)) {
-            inputVector += Vector3.back;
+        if (Input.GetKey(KeyCode.S) && canMove(-transform.forward)) {
+            inputVector -= transform.forward;
         }
-        if (Input.GetKey(KeyCode.D) && canMove(Vector3.right)) {
-            inputVector += Vector3.right;
+        if (Input.GetKey(KeyCode.D) && canMove(transform.right)) {
+            inputVector += transform.right;
         }
         
         if (inputVector.sqrMagnitude > 1f) { // ensure that the player is the same speed when moving diag
-            inputVector.x /= inputVector.sqrMagnitude;
-            inputVector.y /= inputVector.sqrMagnitude;
-            inputVector.z /= inputVector.sqrMagnitude;
+            inputVector.Normalize();
         }
 
-        transform.position += (inputVector * Time.deltaTime) * (!(Input.GetKey(KeyCode.LeftControl)) ? baseSpeedMultiplier : sprintMultiplier);
+        float speedMultiplier = (Input.GetKey(KeyCode.LeftControl)) ? sprintSpeedMultiplier : baseSpeedMultiplier;
+        transform.position += inputVector * Time.deltaTime * speedMultiplier;
     }
     
     public bool canMove(Vector3 dir) {
-        return !(Physics.CapsuleCast((transform.position + new Vector3(0f, -0.1f, 0f)), 
-                (transform.position + new Vector3(0f, 0.9f, 0f)), 
-                playerCollisionRadius, 
-                dir, 
-                maxDistance));
+        return !Physics.CapsuleCast(
+            transform.position, 
+            transform.position + Vector3.up * playerHeight, 
+            playerCollisionRadius, 
+            dir, 
+            maxDistance, 
+            layerForCollisions
+        );
 
-        //return !(Physics.Raycast(transform.position, dirVector, playerCollisionRadius));
     }
 }
+
+// Note that if you are at an angle against a wall it will not work. Short term this will do but long term we need to incorporate
+// Moments into each of the wheel chairs wheel.
