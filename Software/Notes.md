@@ -40,3 +40,5 @@ Note `LogicScript` is the name of the `.cs` and you have to give your *game obje
 -   `Movement types:`<br>`Instantaneous`: Goes through walls, instant. <br>`Kinematic`: Goes through walls, delayed.<br>`Velocity tracking`: Keeps rigid body, delayed.
 
 -   Use `Poke Interactor` specifically for buttons/sliders.
+
+-   `Alpha Clipping` is used when we want to make an object partially transparent. We set the texture/material to opaque, and then any pixel from the texture with an alpha smaller than the threshold provided will not be rendered.

@@ -20,6 +20,7 @@ public class PlayerRespawn : MonoBehaviour
             transform.position = originPositionVector;
 
             transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+            GetComponent<Rigidbody>().velocity=Vector3.zero;
         }
     }
 }
