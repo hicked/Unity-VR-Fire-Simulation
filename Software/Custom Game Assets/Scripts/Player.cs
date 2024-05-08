@@ -19,9 +19,7 @@ public class Player : MonoBehaviour
     }
     void Update() {
         Vector3 inputVector = new Vector3(0f, 0f, 0f);
-        Debug.Log(canMove(Vector3.forward));
         if (Input.GetKey(KeyCode.W) && canMove(transform.forward)) {
-            Debug.Log("pressing w and can move");
             inputVector += transform.forward;
         }
         if (Input.GetKey(KeyCode.A) && canMove(-transform.right)) {

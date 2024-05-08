@@ -42,3 +42,5 @@ Note `LogicScript` is the name of the `.cs` and you have to give your *game obje
 -   Use `Poke Interactor` specifically for buttons/sliders.
 
 -   `Alpha Clipping` is used when we want to make an object partially transparent. We set the texture/material to opaque, and then any pixel from the texture with an alpha smaller than the threshold provided will not be rendered.
+
+-   **IMPORTANT FOR LIGHTING**: Ensure that a. your walls (if quads) don't have a thickness of 0. ALSO, only the FRONT of the quad will block light, meaning that light goes straight through the back. For this reason, always render walls `Front` **ONLY**, unless the wall will be seen from both sides, but at that point I would just add a new quad. 
