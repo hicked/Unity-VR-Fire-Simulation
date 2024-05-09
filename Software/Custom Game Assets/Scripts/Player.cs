@@ -12,24 +12,26 @@ public class Player : MonoBehaviour
     [SerializeField] private LayerMask layersForCollisions; 
     [SerializeField] private float minHeightBeforeCollisions = 0.1f;  // Note this is the height from the top, so well have to do some arithmetic to convert it into the minimum height from the bottom
 
+    public string lastBlockedByLayer; // This will be used to check if the layer that is blocking the player is a ramp
+
     private void Start() {
         if (!(transform.localScale.x == transform.localScale.z)) {
             throw new UnityException("Player collider x scale and z scale must be the same");
         }
         playerHitBox = GetComponent<BoxCollider>();
     }
-    void Update() {
+    private void Update() {
         Vector3 inputVector = new Vector3(0f, 0f, 0f);
-        if (Input.GetKey(KeyCode.W) && canMove(transform.forward)) {
+        if (Input.GetKey(KeyCode.W) && !isBlocked(transform.forward)) {
             inputVector += transform.forward;
         }
-        if (Input.GetKey(KeyCode.A) && canMove(-transform.right)) {
+        if (Input.GetKey(KeyCode.A) && !isBlocked(-transform.right)) {
             inputVector -= transform.right;
         }
-        if (Input.GetKey(KeyCode.S) && canMove(-transform.forward)) {
+        if (Input.GetKey(KeyCode.S) && !isBlocked(-transform.forward)) {
             inputVector -= transform.forward;
         }
-        if (Input.GetKey(KeyCode.D) && canMove(transform.right)) {
+        if (Input.GetKey(KeyCode.D) && !isBlocked(transform.right)) {
             inputVector += transform.right;
         }
         
@@ -40,13 +42,11 @@ public class Player : MonoBehaviour
         float speedMultiplier = (Input.GetKey(KeyCode.LeftControl)) ? sprintSpeedMultiplier : baseSpeedMultiplier;
         transform.position += inputVector * Time.deltaTime * speedMultiplier;
     }
-    
-    public bool canMove(Vector3 dir) {
-        float minHeightBeforeCollisionsFromBottom = playerHitBox.size.y - minHeightBeforeCollisions;
-        //Debug.Log(minHeightBeforeCollisionsFromBottom);
+
+    public bool isBlocked(Vector3 dir) {
         RaycastHit hitInfo;
 
-        bool hit = !Physics.BoxCast(
+        bool hit = Physics.BoxCast(
             new Vector3(transform.position.x, 
                         transform.position.y - playerHitBox.size.y + (playerHitBox.size.y - minHeightBeforeCollisions)/2f + minHeightBeforeCollisions, 
                         transform.position.z), 
@@ -55,9 +55,12 @@ public class Player : MonoBehaviour
             out hitInfo,
             transform.rotation, 
             maxDistance,
-            layersForCollisions
-        );
+            layersForCollisions);
+        
         Debug.DrawRay(transform.position, dir * maxDistance, hit ? Color.red : Color.green);
+        if (hit) {
+            lastBlockedByLayer = LayerMask.LayerToName(hitInfo.collider.gameObject.layer);
+        }
         return hit;
     }
 }
