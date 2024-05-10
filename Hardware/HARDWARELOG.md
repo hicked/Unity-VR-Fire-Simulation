@@ -4,13 +4,13 @@ Date is in YYYY/MM/DD format.
 
 **v.A.B.C**
 
-**A**: Major Feature / Major Bug Fix
+**A**: Major Feature
 
-**B**: Minor Feature / Minor Bug Fix
+**B**: Medium Feature
 
-**C**: Refactoring / Tiny Feature
+**C**: Minor Feature / Bug Fix
 
-**D**: Patch / Very Minor Thing
+**D**: Patch / Refactoring
 
 ## [v.0.0.1.0] - 2024-04-05
 

@@ -4,26 +4,29 @@
 
 **v.A.B.C.D**
 
-**A**: Major Feature / Major Bug Fix
+**A**: Major Feature
 
-**B**: Minor Feature / Minor Bug Fix
+**B**: Medium Feature
 
-**C**: Refactoring / Tiny Feature
+**C**: Minor Feature / Bug Fix
 
-**D**: Patch / Very Minor Thing
+**D**: Patch / Refactoring
 
-## [v.0.1.0.0] - 2024-05-09
+## [v.0.1.1.0] - 2024-05-09
 
 **Author:** Antoine
 
 -   Implemented door swinging with keyboard key **"E"**
+-   Fixed minor bug where `GetKey` was used instead of `GetKeyDown` (caused rapid changing of door states)
 -   Player must be blocked in the **forward direction** by the door for it to work
--   No animation as of yet
--   Doors must start with either the tag `Closed` or `Open`, and then will switch the tag on interaction
+-   Animations for door working
+-   Animator variable are used to store the states of doors
 
 This probably isn't the best method of opening and closing  (should probably use `IsTrigger` colliders)
 But seeing as we will be switching to vr shortly, this isn't very important. It is also moving the frame with the door,
 Instead of the Frame staying still, and only the door swinging.
+<br>
+Doors should be able to be pushed closed with a collisions, this can be done later though.
 
 
 ## [v.0.1.0.0] - 2024-05-09
