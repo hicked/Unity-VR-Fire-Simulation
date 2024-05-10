@@ -12,7 +12,7 @@
 
 **D**: Patch / Refactoring
 
-## [v.0.1.1.0] - 2024-05-09
+## [v.0.1.1.0] - 2024-05-10
 
 **Author:** Antoine
 
