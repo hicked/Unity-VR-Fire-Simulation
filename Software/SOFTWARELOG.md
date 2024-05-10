@@ -21,6 +21,9 @@
 -   No animation as of yet
 -   Doors must start with either the tag `Closed` or `Open`, and then will switch the tag on interaction
 
+This probably isn't the best method of opening and closing  (should probably use `IsTrigger` colliders)
+But seeing as we will be switching to vr shortly, this isn't very important.
+
 
 ## [v.0.1.0.0] - 2024-05-09
 
