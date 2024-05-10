@@ -12,7 +12,7 @@ Date is in YYYY/MM/DD format.
 
 **D**: Patch / Very Minor Thing
 
-## [v.0.1.7] - 2024-04-05
+## [v.0.0.1.0] - 2024-04-05
 
 **Author:** Antoine
 
