@@ -12,7 +12,8 @@ public class Player : MonoBehaviour
     [SerializeField] private LayerMask layersForCollisions; 
     [SerializeField] private float minHeightBeforeCollisions = 0.1f;  // Note this is the height from the top, so well have to do some arithmetic to convert it into the minimum height from the bottom
 
-    public string lastBlockedByLayer; // This will be used to check if the layer that is blocking the player is a ramp
+    public string lastBlockedByType; // This will be used to check if the layer that is blocking the player is a ramp
+    public GameObject lastBlockedByObj;
 
     private void Start() {
         if (!(transform.localScale.x == transform.localScale.z)) {
@@ -59,7 +60,8 @@ public class Player : MonoBehaviour
         
         Debug.DrawRay(transform.position, dir * maxDistance, hit ? Color.red : Color.green);
         if (hit) {
-            lastBlockedByLayer = LayerMask.LayerToName(hitInfo.collider.gameObject.layer);
+            lastBlockedByType = LayerMask.LayerToName(hitInfo.collider.gameObject.layer);
+            lastBlockedByObj = hitInfo.collider.gameObject;
         }
         return hit;
     }
