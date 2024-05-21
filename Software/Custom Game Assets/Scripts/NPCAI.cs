@@ -14,7 +14,10 @@ public class NPCAI : MonoBehaviour {
     [SerializeField] private float NPCRunningSpeedMultiplier = 2.5f;
     [SerializeField] private float crossFadeDuration = 1f;
     [SerializeField] public bool onPhone;
-    [SerializeField] public bool man;
+    [SerializeField] public bool isMan;
+    [SerializeField] public bool isIdle = true;
+    [SerializeField] public bool isWalking = false;
+    [SerializeField] public bool isRunning = false;
     private string[] NPCStateNames = {"Exercise_warmingUp_170f",
                                         "idle_phoneTalking_180f",
                                         "idle_f_1_150f",
@@ -80,45 +83,93 @@ public class NPCAI : MonoBehaviour {
     } 
 
     private void Update() {
+        // Vector2Int start = new Vector2Int((int)transform.position.x, (int)transform.position.z);
+        // Vector2Int goal = new Vector2Int(-24, -8);
+        // int[,] grid = new int[,] {{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+        //                     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+        //                     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+        //                     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+        //                     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+        //                     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}};
 
-        timeSinceIdleChange += Time.deltaTime;
-        timeSinceMoved += Time.deltaTime;
+        // List<Vector2Int> path = AStarPathfinding.FindPath(start, goal, grid);
+        // if (path != null)
+        // {
+        //     foreach (Vector2Int point in path)
+        //     {
+        //         Debug.Log("Path point: " + point);
+        //         transform.position = new Vector3(point.x, transform.position.y, point.y);
+        //     }
+        // }
+        // else
+        // {
+        //     Debug.Log("No path found");
+        // }
 
+        // Gets information about the animator
         animatorInfo = animator.GetCurrentAnimatorClipInfo(0);
+        Debug.Log(animatorInfo);
         currentAnimation = animatorInfo[0].clip.name;
+        // Makes sure we have to correct animation based on the state of the NPC
+        if (isRunning && !(NPCRunningStatesM.Contains(currentAnimation) || !NPCRunningStatesW.Contains(currentAnimation))) {setRandomRunning();}
+        else if (isWalking && !(NPCWalkingStatesM.Contains(currentAnimation) || NPCWalkingStatesW.Contains(currentAnimation))) {setRandomWalking();}
+        else if (isIdle && !(NPCIdleStatesM.Contains(currentAnimation) || NPCIdleStatesW.Contains(currentAnimation))) {setRandomIdle();}
 
-
-        if (NPCWalkingStatesM.Contains(currentAnimation) || NPCWalkingStatesW.Contains(currentAnimation)) {
+        if (isWalking) {
             transform.position +=  transform.forward * Time.deltaTime * NPCWalkSpeedMultiplier;
         }
-        else if (NPCRunningStatesM.Contains(currentAnimation) || NPCRunningStatesW.Contains(currentAnimation)) {
+
+        else if (isRunning) {
             transform.position +=  transform.forward * Time.deltaTime * NPCRunningSpeedMultiplier;
         }
 
-        if (timeSinceIdleChange > timeBeforeChangeIdle + Random.Range(-changeIdleVariance, changeIdleVariance)) {
-            Debug.Log("changing Idle");
-            setRandomIdle();
-            timeSinceIdleChange = 0f;
-        }
-        else if (timeSinceMoved> timeBeforeMove + Random.Range(-moveVariance, moveVariance)) {
-            moveTo(new Vector3(0,0,0));
-            timeSinceMoved = 0f;
+        // Switches Idle animation after set amount of time
+        else if (isIdle) {
+            timeSinceIdleChange += Time.deltaTime;
+            timeSinceMoved += Time.deltaTime;
+
+            if (timeSinceIdleChange > timeBeforeChangeIdle + Random.Range(-changeIdleVariance, changeIdleVariance)) {
+                setRandomIdle();
+                timeSinceIdleChange = 0f;
+            }
+            if (timeSinceMoved> timeBeforeMove + Random.Range(-moveVariance, moveVariance)) {
+                //moveToRandom(new Vector3(0,0,0));
+                timeSinceMoved = 0f;
+            }
         }
     }
 
 
     public void changeState(string state) {
         if (!NPCStateNames.Contains(state)) {throw new UnityException("animation provided not found");}
-        
         animator.CrossFadeInFixedTime(state, crossFadeDuration, 0, Random.value * findAnimation(state).length);
+        Debug.Log(state);
     }
 
     public void setRandomIdle() {
-        if (man) {
+        if (isMan) {
             changeState(NPCIdleStatesM[Random.Range(0, NPCIdleStatesM.Length)]);
         }
         else {
             changeState(NPCIdleStatesW[Random.Range(0, NPCIdleStatesW.Length)]);
+        }
+    }
+
+    public void setRandomWalking() {
+        if (isMan) {
+            changeState(NPCWalkingStatesM[Random.Range(0, NPCWalkingStatesM.Length)]);
+        }
+        else {
+            changeState(NPCWalkingStatesW[Random.Range(0, NPCWalkingStatesW.Length)]);
+        }
+    }
+
+    public void setRandomRunning() {
+        if (isMan) {
+            changeState(NPCRunningStatesM[Random.Range(0, NPCRunningStatesM.Length)]);
+        }
+        else {
+            changeState(NPCRunningStatesW[Random.Range(0, NPCRunningStatesW.Length)]);
         }
     }
 
@@ -130,7 +181,34 @@ public class NPCAI : MonoBehaviour {
         }
     throw new UnityException("animation provided not found");
     }
-    public void moveTo(Vector3 location) {
-        // ai pathfinding
+
+    public void moveToRandom() {
     }
+
+    public void moveTo(Vector3 location) {
+
+    }
+
+    //  public bool isBlocked(Vector3 dir) {
+    //     RaycastHit hitInfo = default(RaycastHit);
+    //         bool hit = Physics.BoxCast(
+    //             new Vector3(
+    //                 transform.position.x, 
+    //                 transform.position.y - playerHitBox.size.y + (playerHitBox.size.y - minHeightBeforeCollisions)/2f + minHeightBeforeCollisions, 
+    //                 transform.position.z), 
+    //             new Vector3((playerHitBox.size.x - maxDistance)/2f, (playerHitBox.size.y - minHeightBeforeCollisions)/2f, (playerHitBox.size.z - maxDistance)/2f), // IMOPRTANT: set the y to negative, that way its starts from the top down instead of bottom up
+    //             dir, 
+    //             out hitInfo,
+    //             transform.rotation, 
+    //             maxDistance,
+    //             layersForCollisions);
+        
+    //     Debug.DrawRay(transform.position, dir * maxDistance, hit ? Color.red : Color.green);
+    //     if (hit) {
+    //         lastBlockedByType = LayerMask.LayerToName(hitInfo.collider.gameObject.layer);
+    //         lastBlockedByObj = hitInfo.collider.gameObject;
+    //         lastBlockedLocation = hitInfo.point;
+    //     }
+    //     return hit;
+    // }
 }
