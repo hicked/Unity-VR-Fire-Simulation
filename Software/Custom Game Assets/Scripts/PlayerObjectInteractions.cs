@@ -1,13 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 //using Player.cs;
 
 public class PlayerObjectInteractions : MonoBehaviour
 {
     private Player player;
-    private Animator doorAnimator;
-    private Rigidbody doorRigidbody;
     // Start is called before the first frame update
     void Start()
     {
@@ -18,17 +17,12 @@ public class PlayerObjectInteractions : MonoBehaviour
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.E) && player.isBlocked(player.transform.forward) && player.lastBlockedByType == "Doors") {
-            GameObject door = player.lastBlockedByObj;
-            doorAnimator = door.GetComponent<Animator>();
-            doorRigidbody = door.GetComponent<Rigidbody>();
-
-            if (doorAnimator.GetBool("IsClosed") == true) { // technically WAS closed
-                doorAnimator.SetBool("IsOpen", true);
-                doorAnimator.SetBool("IsClosed", false);
+            Doors door = player.lastBlockedByObj.GetComponent<Doors>();
+            if (door.isOpen) {
+                door.isOpen = false;
             }
-            else if (doorAnimator.GetBool("IsOpen") == true) {
-                doorAnimator.SetBool("IsClosed", true);
-                doorAnimator.SetBool("IsOpen", false);
+            else {
+                door.isOpen = true;
             }
         }
     }
