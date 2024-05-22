@@ -1,119 +1,86 @@
+using System;
 using System.Collections.Generic;
-using UnityEngine;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using AStarPathfinding;
 
-public class AStarPathfinding : MonoBehaviour
-{
-    public class Node
-    {
+namespace AStarPathfinding {
+
+    class Location {
         public int x;
         public int y;
-        public float gCost;
-        public float hCost;
-        public Node parent;
-        public float fCost => gCost + hCost;
+        public int g; // Cost to get to location (from start) REAL
+        public int h; // Cost to get to end (from current location)
+        public int f;
+        public Location parent;
 
-        public Node(int x, int y)
-        {
-            this.x = x;
-            this.y = y;
+        // Constructor with parameters
+        public void Location(Vector2Int current, Vector2Int start, Vector2Int end, int gValue) {
+            this.x = current.x;
+            this.y = current.y;
+            this.g = gValue;
+            this.h = Mathf.Abs(current.x - end.x) + Mathf.Abs(current.y - end.y);
+            this.f = this.g + this.h;
+            this.parent;
         }
     }
 
-    public static List<Vector2Int> FindPath(Vector2Int start, Vector2Int goal, int[,] grid)
-    {
-        List<Node> openList = new List<Node>();
-        HashSet<Node> closedList = new HashSet<Node>();
-
-        Node startNode = new Node(start.x, start.y);
-        Node goalNode = new Node(goal.x, goal.y);
+    public void findPath(Vector2Int Start, Vector2Int End) {
+        List<Location> openList = new List<Location>();
+        List<Location> closedList = new List<Location>();
         
-        openList.Add(startNode);
-
-        while (openList.Count > 0)
-        {
-            Node currentNode = openList[0];
-            for (int i = 1; i < openList.Count; i++)
-            {
-                if (openList[i].fCost < currentNode.fCost || (openList[i].fCost == currentNode.fCost && openList[i].hCost < currentNode.hCost))
-                {
-                    currentNode = openList[i];
-                }
-            }
-
-            openList.Remove(currentNode);
-            closedList.Add(currentNode);
-
-            if (currentNode.x == goalNode.x && currentNode.y == goalNode.y)
-            {
-                return RetracePath(startNode, currentNode);
-            }
-
-            foreach (Node neighbor in GetNeighbors(currentNode, grid))
-            {
-                if (closedList.Contains(neighbor))
-                    continue;
-
-                float newGCost = currentNode.gCost + GetDistance(currentNode, neighbor);
-                if (newGCost < neighbor.gCost || !openList.Contains(neighbor))
-                {
-                    neighbor.gCost = newGCost;
-                    neighbor.hCost = GetDistance(neighbor, goalNode);
-                    neighbor.parent = currentNode;
-
-                    if (!openList.Contains(neighbor))
-                    {
-                        openList.Add(neighbor);
+        int g = 0;
+        Location start = Location(Start, Start, End, g);
+        
+        List<Location> neighbors = getNeighbors(start);
+        
+        foreach (Location neighbor in neightbors) {
+            openList.Add(neighbor);
+        }
+        
+        Location currentLocation = start;
+        while (currentLocation.x != End.x && currentLocation.y != End.y) {
+            
+            while (openList.Count > 0) {
+                // Find the node with the lowest F score in the open list
+                Location bestNode = openList[0];
+                foreach (Location node in openList) {
+                    if (node.f < current.f) {
+                        current = location;
                     }
                 }
-            }
-        }
 
-        return null; // No path found
+                // Move the current node from open list to closed list
+                openList.Remove(current);
+                closedList.Add(current);
     }
 
-    private static List<Node> GetNeighbors(Node node, int[,] grid)
-    {
-        List<Node> neighbors = new List<Node>();
+    // Get neighboring nodes of a given location
+    List<Location> getNeighbors(Location location) {
+        List<Location> neighbors = new List<Location>();
 
-        for (int x = -1; x <= 1; x++)
-        {
-            for (int y = -1; y <= 1; y++)
-            {
-                if (x == 0 && y == 0)
-                    continue;
+        // Define offsets for neighboring locations (up, down, left, right)
+        Vector2Int[] offsets = {
+            new Vector2Int(0, 1),   // Up
+            new Vector2Int(0, -1),  // Down
+            new Vector2Int(-1, 0),  // Left
+            new Vector2Int(1, 0)    // Right
+        };
 
-                int checkX = node.x + x;
-                int checkY = node.y + y;
-
-                if (checkX >= 0 && checkX < grid.GetLength(0) && checkY >= 0 && checkY < grid.GetLength(1) && grid[checkX, checkY] == 0)
-                {
-                    neighbors.Add(new Node(checkX, checkY));
-                }
+        // Perform raycasts to check for obstacles and add valid neighbors
+        foreach (Vector2Int offset in offsets) {
+            Vector2Int neighborPos = new Vector2Int(location.x + offset.x, location.y + offset.y);
+            
+            // Perform raycast to check for obstacles
+            RaycastHit2D hit = Physics2D.Raycast(new Vector2(location.x, location.y), offset, 1f);
+            
+            // If no obstacle found, add neighbor to list
+            if (hit.collider == null) {
+                neighbors.Add(grid[neighborPos.x, neighborPos.y]);
             }
         }
 
         return neighbors;
-    }
-
-    private static float GetDistance(Node a, Node b)
-    {
-        int dstX = Mathf.Abs(a.x - b.x);
-        int dstY = Mathf.Abs(a.y - b.y);
-        return dstX + dstY;
-    }
-
-    private static List<Vector2Int> RetracePath(Node startNode, Node endNode)
-    {
-        List<Vector2Int> path = new List<Vector2Int>();
-        Node currentNode = endNode;
-
-        while (currentNode != startNode)
-        {
-            path.Add(new Vector2Int(currentNode.x, currentNode.y));
-            currentNode = currentNode.parent;
-        }
-
-        path.Reverse();
-        return path;
     }
 }

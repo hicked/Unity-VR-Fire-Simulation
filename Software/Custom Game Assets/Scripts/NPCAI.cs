@@ -107,73 +107,75 @@ public class NPCAI : MonoBehaviour {
         // }
 
         // Gets information about the animator
+        animator = GetComponent<Animator>();
         animatorInfo = animator.GetCurrentAnimatorClipInfo(0);
-        Debug.Log(animatorInfo);
-        currentAnimation = animatorInfo[0].clip.name;
-        // Makes sure we have to correct animation based on the state of the NPC
-        if (isRunning && !(NPCRunningStatesM.Contains(currentAnimation) || !NPCRunningStatesW.Contains(currentAnimation))) {setRandomRunning();}
-        else if (isWalking && !(NPCWalkingStatesM.Contains(currentAnimation) || NPCWalkingStatesW.Contains(currentAnimation))) {setRandomWalking();}
-        else if (isIdle && !(NPCIdleStatesM.Contains(currentAnimation) || NPCIdleStatesW.Contains(currentAnimation))) {setRandomIdle();}
 
-        if (isWalking) {
-            transform.position +=  transform.forward * Time.deltaTime * NPCWalkSpeedMultiplier;
-        }
+        if (animatorInfo.Length == 1) {
+            currentAnimation = animatorInfo[0].clip.name;
+            // Makes sure we have to correct animation based on the state of the NPC
+            if (isRunning && !(NPCRunningStatesM.Contains(currentAnimation) || NPCRunningStatesW.Contains(currentAnimation))) {setRandomRunning();}
+            else if (isWalking && !(NPCWalkingStatesM.Contains(currentAnimation) || NPCWalkingStatesW.Contains(currentAnimation))) {setRandomWalking();}
+            else if (isIdle && !(NPCIdleStatesM.Contains(currentAnimation) || NPCIdleStatesW.Contains(currentAnimation))) {setRandomIdle();}
 
-        else if (isRunning) {
-            transform.position +=  transform.forward * Time.deltaTime * NPCRunningSpeedMultiplier;
-        }
-
-        // Switches Idle animation after set amount of time
-        else if (isIdle) {
-            timeSinceIdleChange += Time.deltaTime;
-            timeSinceMoved += Time.deltaTime;
-
-            if (timeSinceIdleChange > timeBeforeChangeIdle + Random.Range(-changeIdleVariance, changeIdleVariance)) {
-                setRandomIdle();
-                timeSinceIdleChange = 0f;
+            if (isRunning) {
+                transform.position +=  transform.forward * Time.deltaTime * NPCRunningSpeedMultiplier;
             }
-            if (timeSinceMoved> timeBeforeMove + Random.Range(-moveVariance, moveVariance)) {
-                //moveToRandom(new Vector3(0,0,0));
-                timeSinceMoved = 0f;
+            else if (isWalking) {
+                transform.position +=  transform.forward * Time.deltaTime * NPCWalkSpeedMultiplier;
+            }
+
+            // Switches Idle animation after set amount of time
+            else if (isIdle) {
+                timeSinceIdleChange += Time.deltaTime;
+                timeSinceMoved += Time.deltaTime;
+
+                if (timeSinceIdleChange > timeBeforeChangeIdle + Random.Range(-changeIdleVariance, changeIdleVariance)) {
+                    setRandomIdle();
+                    timeSinceIdleChange = 0f;
+                }
+                if (timeSinceMoved> timeBeforeMove + Random.Range(-moveVariance, moveVariance)) {
+                    //moveToRandom(new Vector3(0,0,0));
+                    timeSinceMoved = 0f;
+                }
             }
         }
     }
 
 
     public void changeState(string state) {
-        if (!NPCStateNames.Contains(state)) {throw new UnityException("animation provided not found");}
-        animator.CrossFadeInFixedTime(state, crossFadeDuration, 0, Random.value * findAnimation(state).length);
+        if (!(NPCStateNames.Contains(state))) {throw new UnityException("animation provided not found");}
+        animator.CrossFadeInFixedTime(state, crossFadeDuration, 0, Random.value * getAnimation(state).length);
         Debug.Log(state);
     }
 
     public void setRandomIdle() {
         if (isMan) {
-            changeState(NPCIdleStatesM[Random.Range(0, NPCIdleStatesM.Length)]);
+            changeState(NPCIdleStatesM[Random.Range(0, NPCIdleStatesM.Length-1)]);
         }
         else {
-            changeState(NPCIdleStatesW[Random.Range(0, NPCIdleStatesW.Length)]);
+            changeState(NPCIdleStatesW[Random.Range(0, NPCIdleStatesW.Length-1)]);
         }
     }
 
     public void setRandomWalking() {
         if (isMan) {
-            changeState(NPCWalkingStatesM[Random.Range(0, NPCWalkingStatesM.Length)]);
+            changeState(NPCWalkingStatesM[Random.Range(0, NPCWalkingStatesM.Length-1)]);
         }
         else {
-            changeState(NPCWalkingStatesW[Random.Range(0, NPCWalkingStatesW.Length)]);
+            changeState(NPCWalkingStatesW[Random.Range(0, NPCWalkingStatesW.Length-1)]);
         }
     }
 
     public void setRandomRunning() {
         if (isMan) {
-            changeState(NPCRunningStatesM[Random.Range(0, NPCRunningStatesM.Length)]);
+            changeState(NPCRunningStatesM[Random.Range(0, NPCRunningStatesM.Length-1)]);
         }
         else {
-            changeState(NPCRunningStatesW[Random.Range(0, NPCRunningStatesW.Length)]);
+            changeState(NPCRunningStatesW[Random.Range(0, NPCRunningStatesW.Length-1)]);
         }
     }
 
-    private AnimationClip findAnimation (string name) {
+    private AnimationClip getAnimation (string name) {
         foreach (AnimationClip clip in animator.runtimeAnimatorController.animationClips) {
             if (clip.name == name) {
                 return clip;

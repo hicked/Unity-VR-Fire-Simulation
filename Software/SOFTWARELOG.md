@@ -12,6 +12,8 @@
 
 **D**: Patch / Refactoring
 
+
+**NOTE BUG: Changes animations twice in NPCAI when time is passed**
 ## [v.0.1.1.0] - 2024-05-10
 
 **Author:** Antoine
