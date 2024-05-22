@@ -13,7 +13,6 @@ namespace AStarPathfinding {
         public int g; // Cost to get to location (from start) REAL
         public int h; // Cost to get to end (from current location)
         public int f;
-        public Location parent;
 
         // Constructor with parameters
         public void Location(Vector2Int current, Vector2Int start, Vector2Int end, int gValue) {
@@ -34,6 +33,7 @@ namespace AStarPathfinding {
         Location start = Location(Start, Start, End, g);
         
         List<Location> neighbors = getNeighbors(start);
+        List<Location> path = new List<Location>();
         
         foreach (Location neighbor in neightbors) {
             openList.Add(neighbor);
