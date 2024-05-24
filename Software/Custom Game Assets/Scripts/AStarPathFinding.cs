@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using AStarPathfinding;
 
 namespace AStarPathfinding {
+    [SerializeField] private float NPCHeight = 1.5f;
+    [SerializeField] private float tileSize = 1f;
 
     class Location {
         public int x;
@@ -21,66 +23,78 @@ namespace AStarPathfinding {
             this.g = gValue;
             this.h = Mathf.Abs(current.x - end.x) + Mathf.Abs(current.y - end.y);
             this.f = this.g + this.h;
-            this.parent;
         }
     }
 
-    public void findPath(Vector2Int Start, Vector2Int End) {
-        List<Location> openList = new List<Location>();
-        List<Location> closedList = new List<Location>();
-        
-        int g = 0;
-        Location start = Location(Start, Start, End, g);
-        
-        List<Location> neighbors = getNeighbors(start);
+    private void Start() {
+        foreach (Location location in findPath(new Vector2Int((int)transform.position.x, (int)transform.position.z), new Vector2Int(0, 0))) {
+            Debug.Log(location);
+        }
+    }
+
+    private void Update() {
+
+    }
+
+    public List<Location> findPath(Vector2Int Start, Vector2Int End) {
         List<Location> path = new List<Location>();
         
-        foreach (Location neighbor in neightbors) {
-            openList.Add(neighbor);
-        }
+        int g = 0;
+        Location currentLocation = new Location(Start, Start, End, g); // current location initialized as starting location
+        List<Location> validNeighbors = getValidNeighbors(currentLocation, Start, End, g);
         
-        Location currentLocation = start;
         while (currentLocation.x != End.x && currentLocation.y != End.y) {
-            
-            while (openList.Count > 0) {
-                // Find the node with the lowest F score in the open list
-                Location bestNode = openList[0];
-                foreach (Location node in openList) {
-                    if (node.f < current.f) {
-                        current = location;
-                    }
+            Location bestLocation = null;
+            for (int i = 0; i < (validNeighbors.Count); i++) {
+                if (i == 0) { // if it is the first neightbor, just assume its the best one so far
+                    bestLocation = validNeighbors[i];
                 }
-
-                // Move the current node from open list to closed list
-                openList.Remove(current);
-                closedList.Add(current);
+                
+                else if (validNeighbors[i].f < bestLocation.f) {
+                    bestLocation = validNeighbors[i];
+                }
+            }   
+            path.Add(bestLocation);
+            
+            currentLocation = bestLocation;
+            g++;
+            validNeighbors = getValidNeighbors(currentLocation, Start, End, g);
+        }
+        return path;
     }
 
     // Get neighboring nodes of a given location
-    List<Location> getNeighbors(Location location) {
-        List<Location> neighbors = new List<Location>();
+    List<Location> getValidNeighbors(Location location, Location start, Location end, int g) {
+        List<Location> validNeighbors = new List<Location>();
 
         // Define offsets for neighboring locations (up, down, left, right)
-        Vector2Int[] offsets = {
-            new Vector2Int(0, 1),   // Up
-            new Vector2Int(0, -1),  // Down
-            new Vector2Int(-1, 0),  // Left
-            new Vector2Int(1, 0)    // Right
+        Vector2Int[] directions = {
+            new Vector2Int(0, 1),
+            new Vector2Int(0, -1),
+            new Vector2Int(-1, 0),
+            new Vector2Int(1, 0)
         };
 
         // Perform raycasts to check for obstacles and add valid neighbors
-        foreach (Vector2Int offset in offsets) {
-            Vector2Int neighborPos = new Vector2Int(location.x + offset.x, location.y + offset.y);
-            
-            // Perform raycast to check for obstacles
-            RaycastHit2D hit = Physics2D.Raycast(new Vector2(location.x, location.y), offset, 1f);
-            
-            // If no obstacle found, add neighbor to list
-            if (hit.collider == null) {
-                neighbors.Add(grid[neighborPos.x, neighborPos.y]);
+        foreach (Vector2Int direction in directions) {
+            if (!isBlocked(location, direction, tileSize)) {
+                validNeighbors.Add(new Location(location + direction*tileSize, start, end, g));
             }
         }
 
-        return neighbors;
+        return validNeighbors;
+    }
+
+    private bool isBlocked(Vector2Int location, Vector2Int dir, float distance) {
+        hitInfo = default(RaycastHit);
+        bool hit = Physics.Raycast(
+            new Vector3(
+                location.x, 
+                NPCHeight, 
+                location.y), 
+            new Vector3(dir.x, 0, dir.y), 
+            out hitInfo,
+            distance);
+        return hit;
     }
 }
