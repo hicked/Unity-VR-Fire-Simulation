@@ -29,7 +29,7 @@ namespace AStarPathfinding {
     }
 
     private void Start() {
-        foreach (Location location in findPath(new Vector2Int((int)transform.position.x, (int)transform.position.z), new Vector2Int(0, 0))) {
+        foreach (Location location in findPath(transform.position, new Vector3(0, 0, 0))) {
             Debug.Log(location);
         }
     }
