@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 using UnityEngine;
 
 public class NPCAI : MonoBehaviour {
@@ -76,37 +75,24 @@ public class NPCAI : MonoBehaviour {
 
     AnimatorClipInfo[] animatorInfo;
     string currentAnimation;
-    
+    private List<Location> path;
+    private int currentPathIndex;
+    private AStarPathfinding pathfinder;
+
     private void Start() {
         animator = GetComponent<Animator>();
+        path = new List<Location>();
+        pathfinder = GetComponent<AStarPathfinding>();
         setRandomIdle();
     } 
 
     private void Update() {
-        // Vector2Int start = new Vector2Int((int)transform.position.x, (int)transform.position.z);
-        // Vector2Int goal = new Vector2Int(-24, -8);
-        // int[,] grid = new int[,] {{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-        //                     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-        //                     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-        //                     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-        //                     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-        //                     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}};
-
-        // List<Vector2Int> path = AStarPathfinding.FindPath(start, goal, grid);
-        // if (path != null)
-        // {
-        //     foreach (Vector2Int point in path)
-        //     {
-        //         Debug.Log("Path point: " + point);
-        //         transform.position = new Vector3(point.x, transform.position.y, point.y);
-        //     }
-        // }
-        // else
-        // {
-        //     Debug.Log("No path found");
-        // }
-
         // Gets information about the animator
+        if (path != null) {
+            isWalking = true;
+            isIdle = false;
+            isRunning = false;
+        }
         animator = GetComponent<Animator>();
         animatorInfo = animator.GetCurrentAnimatorClipInfo(0);
 
@@ -134,18 +120,21 @@ public class NPCAI : MonoBehaviour {
                     timeSinceIdleChange = 0f;
                 }
                 if (timeSinceMoved> timeBeforeMove + Random.Range(-moveVariance, moveVariance)) {
-                    //moveToRandom(new Vector3(0,0,0));
+                    setPathTo(new Vector3(3.5f, 0, -20f));
                     timeSinceMoved = 0f;
                 }
             }
+
+            MoveAlongPath(); // rotates the NPC every time it gets to a point on the path to face the next point on the path
+            // Dont need to move NPC forward since that is automatically done above (isRunning)
         }
     }
 
 
+
     public void changeState(string state) {
-        if (!(NPCStateNames.Contains(state))) {throw new UnityException("animation provided not found");}
+        if (!NPCStateNames.Contains(state)) {throw new UnityException("animation provided not found");}
         animator.CrossFadeInFixedTime(state, crossFadeDuration, 0, Random.value * getAnimation(state).length);
-        Debug.Log(state);
     }
 
     public void setRandomIdle() {
@@ -187,30 +176,29 @@ public class NPCAI : MonoBehaviour {
     public void moveToRandom() {
     }
 
-    public void moveTo(Vector3 location) {
+    public void setPathTo(Vector3 location) {
+        if (pathfinder != null) {
+            path = pathfinder.FindPath(transform.position, location);
+            currentPathIndex = 0;
+        } else {
+            throw new UnityException("AStarPathfinding component not found on the GameObject.");
+        }
+    }
+    private void MoveAlongPath() {
+        if (path != null && currentPathIndex < path.Count) {
+            Vector3 targetPosition = new Vector3(path[currentPathIndex].x, transform.position.y, path[currentPathIndex].z);
+            transform.LookAt(targetPosition);
 
+            if (Vector3.Distance(transform.position, targetPosition) < 0.1f) {
+                currentPathIndex++;
+            }
+        } else {
+            // No path or reached the end of the path, stop moving
+            isWalking = false;
+            isRunning = false;
+            isIdle = true;
+            path = null;
+        }
     }
 
-    //  public bool isBlocked(Vector3 dir) {
-    //     RaycastHit hitInfo = default(RaycastHit);
-    //         bool hit = Physics.BoxCast(
-    //             new Vector3(
-    //                 transform.position.x, 
-    //                 transform.position.y - playerHitBox.size.y + (playerHitBox.size.y - minHeightBeforeCollisions)/2f + minHeightBeforeCollisions, 
-    //                 transform.position.z), 
-    //             new Vector3((playerHitBox.size.x - maxDistance)/2f, (playerHitBox.size.y - minHeightBeforeCollisions)/2f, (playerHitBox.size.z - maxDistance)/2f), // IMOPRTANT: set the y to negative, that way its starts from the top down instead of bottom up
-    //             dir, 
-    //             out hitInfo,
-    //             transform.rotation, 
-    //             maxDistance,
-    //             layersForCollisions);
-        
-    //     Debug.DrawRay(transform.position, dir * maxDistance, hit ? Color.red : Color.green);
-    //     if (hit) {
-    //         lastBlockedByType = LayerMask.LayerToName(hitInfo.collider.gameObject.layer);
-    //         lastBlockedByObj = hitInfo.collider.gameObject;
-    //         lastBlockedLocation = hitInfo.point;
-    //     }
-    //     return hit;
-    // }
 }
