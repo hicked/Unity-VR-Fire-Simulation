@@ -12,6 +12,18 @@
 
 **D**: Patch / Refactoring
 
+## [v.1.1.1.1] - 2024-06-08
+**Author:** Antoine
+-   **MASSIVE UPDATE, FIRST OFFICIAL VERSION (v1)**
+-   NPC pathfinding now works
+-   Opens doors, avoids walls obviously
+
+*BUGS*
+-   While searching for path, location is set as available, but if it fails to find a path to location, the npcs can stack
+-   Main Blender file gaps in between walls/floors...?
+-   Changing walking animations during pathfinding?
+-   *Change rotation of NPC **GRADUALLY***
+
 
 **NOTE BUG: Changes animations twice in NPCAI when time is passed**
 ## [v.0.1.1.0] - 2024-05-10

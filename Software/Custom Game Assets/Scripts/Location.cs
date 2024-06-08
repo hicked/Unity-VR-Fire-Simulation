@@ -1,30 +1,25 @@
 using UnityEngine;
+using System;
 
-public class Location {
-    public float x;
-    public float y;
-    public float z;
-    public float g; // Cost from start to this node
-    public float h; // Heuristic cost from this node to the end
-    public float f; // Total cost (g + h)
+public class Location : IEquatable<Location> {
+    public float x, y, z, g, h, f;
+    public Vector3 vector;
 
-    public Location(Vector3 current, float g, float h) {
-        this.x = current.x;
-        this.y = current.y;
-        this.z = current.z;
+    public Location(Vector3 position, float g, float h) {
+        this.x = position.x;
+        this.y = position.y;
+        this.z = position.z;
         this.g = g;
         this.h = h;
         this.f = g + h;
+        this.vector = new Vector3(x,y,z);
     }
 
-    public override bool Equals(object obj) {
-        return obj is Location location &&
-                x == location.x &&
-                y == location.y &&
-                z == location.z;
+    public bool Equals(Location other) {
+        return this.x == other.x && this.y == other.y && this.z == other.z;
     }
 
     public override int GetHashCode() {
-        return new Vector3(x, y, z).GetHashCode();
+        return x.GetHashCode() ^ y.GetHashCode() ^ z.GetHashCode();
     }
 }
