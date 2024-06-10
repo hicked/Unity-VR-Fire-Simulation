@@ -12,6 +12,26 @@
 
 **D**: Patch / Refactoring
 
+## [v.1.2.5.2] - 2024-06-10
+**Author:** Antoine
+-   Finalized pathfinding
+-   Doors now move on a "points along path" basis instead of facing the direction
+-   Smoothed out NPC rotations
+-   Fixed major bug where pathfinding coroutines could stack and mess with each other
+-   Fixed bug where animation would change mid path
+-   Lots of refactoring in `NPCAI.cs`
+-   Removed collisions between NPCs and Player (player cant walk through NPC, but NPC can walk through player)
+-   Fixed bug where wouldnt rotate smoothly once arrived at final location
+-   Added a default variable to move along path (`bool run=false`)
+
+*BUGS*
+-   Main Blender file gaps in between walls/floors...? Very minor, doesnt come up often
+-   While searching for path, location is set as available, but if it fails to find a path to location: the npcs can stack on one location
+-   Should automatically search for a new path if it failed (not wait another XX seconds)
+-   `Look rotation viewing vector is zero` "bug", not game breaking
+-   
+
+
 ## [v.1.1.1.1] - 2024-06-08
 **Author:** Antoine
 -   **MASSIVE UPDATE, FIRST OFFICIAL VERSION (v1)**

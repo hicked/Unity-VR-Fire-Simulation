@@ -14,6 +14,7 @@ public class AStarPathfinding : MonoBehaviour {
     [SerializeField] private int maxTilesAllowedToCheck = 2000;
     private float NPCHeight;
     private float NPCRadius;
+    public bool isPathfinding;
 
     private List<Location> openList = new List<Location>();
     private HashSet<Location> closedList = new HashSet<Location>();
@@ -22,14 +23,14 @@ public class AStarPathfinding : MonoBehaviour {
     private List<Location> path = null;
     Location currentLocation;
     Vector3[] directions = {
-            new Vector3(1f, 0f, 0f),
-            new Vector3(-1f, 0f, 0f),
-            new Vector3(0f, 0f, 1f),
-            new Vector3(0f, 0f, -1f),
-            new Vector3(1f, 0f, 1f),
-            new Vector3(-1f, 0f, 1f),
-            new Vector3(-1f, 0f, -1f),
-            new Vector3(1f, 0f, -1f)
+        new Vector3(1f, 0f, 0f),
+        new Vector3(-1f, 0f, 0f),
+        new Vector3(0f, 0f, 1f),
+        new Vector3(0f, 0f, -1f),
+        new Vector3(1f, 0f, 1f),
+        new Vector3(-1f, 0f, 1f),
+        new Vector3(-1f, 0f, -1f),
+        new Vector3(1f, 0f, -1f)
         };
 
     private void Start() {
@@ -41,12 +42,14 @@ public class AStarPathfinding : MonoBehaviour {
     private void Update() {
         if (path != null) {
             for (int i = 1; i < path.Count; i++) {
-                Debug.DrawLine(path[i].vector, path[i-1].vector, Color.yellow);
+                Debug.DrawLine(path[i].vector + new Vector3(0, 0.5f, 0), path[i-1].vector + new Vector3(0, 0.5f, 0), Color.yellow);
             }
         }
     }
 
-    public IEnumerator FindPathCoroutine(Vector3 start, Vector3 end) { 
+    public IEnumerator FindPathCoroutine(Vector3 start, Vector3 end) {
+        isPathfinding = true;
+
         path = null;
         openList.Clear();
         closedList.Clear();
@@ -57,12 +60,11 @@ public class AStarPathfinding : MonoBehaviour {
 
         openList.Add(startLocation);
 
-        Debug.Log("Calculating Path");
         while (openList.Count > 0) {
             // checks if too many tiles have been checked, and simply breaks
             if (openList.Count > maxTilesAllowedToCheck) { 
                 Debug.Log($"Checked too many tiles, assuming no path possible to get to location {end} from {start} with NPC {NPC}");
-                path = null;
+                isPathfinding = false;
                 yield break;
             }
 
@@ -85,6 +87,7 @@ public class AStarPathfinding : MonoBehaviour {
                 cameFrom[endLocation] = currentLocation; // Ensure cameFrom is updated
                 currentLocation = endLocation;
                 path = ReconstructPath(cameFrom, currentLocation); // path is set to the variable, note that the path will have need a getter
+                isPathfinding = false;
                 yield break;
             }
 
@@ -116,7 +119,7 @@ public class AStarPathfinding : MonoBehaviour {
         }
         // If it breaks from the while loop aka, checked too many tiles or out of open tiles to check
         Debug.Log($"No path could be found from {start} to {end}");
-        path = null;
+        isPathfinding = false;
         yield break;
     }
 

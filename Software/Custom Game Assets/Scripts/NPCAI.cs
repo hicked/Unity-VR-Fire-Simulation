@@ -17,9 +17,11 @@ public class NPCAI : MonoBehaviour {
     [SerializeField] private int moveVariance = 5;
     [SerializeField] private float NPCWalkSpeedMultiplier = 1.5f;
     [SerializeField] private float NPCRunningSpeedMultiplier = 2.5f;
+    [SerializeField] private float NPCTurnSpeed = 100f;
     [SerializeField] private float crossFadeDuration = 1f;
     [SerializeField] public bool onPhone;
     [SerializeField] public bool isMan;
+    [SerializeField] private int pointsBeforeOpenDoor = 3; // how many tiles away will the door open on an NPCs path
     public bool isIdle = true;
     public bool isWalking = false;
     public bool isRunning = false;
@@ -123,6 +125,33 @@ public class NPCAI : MonoBehaviour {
     private AStarPathfinding pathfinder;
     private int locationIndex = 0;
 
+
+    private IEnumerator IdleCoroutine() {
+        while (true) {
+            int idleVar = Random.Range(-changeIdleVariance, changeIdleVariance);
+            yield return new WaitForSeconds(timeChangeIdle + idleVar);
+            
+            if (isIdle && !isWalking && !isRunning) { // if it isnt idle, or is walking along a path, dont change idles
+                setRandomIdle();
+            }
+            yield return null;
+        }
+
+    }
+    private IEnumerator ChangeLocationCoroutine() {
+        while (true) {
+            int moveVar = Random.Range(-moveVariance, moveVariance);
+            yield return new WaitForSeconds(timeBeforeMove + moveVar);
+
+            if (!isWalking && !isRunning && !pathfinder.isPathfinding) {
+                Debug.Log("Changing location");
+                moveToRandom();
+            }
+            yield return null;
+        }
+    }
+
+
     private void Start() {
         List<Vector3> firstIndexesList = new List<Vector3>();
 
@@ -136,41 +165,22 @@ public class NPCAI : MonoBehaviour {
 
         StartCoroutine(IdleCoroutine());
         StartCoroutine(ChangeLocationCoroutine());
-        moveToRandom();
     }
 
-    private IEnumerator IdleCoroutine() {
-        while (true) {
-            int idleVar = Random.Range(-changeIdleVariance, changeIdleVariance);
-            if (!isIdle || path != null) {
-                yield return null;
-            }
-            yield return new WaitForSeconds(timeChangeIdle + idleVar);
-            setRandomIdle();
-        }
-            
-    }
-    private IEnumerator ChangeLocationCoroutine() {
-        while (true) {
-            int moveVar = Random.Range(-moveVariance, moveVariance); 
-            if (!isIdle || path != null) {
-                yield return null;
-            }
-            yield return new WaitForSeconds(timeBeforeMove + moveVar);
-            moveToRandom();
-        }
-    }
-    
 
     private void Update() {
         if (pathfinder != null) {
             path = pathfinder.GetPath();
         }
-        else { throw new UnityException("AStarPathfinding component not found on the GameObject.");}
 
         if (path != null) {
             isWalking = true;
             isIdle = false;
+            isRunning = false;
+        }
+        else if (path == null) {
+            isWalking = false;
+            isIdle = true;
             isRunning = false;
         }
         
@@ -241,8 +251,8 @@ public class NPCAI : MonoBehaviour {
         idleLocations[locationIndex].isSpotTaken = true;
         Vector3 newLocation = idleLocations[locationIndex].position;
         lookatVector = idleLocations[locationIndex].lookAt;
-        setPathTo(newLocation);
         
+        setPathTo(newLocation);
     }
 
     private void setPathTo(Vector3 location) {
@@ -250,17 +260,32 @@ public class NPCAI : MonoBehaviour {
         currentPathIndex = 0;
     }
 
-    private void MoveAlongPath() {
+    private void MoveAlongPath(bool run=false) { // default param of walking not running
         if (path == null || path.Count == 0 || currentPathIndex > path.Count-1) {
             return;
         }
 
-        Vector3 targetPosition = new Vector3(path[currentPathIndex].x, transform.position.y, path[currentPathIndex].z);
-        transform.LookAt(targetPosition);
+        if (!run) {
+            isWalking = true;
+            isIdle = false;
+            isRunning = false;
+        }
+        else if (run) {
+            isWalking = false;
+            isIdle = false;
+            isRunning = true;
+        }
 
-        // Move towards the target position
-        Vector3 direction = targetPosition - transform.position;
+        Vector3 targetPosition = new Vector3(path[currentPathIndex].x, transform.position.y, path[currentPathIndex].z); // next point along path to reach
+
+        Vector3 direction = targetPosition - transform.position; // directional vector towards the point
         float distanceToTarget = direction.magnitude;
+
+        Quaternion targetRotation = Quaternion.LookRotation(direction);
+
+        // Smoothly rotate towards the target position
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * NPCTurnSpeed);
+
 
         // Move the NPC
         transform.position += direction.normalized * Time.deltaTime * (isRunning ? NPCRunningSpeedMultiplier : NPCWalkSpeedMultiplier);
@@ -268,43 +293,51 @@ public class NPCAI : MonoBehaviour {
         // Check if the NPC is close enough to the target position
         if (distanceToTarget < 0.1f) {
             if (currentPathIndex == path.Count - 1) {
-                transform.LookAt(lookatVector);
-                isWalking = false;
-                isRunning = false;
-                isIdle = true;
+                // Smooth rotation of npc once reached the end location
+                targetRotation = Quaternion.LookRotation(lookatVector - transform.position);
+                StartCoroutine(RotateToFinalDirectionCoroutine(targetRotation));
+
                 pathfinder.SetPath(null);
+                isWalking = false;
+                isIdle = true;
+                isRunning = false;
                 return;
             }
             currentPathIndex++;
         }
 
-        if (isBlockedByDoor(direction, hitDistanceDoors)) {
-            Doors door = lastDoorBlocked.GetComponent<Doors>();
-            door.OpenDoorTemporarily();
+        for (int i = pointsBeforeOpenDoor; i >= 0; i--) {
+            // Tries to open a door sum number of points on the path away, if it fails, reduces the number of point away by 1 and tried again
+            // Does this until it reaches 0 which will be between the next point, and the previous point
+            // Might be smart to change "pointsBeforeOpenDoor" actively with tile size, but for now it can be manual
+            try {
+                if (isBlockedByDoor(path[currentPathIndex+i-1].vector + new Vector3(0, 1, 0), path[currentPathIndex+i].vector + new Vector3(0, 1, 0))) {
+                    Doors door = lastDoorBlocked.GetComponent<Doors>();
+                    door.OpenDoorTemporarily();
+                }
+            }
+            catch {
+                continue;
+            }
         }
     }
 
-    public bool isBlockedByDoor(Vector3 dir, float distance) {
+    public bool isBlockedByDoor(Vector3 start, Vector3 end) {
         RaycastHit hitInfo = default(RaycastHit);
-        bool hit = Physics.CapsuleCast(
-            new Vector3(
-                transform.position.x, 
-                transform.position.y + NPCHeight/2f,
-                transform.position.z), 
-            new Vector3(
-                transform.position.x, 
-                transform.position.y - NPCHeight/2f,
-                transform.position.z),
-            NPCRadius,
-            dir, 
-            out hitInfo,
-            distance,
-            doorLayer);
-        
+        bool hit = Physics.Linecast(start, end, out hitInfo, doorLayer);
         if (hit) {
             lastDoorBlocked = hitInfo.collider.gameObject;
-            Debug.DrawLine(transform.position, transform.position + dir * distance);
         }
         return hit;
+    }
+
+    private IEnumerator RotateToFinalDirectionCoroutine(Quaternion finalTargetRotation) {
+        while (true) {
+            if (Quaternion.Angle(transform.rotation, finalTargetRotation) < 0.1f) {
+                yield break;
+            }
+            transform.rotation = Quaternion.Slerp(transform.rotation, finalTargetRotation, Time.deltaTime * NPCTurnSpeed);
+            yield return null; // Wait for the end of the frame
+        }
     }
 }
