@@ -29,7 +29,13 @@
 -   While searching for path, location is set as available, but if it fails to find a path to location: the npcs can stack on one location
 -   Should automatically search for a new path if it failed (not wait another XX seconds)
 -   `Look rotation viewing vector is zero` "bug", not game breaking
--   
+
+*Next steps*
+-   add for total of 6 rooms
+-   change furniture
+-   add locked doors to each room
+-   End room light thingy
+-   Smoke   
 
 
 ## [v.1.1.1.1] - 2024-06-08
