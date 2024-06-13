@@ -1,129 +1,77 @@
-/*using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-
-public class Doors : MonoBehaviour {
-    [SerializeField] private float doorSpeed = 100f;
-    [SerializeField] private float timeSpentOpenByNPC = 1.5f;
-    private float initialAngleY;
-    public bool isOpen = false;
-    public string openedBy;
-    public float timeSinceOpenedByNPC;
-    // Start is called before the first frame update
-    void Start()
-    {
-        initialAngleY = this.transform.eulerAngles.y;
-    }
-    
-    // Update is called once per frame
-    void Update() {
-        if (isOpen && openedBy == "NPC") {
-            if  (timeSinceOpenedByNPC > timeSpentOpenByNPC) {
-                isOpen = false;
-            }
-            else {
-                timeSinceOpenedByNPC += Time.deltaTime;
-            }
-        }
-        int direction = 1;
-        float targetAngleY = initialAngleY - 90f * (isOpen ? 1f : 0f);
-        float currentAngleY = this.transform.eulerAngles.y;
-
-        if (targetAngleY < 0) {
-            targetAngleY += 360; // Adjust to be in range [0, 360)
-        }
-        if (Mathf.Abs(targetAngleY - currentAngleY) > 180) {
-            direction *= -1; // Reverse direction for angles larger than 180 degrees
-        }
-    
-        currentAngleY = (currentAngleY + 360) % 360;
-        targetAngleY = (targetAngleY + 360) % 360;
-        if (Mathf.Round(this.transform.eulerAngles.y) != Mathf.Round(targetAngleY)) {
-            this.transform.eulerAngles = new Vector3(this.transform.eulerAngles.x, 
-            this.transform.eulerAngles.y + doorSpeed * direction * Time.deltaTime * ((this.transform.eulerAngles.y < targetAngleY) ? 1 : -1), 
-            this.transform.eulerAngles.z);
-        }
-    }
-}
-*/
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Doors : MonoBehaviour {
-    [SerializeField] private float doorSpeed = 100f;
-    [SerializeField] private float timeSpentOpenByNPC = 1.5f;
-    private float currentAngleY;
-    private float angleYOpen;
-    private float angleYClosed;
+    [SerializeField] public AudioSource audioSource;
+    [SerializeField] public AudioClip openDoorClip;
+    [SerializeField] public AudioClip closeDoorClip;
+    [SerializeField] public AudioClip lockedDoorClip;
+    [SerializeField] public float closeOffset = 0.55f;
+    [SerializeField] public float openOffset = 0.55f;
+    [SerializeField] private float doorSpeed = 90f;
+
+    private Quaternion targetRotation;
+    private float rotationOpen;
+    private float rotationClosed;
     public bool isOpen = false;
+    public bool isMoving = false;
+    public bool isLocked;
     private Coroutine temporaryOpenCoroutine;
 
     // Start is called before the first frame update
     void Start() {
-        angleYClosed = transform.eulerAngles.y;
-        angleYOpen = angleYClosed - 90f;
+        rotationClosed = transform.eulerAngles.y;
+        rotationOpen = rotationClosed - 90f;
+        targetRotation = transform.rotation;
     }
 
     // Update is called once per frame
     void Update() {
-        currentAngleY = transform.eulerAngles.y;
-        
-
-        if (isOpen && currentAngleY != angleYOpen) {
-            OpenDoor();
-        } else if (!isOpen && currentAngleY != angleYClosed){
-            CloseDoor();
+        if (isMoving) {
+            // Smoothly rotate towards the target rotation
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, doorSpeed * Time.deltaTime);
+            // Check if the rotation is close enough to the target
+            if (Quaternion.Angle(transform.rotation, targetRotation) < 0.1f) {
+                isMoving = false; // Stop moving
+                transform.rotation = targetRotation; // Ensure exact alignment
+            }
         }
     }
 
-    public void OpenDoor() {
-        float targetAngleY = angleYClosed - 90f;
-        RotateDoor(targetAngleY);
+    public void Open() {
+        targetRotation = Quaternion.Euler(transform.eulerAngles.x, rotationOpen, transform.eulerAngles.z);
         isOpen = true;
+        isMoving = true;
+        StartCoroutine(openCoroutine());
     }
 
-    public void CloseDoor() {
-        float targetAngleY = angleYClosed;
-        RotateDoor(targetAngleY);
+    public void Close() {
+        targetRotation = Quaternion.Euler(transform.eulerAngles.x, rotationClosed, transform.eulerAngles.z);
         isOpen = false;
+        isMoving = true;
+        StartCoroutine(closeCoroutine());
     }
 
-    public void OpenDoorTemporarily() {
+    public void OpenDoorTemporarily(float timeOpen) {
         if (temporaryOpenCoroutine != null) {
             StopCoroutine(temporaryOpenCoroutine);
         }
-        temporaryOpenCoroutine = StartCoroutine(TemporaryOpenCoroutine());
+        temporaryOpenCoroutine = StartCoroutine(TemporaryOpenCoroutine(timeOpen));
     }
 
-    private IEnumerator TemporaryOpenCoroutine() {
-        OpenDoor();
-        yield return new WaitForSeconds(timeSpentOpenByNPC);
-        CloseDoor();
+    private IEnumerator TemporaryOpenCoroutine(float timeOpen) {
+        Open();
+        yield return new WaitForSeconds(timeOpen);
+        Close();
     }
-
-    private void RotateDoor(float targetAngleY) {
-        float currentAngleY = this.transform.eulerAngles.y;
-
-        if (targetAngleY < 0) {
-            targetAngleY += 360; // Adjust to be in range [0, 360)
-        }
-
-        int direction = 1;
-        if (Mathf.Abs(targetAngleY - currentAngleY) > 180) {
-            direction *= -1; // Reverse direction for angles larger than 180 degrees
-        }
-
-        currentAngleY = (currentAngleY + 360) % 360;
-        targetAngleY = (targetAngleY + 360) % 360;
-
-        if (Mathf.Round(this.transform.eulerAngles.y) != Mathf.Round(targetAngleY)) {
-            this.transform.eulerAngles = new Vector3(
-                this.transform.eulerAngles.x,
-                this.transform.eulerAngles.y + doorSpeed * direction * Time.deltaTime * ((this.transform.eulerAngles.y < targetAngleY) ? 1 : -1),
-                this.transform.eulerAngles.z
-            );
-        }
+    private IEnumerator closeCoroutine() {
+        yield return new WaitForSeconds(closeOffset);
+        audioSource.clip = closeDoorClip;
+        audioSource.Play();
+    }
+    private IEnumerator openCoroutine() {
+        yield return new WaitForSeconds(openOffset);
+        audioSource.clip = openDoorClip;
+        audioSource.Play();
     }
 }

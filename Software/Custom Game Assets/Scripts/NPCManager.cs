@@ -6,62 +6,112 @@ using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class NPCAI : MonoBehaviour {
+[System.Serializable]
+public class NPCLocationInfo {
+    public Vector3 position;
+    public Vector3 lookat;
+    public bool isSpotTaken;
+}
+
+[System.Serializable]
+public class NPCLocationInfoList {
+    public List<NPCLocationInfo> idleLocationsList;
+}
+
+public class NPCManager : MonoBehaviour {
     [SerializeField] private LayerMask doorLayer;
     [SerializeField] public float NPCHeight = 1.75f;
     [SerializeField] public float NPCRadius = 0.3f;
-    [SerializeField] private float hitDistanceDoors = 1f;
+
     [SerializeField] private int timeChangeIdle = 15;
     [SerializeField] private int changeIdleVariance = 3;
-    [SerializeField] private int timeBeforeMove = 30;
-    [SerializeField] private int moveVariance = 5;
+    [SerializeField] private int timeBeforeMove = 60;
+    [SerializeField] private int moveVariance = 30;
+
     [SerializeField] private float NPCWalkSpeedMultiplier = 1.5f;
     [SerializeField] private float NPCRunningSpeedMultiplier = 2.5f;
-    [SerializeField] private float NPCTurnSpeed = 100f;
+    [SerializeField] private float NPCTurnSpeed = 6f;
+
+    [SerializeField] private int pointsBeforeOpenDoor = 4; // how many tiles away will the door open on an NPCs path
+    [SerializeField] private float timeSpentOpenByNPC = 2f;
+
     [SerializeField] private float crossFadeDuration = 1f;
+
     [SerializeField] public bool onPhone;
     [SerializeField] public bool isMan;
-    [SerializeField] private int pointsBeforeOpenDoor = 3; // how many tiles away will the door open on an NPCs path
+
     public bool isIdle = true;
     public bool isWalking = false;
     public bool isRunning = false;
     private GameObject lastDoorBlocked;
 
-    private class NPCLocationInfo {
-        public Vector3 position;
-        public Vector3 lookAt;
-        public bool isSpotTaken;
 
-        public NPCLocationInfo(Vector3 pos, Vector3 look, bool isTaken) {
-            position = pos;
-            lookAt = look;
-            isSpotTaken = isTaken;
-        }
-    }
+    [SerializeField] private TextAsset locationsJSON;
 
-    [SerializeField] private static NPCLocationInfo[] idleLocations = new NPCLocationInfo[] { // must be static to keep track of if the spots are taken/not, shared across all instances of NPCs
-            new NPCLocationInfo(new Vector3(6f, 0 ,-23.2f), new Vector3(5.35f, 0 ,-22.5f), false),
-            new NPCLocationInfo(new Vector3(6f, 0, -6.3f), new Vector3(5.3f, 0, -7f), false),
-            new NPCLocationInfo(new Vector3(1.14f, 0, -9.7f), new Vector3(0.6f, 0, -8.87f), false),
-            new NPCLocationInfo(new Vector3(1.34f, 0, 3.92f), new Vector3(0.68f, 0, 3.17f), false),
-            new NPCLocationInfo(new Vector3(-4.14f, 0, 1.45f), new Vector3(-3.45f, 0, 0.72f), false),
-            new NPCLocationInfo(new Vector3(2.11f, 0, -1.8f), new Vector3(2.11f, 0, -1.8f), false),
-            new NPCLocationInfo(new Vector3(-3.41f, 0, -19.43f), new Vector3(-4.26f, 0, -18.91f), false),
-            new NPCLocationInfo(new Vector3(-11.12f, 0, -19.61f), new Vector3(-10.53f, 0, -18.8f), false),
-            new NPCLocationInfo(new Vector3(-10.86f, 0, -11.52f), new Vector3(-10.13f, 0, -12.2f), false),
-            new NPCLocationInfo(new Vector3(-8.08f, 0, -14.92f), new Vector3(-7.35f, 0, -15.6f), false),
-            new NPCLocationInfo(new Vector3(-7f, 0, -16.22f), new Vector3(-7.69f, 0, -15.5f), false),
-            new NPCLocationInfo(new Vector3(-5.34f, 0, -11.35f), new Vector3(-5.08f, 0, -12.32f), false),
-            new NPCLocationInfo(new Vector3(-23.12f, 0, -19.61f), new Vector3(-22.53f, 0, -18.8f), false),
-            new NPCLocationInfo(new Vector3(-22.86f, 0, -11.52f), new Vector3(-22.13f, 0, -12.2f), false),
-            new NPCLocationInfo(new Vector3(-20.08f, 0, -14.92f), new Vector3(-19.35f, 0, -15.6f), false),
-            new NPCLocationInfo(new Vector3(-19f, 0, -16.22f), new Vector3(-19.69f, 0, -15.5f), false),
-            new NPCLocationInfo(new Vector3(-17.34f, 0, -11.35f), new Vector3(-17.08f, 0, -12.32f), false),
-            new NPCLocationInfo(new Vector3(-14f, 0, -9.46f), new Vector3(-14f, 0, -8.48f), false),
-            new NPCLocationInfo(new Vector3(-5.2f, 0, -9.66f), new Vector3(-4.93f, 0, -8.7f), false),
-            new NPCLocationInfo(new Vector3(-35.55f, 0, -9.17f), new Vector3(-34.7f, 0, -8.64f), false)
-    };
-    
+    [SerializeField] private static NPCLocationInfoList idleLocations = new NPCLocationInfoList();/* = new NPCLocationInfo[] {
+        // Hallway
+        new NPCLocationInfo(new Vector3(-36f, 0, -9.4f), new Vector3(0f, 0f, 0f), false),
+        new NPCLocationInfo(new Vector3(-36f, 0, -6.1f), new Vector3(0f, 0f, 0f), false),
+        new NPCLocationInfo(new Vector3(-28.69f, 0, -9.56f), new Vector3(0f, 0f, 0f), false),
+        new NPCLocationInfo(new Vector3(-28.51f, 0, -6f), new Vector3(0f, 0f, 0f), false),
+        new NPCLocationInfo(new Vector3(-13.9f, 0, -6f), new Vector3(0f, 0f, 0f), false),
+        new NPCLocationInfo(new Vector3(-13.9f, 0, -9.6f), new Vector3(0f, 0f, 0f), false),
+        new NPCLocationInfo(new Vector3(-5.3f, 0, -9.7f), new Vector3(0f, 0f, 0f), false),
+        new NPCLocationInfo(new Vector3(-5.3f, 0, -6f), new Vector3(0f, 0f, 0f), false),
+        new NPCLocationInfo(new Vector3(1.4f, 0, -9.4f), new Vector3(0f, 0f, 0f), false),
+        new NPCLocationInfo(new Vector3(6f, 0, -5.9f), new Vector3(0f, 0f, 0f), false),
+        new NPCLocationInfo(new Vector3(2.75f, 0, -10.9f), new Vector3(0f, 0f, 0f), false),
+        new NPCLocationInfo(new Vector3(2.8f, 0, -23.5f), new Vector3(0f, 0f, 0f), false),
+        new NPCLocationInfo(new Vector3(6.3f, 0, -23.5f), new Vector3(0f, 0f, 0f), false),
+
+        // Rooms 1-3
+        new NPCLocationInfo(new Vector3(-25.3f, 0, 4f), new Vector3(0f, 0f, 0f), false),
+        new NPCLocationInfo(new Vector3(-22f, 0, 4.2f), new Vector3(0f, 0f, 0f), false),
+        new NPCLocationInfo(new Vector3(-21f, 0, 2.4f), new Vector3(0f, 0f, 0f), false),
+        new NPCLocationInfo(new Vector3(-21.2f, 0, -2.2f), new Vector3(0f, 0f, 0f), false),
+        new NPCLocationInfo(new Vector3(-25.3f, 0, -4.2f), new Vector3(0f, 0f, 0f), false),
+        new NPCLocationInfo(new Vector3(-27.8f, 0, 1.5f), new Vector3(0f, 0f, 0f), false),
+        new NPCLocationInfo(new Vector3(-27.8f, 0, -1.4f), new Vector3(0f, 0f, 0f), false),
+
+        new NPCLocationInfo(new Vector3(-14.3f, 0, 4f), new Vector3(0f, 0f, 0f), false),
+        new NPCLocationInfo(new Vector3(-11f, 0, 4.2f), new Vector3(0f, 0f, 0f), false),
+        new NPCLocationInfo(new Vector3(-10f, 0, 2.4f), new Vector3(0f, 0f, 0f), false),
+        new NPCLocationInfo(new Vector3(-10.2f, 0, -2.2f), new Vector3(0f, 0f, 0f), false),
+        new NPCLocationInfo(new Vector3(-14.3f, 0, -4.2f), new Vector3(0f, 0f, 0f), false),
+        new NPCLocationInfo(new Vector3(-16.8f, 0, 1.5f), new Vector3(0f, 0f, 0f), false),
+        new NPCLocationInfo(new Vector3(-16.8f, 0, -1.4f), new Vector3(0f, 0f, 0f), false),
+
+        new NPCLocationInfo(new Vector3(-3.3f, 0, 4f), new Vector3(0f, 0f, 0f), false),
+        new NPCLocationInfo(new Vector3(0f, 0, 4.2f), new Vector3(0f, 0f, 0f), false),
+        new NPCLocationInfo(new Vector3(1f, 0, 2.4f), new Vector3(0f, 0f, 0f), false),
+        new NPCLocationInfo(new Vector3(0.8f, 0, -2.2f), new Vector3(0f, 0f, 0f), false),
+        new NPCLocationInfo(new Vector3(-3.3f, 0, -4.2f), new Vector3(0f, 0f, 0f), false),
+        new NPCLocationInfo(new Vector3(-5.8f, 0, 1.5f), new Vector3(0f, 0f, 0f), false),
+        new NPCLocationInfo(new Vector3(-5.8f, 0, -1.4f), new Vector3(0f, 0f, 0f), false),
+
+        // Rooms 4-6
+        new NPCLocationInfo(new Vector3(-32.8f, 0, -13.4f), new Vector3(0f, 0f, 0f), false),
+        new NPCLocationInfo(new Vector3(-28.5f, 0, -11.4f), new Vector3(0f, 0f, 0f), false),
+        new NPCLocationInfo(new Vector3(-26f, 0, -17f), new Vector3(0f, 0f, 0f), false),
+        new NPCLocationInfo(new Vector3(-28.7f, 0, -19.8f), new Vector3(0f, 0f, 0f), false),
+        new NPCLocationInfo(new Vector3(-32f, 0, -19.9f), new Vector3(0f, 0f, 0f), false),
+        new NPCLocationInfo(new Vector3(-33f, 0, -18.1f), new Vector3(0f, 0f, 0f), false),
+
+        new NPCLocationInfo(new Vector3(-21.8f, 0, -13.4f), new Vector3(0f, 0f, 0f), false),
+        new NPCLocationInfo(new Vector3(-17.5f, 0, -11.4f), new Vector3(0f, 0f, 0f), false),
+        new NPCLocationInfo(new Vector3(-15f, 0, -17f), new Vector3(0f, 0f, 0f), false),
+        new NPCLocationInfo(new Vector3(-17.7f, 0, -19.8f), new Vector3(0f, 0f, 0f), false),
+        new NPCLocationInfo(new Vector3(-21f, 0, -19.9f), new Vector3(0f, 0f, 0f), false),
+        new NPCLocationInfo(new Vector3(-22f, 0, -18.1f), new Vector3(0f, 0f, 0f), false),
+
+        new NPCLocationInfo(new Vector3(-10.8f, 0, -13.4f), new Vector3(0f, 0f, 0f), false),
+        new NPCLocationInfo(new Vector3(-6.5f, 0, -11.4f), new Vector3(0f, 0f, 0f), false),
+        new NPCLocationInfo(new Vector3(-4f, 0, -17f), new Vector3(0f, 0f, 0f), false),
+        new NPCLocationInfo(new Vector3(-6.7f, 0, -19.8f), new Vector3(0f, 0f, 0f), false),
+        new NPCLocationInfo(new Vector3(-10f, 0, -19.9f), new Vector3(0f, 0f, 0f), false),
+        new NPCLocationInfo(new Vector3(-11f, 0, -18.1f), new Vector3(0f, 0f, 0f), false)
+    };*/
+
     private string[] NPCStateNames = {"Exercise_warmingUp_170f",
                                         "idle_phoneTalking_180f",
                                         "idle_f_1_150f",
@@ -75,7 +125,7 @@ public class NPCAI : MonoBehaviour {
                                         "dance_hype_100f",
                                         "dance_m_flossing_40f",
                                         "dance_riverdance_60f",
-                                        "locom_m_jogging_30f", 
+                                        "locom_m_jogging_30f",
                                         "locom_f_phoneWalking_40f",
                                         "locom_f_running_20f",
                                         "locom_f_slowWalk_40f",
@@ -87,7 +137,7 @@ public class NPCAI : MonoBehaviour {
     private Animator animator;
     private Vector3 lookatVector;
 
-//----------------------------------------------------------------------
+    //----------------------------------------------------------------------
     public string[] NPCIdleStatesW = new string[] {
                                         "Exercise_warmingUp_170f",
                                         "idle_f_1_150f",
@@ -102,7 +152,7 @@ public class NPCAI : MonoBehaviour {
                                         "locom_m_jogging_30f",
                                         "locom_f_running_20f"};
 
-//----------------------------------------------------------------------
+    //----------------------------------------------------------------------
     public string[] NPCIdleStatesM = new string[] {
                                         "Exercise_warmingUp_170f",
                                         "idle_phoneTalking_180f",
@@ -116,13 +166,13 @@ public class NPCAI : MonoBehaviour {
     public string[] NPCRunningStatesM = new string[] {
                                         "locom_m_jogging_30f",
                                         "locom_m_running_20f"};
-//----------------------------------------------------------------------
+    //----------------------------------------------------------------------
 
     AnimatorClipInfo[] animatorInfo;
     string currentAnimation;
     private List<Location> path;
     private int currentPathIndex;
-    private AStarPathfinding pathfinder;
+    private AStarPathfinder pathfinder;
     private int locationIndex = 0;
 
 
@@ -130,7 +180,7 @@ public class NPCAI : MonoBehaviour {
         while (true) {
             int idleVar = Random.Range(-changeIdleVariance, changeIdleVariance);
             yield return new WaitForSeconds(timeChangeIdle + idleVar);
-            
+
             if (isIdle && !isWalking && !isRunning) { // if it isnt idle, or is walking along a path, dont change idles
                 setRandomIdle();
             }
@@ -154,13 +204,9 @@ public class NPCAI : MonoBehaviour {
 
     private void Start() {
         List<Vector3> firstIndexesList = new List<Vector3>();
-
-        foreach (NPCLocationInfo location in idleLocations) {
-            Debug.DrawLine(location.position, location.position + transform.forward * 0.25f, Color.yellow);
-        }
         animator = GetComponent<Animator>();
         path = new List<Location>();
-        pathfinder = GetComponent<AStarPathfinding>();
+        pathfinder = GetComponent<AStarPathfinder>();
         setRandomIdle();
 
         StartCoroutine(IdleCoroutine());
@@ -189,10 +235,10 @@ public class NPCAI : MonoBehaviour {
         if (animatorInfo.Length == 1) {
             currentAnimation = animatorInfo[0].clip.name;
             // Makes sure we have to correct animation based on the state of the NPC
-            
-            if (isRunning && !(NPCRunningStatesM.Contains(currentAnimation) || NPCRunningStatesW.Contains(currentAnimation))) {setRandomRunning();}
-            else if (isWalking && !(NPCWalkingStatesM.Contains(currentAnimation) || NPCWalkingStatesW.Contains(currentAnimation))) {setRandomWalking();}
-            else if (isIdle && !(NPCIdleStatesM.Contains(currentAnimation) || NPCIdleStatesW.Contains(currentAnimation))) {setRandomIdle();}
+
+            if (isRunning && !(NPCRunningStatesM.Contains(currentAnimation) || NPCRunningStatesW.Contains(currentAnimation))) { setRandomRunning(); }
+            else if (isWalking && !(NPCWalkingStatesM.Contains(currentAnimation) || NPCWalkingStatesW.Contains(currentAnimation))) { setRandomWalking(); }
+            else if (isIdle && !(NPCIdleStatesM.Contains(currentAnimation) || NPCIdleStatesW.Contains(currentAnimation))) { setRandomIdle(); }
 
             MoveAlongPath(); // rotates the NPC every time it gets to a point on the path to face the next point on the path
             // Dont need to move NPC forward since that is automatically done above (isRunning
@@ -201,7 +247,7 @@ public class NPCAI : MonoBehaviour {
 
 
     public void changeState(string state) {
-        if (!NPCStateNames.Contains(state)) {throw new UnityException("animation provided not found");}
+        if (!NPCStateNames.Contains(state)) { throw new UnityException("animation provided not found"); }
         animator.CrossFadeInFixedTime(state, crossFadeDuration, 0, Random.value * getAnimation(state).length);
     }
 
@@ -232,36 +278,37 @@ public class NPCAI : MonoBehaviour {
         }
     }
 
-    private AnimationClip getAnimation (string name) {
+    private AnimationClip getAnimation(string name) {
         foreach (AnimationClip clip in animator.runtimeAnimatorController.animationClips) {
             if (clip.name == name) {
                 return clip;
             }
         }
-    throw new UnityException("Animation provided not found");
+        throw new UnityException("Animation provided not found");
     }
 
     public void moveToRandom() {
-        idleLocations[locationIndex].isSpotTaken = false;
-        locationIndex = Random.Range(0, idleLocations.Length-1);
-        while (idleLocations[locationIndex].isSpotTaken == true) {
+        idleLocations = JsonUtility.FromJson<NPCLocationInfoList>(locationsJSON.text);
+        int locationIndex = Random.Range(0, idleLocations.idleLocationsList.Count - 1);
+        while (idleLocations.idleLocationsList[locationIndex].isSpotTaken) {
             Debug.Log("Spot taken, checking another");
-            locationIndex = Random.Range(0, idleLocations.Length-1);
+            locationIndex = Random.Range(0, idleLocations.idleLocationsList.Count - 1);
         }
-        idleLocations[locationIndex].isSpotTaken = true;
-        Vector3 newLocation = idleLocations[locationIndex].position;
-        lookatVector = idleLocations[locationIndex].lookAt;
-        
+
+        Vector3 newLocation = idleLocations.idleLocationsList[locationIndex].position;
+        lookatVector = idleLocations.idleLocationsList[locationIndex].lookat;
+
         setPathTo(newLocation);
     }
+
 
     private void setPathTo(Vector3 location) {
         StartCoroutine(pathfinder.FindPathCoroutine(transform.position, location));
         currentPathIndex = 0;
     }
 
-    private void MoveAlongPath(bool run=false) { // default param of walking not running
-        if (path == null || path.Count == 0 || currentPathIndex > path.Count-1) {
+    private void MoveAlongPath(bool run = false) { // default param of walking not running
+        if (path == null || path.Count == 0 || currentPathIndex > path.Count - 1) {
             return;
         }
 
@@ -311,9 +358,10 @@ public class NPCAI : MonoBehaviour {
             // Does this until it reaches 0 which will be between the next point, and the previous point
             // Might be smart to change "pointsBeforeOpenDoor" actively with tile size, but for now it can be manual
             try {
-                if (isBlockedByDoor(path[currentPathIndex+i-1].vector + new Vector3(0, 1, 0), path[currentPathIndex+i].vector + new Vector3(0, 1, 0))) {
+                if (isBlockedByDoor(path[currentPathIndex + i - 1].vector + new Vector3(0, 1, 0), path[currentPathIndex + i].vector + new Vector3(0, 1, 0))) {
                     Doors door = lastDoorBlocked.GetComponent<Doors>();
-                    door.OpenDoorTemporarily();
+                    door.OpenDoorTemporarily(timeSpentOpenByNPC);
+                    break;
                 }
             }
             catch {

@@ -57,17 +57,17 @@ public class Player : MonoBehaviour
         float leftWheelSpeed = 0f;
         float rightWheelSpeed = 0f;
 
-        if (Input.GetKey(KeyCode.W) && !isBlocked(transform.forward)) {
+        if (Input.GetKey(KeyCode.W) && !isBlocked(transform.forward, maxDistance)) {
             leftWheelSpeed = 1f;
         }
-        if (Input.GetKey(KeyCode.S) && !isBlocked(-transform.forward)) {
+        if (Input.GetKey(KeyCode.S) && !isBlocked(-transform.forward, maxDistance)) {
             leftWheelSpeed = -1f;
         }
 
-        if (Input.GetKey(KeyCode.UpArrow) && !isBlocked(transform.forward)) {
+        if (Input.GetKey(KeyCode.UpArrow) && !isBlocked(transform.forward, maxDistance)) {
             rightWheelSpeed += 1f;
         }
-        if (Input.GetKey(KeyCode.DownArrow) && !isBlocked(-transform.forward)) {
+        if (Input.GetKey(KeyCode.DownArrow) && !isBlocked(-transform.forward, maxDistance)) {
             rightWheelSpeed = -1f;
         }
         
@@ -86,7 +86,7 @@ public class Player : MonoBehaviour
         transform.eulerAngles += new Vector3(0, rotationalSpeed * Time.deltaTime * lookingSpeed, 0);
     }
 
-    public bool isBlocked(Vector3 dir) {
+    public bool isBlocked(Vector3 dir, float distance) {
         RaycastHit hitInfo = default(RaycastHit);
             bool hit = Physics.BoxCast(
                 new Vector3(
@@ -97,7 +97,7 @@ public class Player : MonoBehaviour
                 dir, 
                 out hitInfo,
                 transform.rotation, 
-                maxDistance,
+                distance,
                 layersForCollisions);
         
         Debug.DrawRay(transform.position, dir * maxDistance, hit ? Color.red : Color.green);

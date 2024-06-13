@@ -7,11 +7,11 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 
-public class AStarPathfinding : MonoBehaviour {
+public class AStarPathfinder : MonoBehaviour {
     [SerializeField] public float tileSize = 1f; // square meters
     [SerializeField] private LayerMask layer;
-    [SerializeField] NPCAI NPC;
-    [SerializeField] private int maxTilesAllowedToCheck = 2000;
+    [SerializeField] NPCManager NPC;
+    [SerializeField] private int maxTilesAllowedToCheck = 10000;
     private float NPCHeight;
     private float NPCRadius;
     public bool isPathfinding;
@@ -34,7 +34,7 @@ public class AStarPathfinding : MonoBehaviour {
         };
 
     private void Start() {
-        NPC = GetComponent<NPCAI>();
+        NPC = GetComponent<NPCManager>();
         NPCHeight = NPC.NPCHeight;
         NPCRadius = NPC.NPCRadius;
     }
@@ -82,7 +82,7 @@ public class AStarPathfinding : MonoBehaviour {
 
             // if its close enough to the end location and there isnt a wall in the way, simply make the final location = end location
             if (Vector3.Distance(currentLocation.vector, end) <= tileSize && 
-                !IsBlocked(currentLocation.vector, currentLocation.vector - end, (currentLocation.vector - end).magnitude)) {
+                !IsBlocked(currentLocation.vector, currentLocation.vector - end, (currentLocation.vector - end).magnitude, layer)) {
 
                 cameFrom[endLocation] = currentLocation; // Ensure cameFrom is updated
                 currentLocation = endLocation;
@@ -133,7 +133,7 @@ public class AStarPathfinding : MonoBehaviour {
     List<Location> GetValidNeighbors(Location currentLocation, Vector3 end, float currentG) {
         validNeighbors.Clear();
         for(int i = 0; i < directions.Count(); i++) {      
-            if (!IsBlocked(new Vector3(currentLocation.x, currentLocation.y, currentLocation.z), directions[i], tileSize)) {
+            if (!IsBlocked(new Vector3(currentLocation.x, currentLocation.y, currentLocation.z), directions[i], tileSize, layer)) {
                 Vector3 neighborPos = currentLocation.vector + directions[i].normalized * tileSize;
                 float tentativeG = currentG + Vector3.Distance(currentLocation.vector, neighborPos);
                 validNeighbors.Add(new Location(neighborPos, tentativeG, Heuristic(neighborPos, end)));
@@ -142,23 +142,48 @@ public class AStarPathfinding : MonoBehaviour {
         return validNeighbors;
     }
 
-    private bool IsBlocked(Vector3 location, Vector3 dir, float distance) {
-        bool hit = Physics.CapsuleCast(
-            new Vector3(
-                location.x, 
-                location.y + NPCHeight/2f,
-                location.z), 
-            new Vector3(
-                location.x, 
-                location.y - NPCHeight/2f,
-                location.z),
-            NPCRadius*1.2f,  // random buffer for safety
+    private bool PerformCapsuleCast(Vector3 location, Vector3 dir, float distance, int layerMask, out RaycastHit hitInfo) {
+        return Physics.CapsuleCast(
+            new Vector3(location.x, location.y + NPCHeight / 2f, location.z),
+            new Vector3(location.x, location.y - NPCHeight / 2f, location.z),
+            NPCRadius * 1.2f,
             dir,
+            out hitInfo,
             distance,
-            layer
+            layerMask
         );
-        return hit;
     }
+
+    private bool IsBlocked(Vector3 location, Vector3 dir, float distance, int layer) {
+        RaycastHit hitInfo;
+
+        // Perform capsule cast
+        bool hit = PerformCapsuleCast(location, dir, distance, layer, out hitInfo);
+
+        // Check if we hit an NPC
+        if (hit && LayerMask.LayerToName(hitInfo.collider.gameObject.layer) == "NPC") {
+            AStarPathfinder npcAStar = hitInfo.collider.gameObject.GetComponent<AStarPathfinder>();
+            if (npcAStar.isPathfinding) {
+                // NPC is pathfinding, perform capsule cast again excluding the NPC layer
+                int layerWithoutNPC = layer;
+                layerWithoutNPC &= ~(1 << LayerMask.NameToLayer("NPC"));
+                return IsBlocked(location, dir, distance, layerWithoutNPC);
+            }
+        }
+
+        // Check if we hit a door
+        if (hit && LayerMask.LayerToName(hitInfo.collider.gameObject.layer) == "Doors") {
+            Doors door = hitInfo.collider.gameObject.GetComponent<Doors>();
+            if (!door.isLocked) {
+                int layerWithoutDoors = layer;
+                layerWithoutDoors &= ~(1 << LayerMask.NameToLayer("Doors"));
+                return IsBlocked(location, dir, distance, layerWithoutDoors);
+            }
+        }
+
+        return hit; // Return the result of the capsule cast
+    }
+
 
     private List<Location> ReconstructPath(Dictionary<Location, Location> cameFrom, Location current) {
         List<Location> totalPath = new List<Location> { current };

@@ -12,6 +12,29 @@
 
 **D**: Patch / Refactoring
 
+## [v.1.3.6.2] - 2024-06-12
+**Author:** Antoine
+-   Refactored the doors scripts, added audio clips
+-   Made pathfinding take into account locked doors (dont go through locked ones)
+-   Finalized the reworked scene (still need to add new furniture)
+-   Added end game rooms (white light)
+-   Added locked doors in each dorm room, including UI and sound effect
+-   Refactored NPC locations; now stored in a `JSON` file for better 
+memory
+-   Fixed bug where audio (doors) could be heard from any distance
+
+*BUGS*
+-   **While searching for path, location is set as available, but if it fails to find a path to location: the npcs can stack on one location**
+-   Audio open should play slightly earlier
+-   Should automatically search for a new path if it failed (not wait another XX seconds)
+-   `Look rotation viewing vector is zero` "bug", not game breaking
+
+*Next steps*
+-   Change furniture
+-   Light switches interactions and sound effect
+-   Smoke   
+
+
 ## [v.1.2.5.2] - 2024-06-10
 **Author:** Antoine
 -   Finalized pathfinding
