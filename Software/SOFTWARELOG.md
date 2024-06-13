@@ -12,6 +12,29 @@
 
 **D**: Patch / Refactoring
 
+## [v.1.3.6.2] - 2024-06-13
+**Author:** Antoine
+-   **IMPORTANT:** Interactions are now handles by the object script (must extend interatable)
+-   Therefore, door interactions are now handled within the `doors.cs` script
+-   NPCs can no longer stack (still possible during race condition I think but good enough)
+-   Attached sound source to `low` of door so that it moves witht he door
+-   Foot step sounds now work
+-   Added Wheel sound effects
+
+*BUGS*
+-   `Lookat` Vectors are wrong for NPC positions
+-   Audio open should play slightly earlier
+-   Audio wheels should play slightly earlier AND should *FADE* out
+-   `Look rotation viewing vector is zero` "bug", not game breaking
+-   `locom_m_basicWalk_30f` too fast for the audio clip. This can be dealt with later
+
+*NEXT STEPS*
+-   Change furniture
+-   Light switches interactions and sound effect
+-   Smoke   
+-   Paintings
+
+
 ## [v.1.3.6.2] - 2024-06-12
 **Author:** Antoine
 -   Refactored the doors scripts, added audio clips
@@ -33,6 +56,7 @@ memory
 -   Change furniture
 -   Light switches interactions and sound effect
 -   Smoke   
+-   Paintings
 
 
 ## [v.1.2.5.2] - 2024-06-10

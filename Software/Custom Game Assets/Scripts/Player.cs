@@ -10,6 +10,8 @@ public class Player : MonoBehaviour
     [SerializeField] private LayerMask layersForCollisions; 
     [SerializeField] private float minHeightBeforeCollisions = 0.1f;  // Note this is the height from the top, so well have to do some arithmetic to convert it into the minimum height from the bottom
     [SerializeField] private float lookingSpeed = 5f;
+    private bool isWheelAudioPlaying = false;
+    public AudioSource wheelAudioSource;
     private BoxCollider playerHitBox;
     private Vector3 lastBlockedLocation;
     private float horizontalRotation;
@@ -71,7 +73,6 @@ public class Player : MonoBehaviour
             rightWheelSpeed = -1f;
         }
         
-        
         float rotationalSpeed = (leftWheelSpeed - rightWheelSpeed)/playerHitBox.size.x; // positive would be clockwise
         float forwardSpeed = 0f;
 
@@ -80,6 +81,15 @@ public class Player : MonoBehaviour
         }
         else if (leftWheelSpeed < 0 && rightWheelSpeed < 0) {
             forwardSpeed = -Mathf.Min(Mathf.Abs(leftWheelSpeed), Mathf.Abs(rightWheelSpeed));
+        }
+
+        if ((leftWheelSpeed != 0 || rightWheelSpeed != 0) && !isWheelAudioPlaying) {
+            wheelAudioSource.Play();
+            isWheelAudioPlaying = true;
+        }
+        else if (leftWheelSpeed < 0.5f && rightWheelSpeed < 0.5f && isWheelAudioPlaying) {
+            wheelAudioSource.Stop();
+            isWheelAudioPlaying = false;
         }
 
         transform.position += forwardSpeed * transform.forward * Time.deltaTime * baseSpeedMultiplier;

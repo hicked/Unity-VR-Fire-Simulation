@@ -1,0 +1,65 @@
+{
+    "idleLocationsList": [
+        {"position": {"x": -36.0, "y": 0.0, "z": -9.4}, "rotation": {"x": 0.0, "y": 0.0, "z": 0.0}, "isSpotTaken": false},
+        {"position": {"x": -36.0, "y": 0.0, "z": -6.1}, "rotation": {"x": 0.0, "y": 0.0, "z": 0.0}, "isSpotTaken": false},
+        {"position": {"x": -28.69, "y": 0.0, "z": -9.56}, "rotation": {"x": 0.0, "y": 0.0, "z": 0.0}, "isSpotTaken": false},
+        {"position": {"x": -28.51, "y": 0.0, "z": -6.0}, "rotation": {"x": 0.0, "y": 0.0, "z": 0.0}, "isSpotTaken": false},
+        {"position": {"x": -13.9, "y": 0.0, "z": -6.0}, "rotation": {"x": 0.0, "y": 0.0, "z": 0.0}, "isSpotTaken": false},
+        {"position": {"x": -13.9, "y": 0.0, "z": -9.6}, "rotation": {"x": 0.0, "y": 0.0, "z": 0.0}, "isSpotTaken": false},
+        {"position": {"x": -5.3, "y": 0.0, "z": -9.7}, "rotation": {"x": 0.0, "y": 0.0, "z": 0.0}, "isSpotTaken": false},
+        {"position": {"x": -5.3, "y": 0.0, "z": -6.0}, "rotation": {"x": 0.0, "y": 0.0, "z": 0.0}, "isSpotTaken": false},
+        {"position": {"x": 1.4, "y": 0.0, "z": -9.4}, "rotation": {"x": 0.0, "y": 0.0, "z": 0.0}, "isSpotTaken": false},
+        {"position": {"x": 6.0, "y": 0.0, "z": -5.9}, "rotation": {"x": 0.0, "y": 0.0, "z": 0.0}, "isSpotTaken": false},
+        {"position": {"x": 2.75, "y": 0.0, "z": -10.9}, "rotation": {"x": 0.0, "y": 0.0, "z": 0.0}, "isSpotTaken": false},
+        {"position": {"x": 2.8, "y": 0.0, "z": -23.5}, "rotation": {"x": 0.0, "y": 0.0, "z": 0.0}, "isSpotTaken": false},
+        {"position": {"x": 6.3, "y": 0.0, "z": -23.5}, "rotation": {"x": 0.0, "y": 0.0, "z": 0.0}, "isSpotTaken": false},
+        
+        
+        {"position": {"x": -27.0, "y": 0.0, "z": 4.2}, "rotation": {"x": 0.0, "y": 0.0, "z": 0.0}, "isSpotTaken": false},
+        {"position": {"x": -22.0, "y": 0.0, "z": 4.2}, "rotation": {"x": 0.0, "y": 0.0, "z": 0.0}, "isSpotTaken": false},
+        {"position": {"x": -21.25, "y": 0.0, "z": 2.2}, "rotation": {"x": 0.0, "y": 0.0, "z": 0.0}, "isSpotTaken": false},
+        {"position": {"x": -21.2, "y": 0.0, "z": -2.2}, "rotation": {"x": 0.0, "y": 0.0, "z": 0.0}, "isSpotTaken": false},
+        {"position": {"x": -25.3, "y": 0.0, "z": -4.2}, "rotation": {"x": 0.0, "y": 0.0, "z": 0.0}, "isSpotTaken": false},
+        {"position": {"x": -27.8, "y": 0.0, "z": 1.5}, "rotation": {"x": 0.0, "y": 0.0, "z": 0.0}, "isSpotTaken": false},
+        {"position": {"x": -27.8, "y": 0.0, "z": -1.4}, "rotation": {"x": 0.0, "y": 0.0, "z": 0.0}, "isSpotTaken": false},
+    
+        {"position": {"x": -15.5, "y": 0.0, "z": 4.2}, "rotation": {"x": 0.0, "y": 0.0, "z": 0.0}, "isSpotTaken": false},
+        {"position": {"x": -10.8, "y": 0.0, "z": 4.2}, "rotation": {"x": 0.0, "y": 0.0, "z": 0.0}, "isSpotTaken": false},
+        {"position": {"x": -9.5, "y": 0.0, "z": 2.4}, "rotation": {"x": 0.0, "y": 0.0, "z": 0.0}, "isSpotTaken": false},
+        {"position": {"x": -9.8, "y": 0.0, "z": -2.15}, "rotation": {"x": 0.0, "y": 0.0, "z": 0.0}, "isSpotTaken": false},
+        {"position": {"x": -13.8, "y": 0.0, "z": -4.2}, "rotation": {"x": 0.0, "y": 0.0, "z": 0.0}, "isSpotTaken": false},
+        {"position": {"x": -16.3, "y": 0.0, "z": 1.5}, "rotation": {"x": 0.0, "y": 0.0, "z": 0.0}, "isSpotTaken": false},
+        {"position": {"x": -16.3, "y": 0.0, "z": -1.4}, "rotation": {"x": 0.0, "y": 0.0, "z": 0.0}, "isSpotTaken": false},
+    
+        {"position": {"x": -3.5, "y": 0.0, "z": 4.2}, "rotation": {"x": 0.0, "y": 0.0, "z": 0.0}, "isSpotTaken": false},
+        {"position": {"x": 1.5, "y": 0.0, "z": 4.2}, "rotation": {"x": 0.0, "y": 0.0, "z": 0.0}, "isSpotTaken": false},
+        {"position": {"x": 2.5, "y": 0.0, "z": 2.4}, "rotation": {"x": 0.0, "y": 0.0, "z": 0.0}, "isSpotTaken": false},
+        {"position": {"x": 2.3, "y": 0.0, "z": -2.2}, "rotation": {"x": 0.0, "y": 0.0, "z": 0.0}, "isSpotTaken": false},
+        {"position": {"x": -1.8, "y": 0.0, "z": -4.2}, "rotation": {"x": 0.0, "y": 0.0, "z": 0.0}, "isSpotTaken": false},
+        {"position": {"x": -4.3, "y": 0.0, "z": 1.5}, "rotation": {"x": 0.0, "y": 0.0, "z": 0.0}, "isSpotTaken": false},
+        {"position": {"x": -4.3, "y": 0.0, "z": -1.4}, "rotation": {"x": 0.0, "y": 0.0, "z": 0.0}, "isSpotTaken": false},
+    
+
+        {"position": {"x": -32.8, "y": 0.0, "z": -13.4}, "rotation": {"x": 0.0, "y": 0.0, "z": 0.0}, "isSpotTaken": false},
+        {"position": {"x": -28.5, "y": 0.0, "z": -11.4}, "rotation": {"x": 0.0, "y": 0.0, "z": 0.0}, "isSpotTaken": false},
+        {"position": {"x": -26.5, "y": 0.0, "z": -17.0}, "rotation": {"x": 0.0, "y": 0.0, "z": 0.0}, "isSpotTaken": false},
+        {"position": {"x": -27.0, "y": 0.0, "z": -19.8}, "rotation": {"x": 0.0, "y": 0.0, "z": 0.0}, "isSpotTaken": false},
+        {"position": {"x": -32.0, "y": 0.0, "z": -19.9}, "rotation": {"x": 0.0, "y": 0.0, "z": 0.0}, "isSpotTaken": false},
+        {"position": {"x": -33.0, "y": 0.0, "z": -18.1}, "rotation": {"x": 0.0, "y": 0.0, "z": 0.0}, "isSpotTaken": false},
+    
+        {"position": {"x": -21.3, "y": 0.0, "z": -13.4}, "rotation": {"x": 0.0, "y": 0.0, "z": 0.0}, "isSpotTaken": false},
+        {"position": {"x": -16.8, "y": 0.0, "z": -11.4}, "rotation": {"x": 0.0, "y": 0.0, "z": 0.0}, "isSpotTaken": false},
+        {"position": {"x": -15.0, "y": 0.0, "z": -17.0}, "rotation": {"x": 0.0, "y": 0.0, "z": 0.0}, "isSpotTaken": false},
+        {"position": {"x": -15.5, "y": 0.0, "z": -19.8}, "rotation": {"x": 0.0, "y": 0.0, "z": 0.0}, "isSpotTaken": false},
+        {"position": {"x": -20.5, "y": 0.0, "z": -19.9}, "rotation": {"x": 0.0, "y": 0.0, "z": 0.0}, "isSpotTaken": false},
+        {"position": {"x": -21.5, "y": 0.0, "z": -18.1}, "rotation": {"x": 0.0, "y": 0.0, "z": 0.0}, "isSpotTaken": false},
+    
+        {"position": {"x": -9.3, "y": 0.0, "z": -13.4}, "rotation": {"x": 0.0, "y": 0.0, "z": 0.0}, "isSpotTaken": false},
+        {"position": {"x": -4.0, "y": 0.0, "z": -11.4}, "rotation": {"x": 0.0, "y": 0.0, "z": 0.0}, "isSpotTaken": false},
+        {"position": {"x": -3.0, "y": 0.0, "z": -17.0}, "rotation": {"x": 0.0, "y": 0.0, "z": 0.0}, "isSpotTaken": false},
+        {"position": {"x": -3.5, "y": 0.0, "z": -19.8}, "rotation": {"x": 0.0, "y": 0.0, "z": 0.0}, "isSpotTaken": false},
+        {"position": {"x": -8.5, "y": 0.0, "z": -19.9}, "rotation": {"x": 0.0, "y": 0.0, "z": 0.0}, "isSpotTaken": false},
+        {"position": {"x": -9.5, "y": 0.0, "z": -18.1}, "rotation": {"x": 0.0, "y": 0.0, "z": 0.0}, "isSpotTaken": false}
+    ]    
+  }
+  

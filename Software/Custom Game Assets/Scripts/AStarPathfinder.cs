@@ -11,7 +11,7 @@ public class AStarPathfinder : MonoBehaviour {
     [SerializeField] public float tileSize = 1f; // square meters
     [SerializeField] private LayerMask layer;
     [SerializeField] NPCManager NPC;
-    [SerializeField] private int maxTilesAllowedToCheck = 10000;
+    [SerializeField] private int maxTilesAllowedToCheck = 5000;
     private float NPCHeight;
     private float NPCRadius;
     public bool isPathfinding;
@@ -65,6 +65,7 @@ public class AStarPathfinder : MonoBehaviour {
             if (openList.Count > maxTilesAllowedToCheck) { 
                 Debug.Log($"Checked too many tiles, assuming no path possible to get to location {end} from {start} with NPC {NPC}");
                 isPathfinding = false;
+                NPC.moveToRandom(); // restart pathfinding
                 yield break;
             }
 
@@ -88,6 +89,11 @@ public class AStarPathfinder : MonoBehaviour {
                 currentLocation = endLocation;
                 path = ReconstructPath(cameFrom, currentLocation); // path is set to the variable, note that the path will have need a getter
                 isPathfinding = false;
+
+                // NOTE: This part is optional if location are to be stored in a JSON file,
+                // set the location as taken if you have multiple NPCs and a list of NPC locations
+                NPC.ChangeLocationStatus(); // Basically sets the previous location as available, and new current location as taken/occupied
+                // We only want to do this if the pathfinding succeeds
                 yield break;
             }
 
@@ -120,6 +126,7 @@ public class AStarPathfinder : MonoBehaviour {
         // If it breaks from the while loop aka, checked too many tiles or out of open tiles to check
         Debug.Log($"No path could be found from {start} to {end}");
         isPathfinding = false;
+        NPC.moveToRandom(); // restart pathfinding
         yield break;
     }
 
@@ -162,8 +169,8 @@ public class AStarPathfinder : MonoBehaviour {
 
         // Check if we hit an NPC
         if (hit && LayerMask.LayerToName(hitInfo.collider.gameObject.layer) == "NPC") {
-            AStarPathfinder npcAStar = hitInfo.collider.gameObject.GetComponent<AStarPathfinder>();
-            if (npcAStar.isPathfinding) {
+            NPCManager NPC = hitInfo.collider.gameObject.GetComponent<NPCManager>();
+            if (NPC.isIdle) {
                 // NPC is pathfinding, perform capsule cast again excluding the NPC layer
                 int layerWithoutNPC = layer;
                 layerWithoutNPC &= ~(1 << LayerMask.NameToLayer("NPC"));
