@@ -18,8 +18,4 @@ public class Location : IEquatable<Location> {
     public bool Equals(Location other) {
         return this.x == other.x && this.y == other.y && this.z == other.z;
     }
-
-    public override int GetHashCode() {
-        return x.GetHashCode() ^ y.GetHashCode() ^ z.GetHashCode();
-    }
 }

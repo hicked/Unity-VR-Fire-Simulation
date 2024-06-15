@@ -15,6 +15,7 @@ public class AStarPathfinder : MonoBehaviour {
     private float NPCHeight;
     private float NPCRadius;
     public bool isPathfinding;
+    public Vector3 lookatVector;
 
     private List<Location> openList = new List<Location>();
     private HashSet<Location> closedList = new HashSet<Location>();
@@ -51,6 +52,7 @@ public class AStarPathfinder : MonoBehaviour {
         isPathfinding = true;
 
         path = null;
+        lookatVector = Vector3.zero;
         openList.Clear();
         closedList.Clear();
         cameFrom.Clear();
@@ -88,6 +90,15 @@ public class AStarPathfinder : MonoBehaviour {
                 cameFrom[endLocation] = currentLocation; // Ensure cameFrom is updated
                 currentLocation = endLocation;
                 path = ReconstructPath(cameFrom, currentLocation); // path is set to the variable, note that the path will have need a getter
+
+                lookatVector = end;
+                foreach (Vector3 direction in directions) {
+                    RaycastHit hitInfo;
+                    if (!PerformCapsuleCast(end, direction, 2f, layer, out hitInfo)) {
+                        lookatVector += direction;
+                    }
+                }
+                
                 isPathfinding = false;
 
                 // NOTE: This part is optional if location are to be stored in a JSON file,
@@ -149,7 +160,7 @@ public class AStarPathfinder : MonoBehaviour {
         return validNeighbors;
     }
 
-    private bool PerformCapsuleCast(Vector3 location, Vector3 dir, float distance, int layerMask, out RaycastHit hitInfo) {
+    public bool PerformCapsuleCast(Vector3 location, Vector3 dir, float distance, int layerMask, out RaycastHit hitInfo) {
         return Physics.CapsuleCast(
             new Vector3(location.x, location.y + NPCHeight / 2f, location.z),
             new Vector3(location.x, location.y - NPCHeight / 2f, location.z),

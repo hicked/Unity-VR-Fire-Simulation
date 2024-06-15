@@ -89,6 +89,7 @@ public class Doors : MonoBehaviour, Interactable {
         Open();
         yield return new WaitForSeconds(timeOpen);
         Close();
+        temporaryOpenCoroutine = null;
     }
     private IEnumerator closeCoroutine() {
         yield return new WaitForSeconds(closeOffset);

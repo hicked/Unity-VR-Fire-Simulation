@@ -9,7 +9,6 @@ using UnityEngine;
 [System.Serializable]
 public class NPCLocationInfo {
     public Vector3 position;
-    public Vector3 lookat;
     public bool isSpotTaken;
 }
 
@@ -49,73 +48,9 @@ public class NPCManager : MonoBehaviour {
     public bool isRunning = false;
     private GameObject lastDoorBlocked;
 
-    [SerializeField] private string originalLocationsFilePath = Application.dataPath + "/Scripts/originalNPCLocations.json";
-    [SerializeField] private string NPCLocationsFilePath = Application.dataPath + "/Scripts/NPCLocations.json";
 
-
-    [SerializeField] private static NPCLocationInfoList idleLocations = new NPCLocationInfoList();/* = new NPCLocationInfo[] {
-        // Hallway
-        new NPCLocationInfo(new Vector3(-36f, 0, -9.4f), new Vector3(0f, 0f, 0f), false),
-        new NPCLocationInfo(new Vector3(-36f, 0, -6.1f), new Vector3(0f, 0f, 0f), false),
-        new NPCLocationInfo(new Vector3(-28.69f, 0, -9.56f), new Vector3(0f, 0f, 0f), false),
-        new NPCLocationInfo(new Vector3(-28.51f, 0, -6f), new Vector3(0f, 0f, 0f), false),
-        new NPCLocationInfo(new Vector3(-13.9f, 0, -6f), new Vector3(0f, 0f, 0f), false),
-        new NPCLocationInfo(new Vector3(-13.9f, 0, -9.6f), new Vector3(0f, 0f, 0f), false),
-        new NPCLocationInfo(new Vector3(-5.3f, 0, -9.7f), new Vector3(0f, 0f, 0f), false),
-        new NPCLocationInfo(new Vector3(-5.3f, 0, -6f), new Vector3(0f, 0f, 0f), false),
-        new NPCLocationInfo(new Vector3(1.4f, 0, -9.4f), new Vector3(0f, 0f, 0f), false),
-        new NPCLocationInfo(new Vector3(6f, 0, -5.9f), new Vector3(0f, 0f, 0f), false),
-        new NPCLocationInfo(new Vector3(2.75f, 0, -10.9f), new Vector3(0f, 0f, 0f), false),
-        new NPCLocationInfo(new Vector3(2.8f, 0, -23.5f), new Vector3(0f, 0f, 0f), false),
-        new NPCLocationInfo(new Vector3(6.3f, 0, -23.5f), new Vector3(0f, 0f, 0f), false),
-
-        // Rooms 1-3
-        new NPCLocationInfo(new Vector3(-25.3f, 0, 4f), new Vector3(0f, 0f, 0f), false),
-        new NPCLocationInfo(new Vector3(-22f, 0, 4.2f), new Vector3(0f, 0f, 0f), false),
-        new NPCLocationInfo(new Vector3(-21f, 0, 2.4f), new Vector3(0f, 0f, 0f), false),
-        new NPCLocationInfo(new Vector3(-21.2f, 0, -2.2f), new Vector3(0f, 0f, 0f), false),
-        new NPCLocationInfo(new Vector3(-25.3f, 0, -4.2f), new Vector3(0f, 0f, 0f), false),
-        new NPCLocationInfo(new Vector3(-27.8f, 0, 1.5f), new Vector3(0f, 0f, 0f), false),
-        new NPCLocationInfo(new Vector3(-27.8f, 0, -1.4f), new Vector3(0f, 0f, 0f), false),
-
-        new NPCLocationInfo(new Vector3(-14.3f, 0, 4f), new Vector3(0f, 0f, 0f), false),
-        new NPCLocationInfo(new Vector3(-11f, 0, 4.2f), new Vector3(0f, 0f, 0f), false),
-        new NPCLocationInfo(new Vector3(-10f, 0, 2.4f), new Vector3(0f, 0f, 0f), false),
-        new NPCLocationInfo(new Vector3(-10.2f, 0, -2.2f), new Vector3(0f, 0f, 0f), false),
-        new NPCLocationInfo(new Vector3(-14.3f, 0, -4.2f), new Vector3(0f, 0f, 0f), false),
-        new NPCLocationInfo(new Vector3(-16.8f, 0, 1.5f), new Vector3(0f, 0f, 0f), false),
-        new NPCLocationInfo(new Vector3(-16.8f, 0, -1.4f), new Vector3(0f, 0f, 0f), false),
-
-        new NPCLocationInfo(new Vector3(-3.3f, 0, 4f), new Vector3(0f, 0f, 0f), false),
-        new NPCLocationInfo(new Vector3(0f, 0, 4.2f), new Vector3(0f, 0f, 0f), false),
-        new NPCLocationInfo(new Vector3(1f, 0, 2.4f), new Vector3(0f, 0f, 0f), false),
-        new NPCLocationInfo(new Vector3(0.8f, 0, -2.2f), new Vector3(0f, 0f, 0f), false),
-        new NPCLocationInfo(new Vector3(-3.3f, 0, -4.2f), new Vector3(0f, 0f, 0f), false),
-        new NPCLocationInfo(new Vector3(-5.8f, 0, 1.5f), new Vector3(0f, 0f, 0f), false),
-        new NPCLocationInfo(new Vector3(-5.8f, 0, -1.4f), new Vector3(0f, 0f, 0f), false),
-
-        // Rooms 4-6
-        new NPCLocationInfo(new Vector3(-32.8f, 0, -13.4f), new Vector3(0f, 0f, 0f), false),
-        new NPCLocationInfo(new Vector3(-28.5f, 0, -11.4f), new Vector3(0f, 0f, 0f), false),
-        new NPCLocationInfo(new Vector3(-26f, 0, -17f), new Vector3(0f, 0f, 0f), false),
-        new NPCLocationInfo(new Vector3(-28.7f, 0, -19.8f), new Vector3(0f, 0f, 0f), false),
-        new NPCLocationInfo(new Vector3(-32f, 0, -19.9f), new Vector3(0f, 0f, 0f), false),
-        new NPCLocationInfo(new Vector3(-33f, 0, -18.1f), new Vector3(0f, 0f, 0f), false),
-
-        new NPCLocationInfo(new Vector3(-21.8f, 0, -13.4f), new Vector3(0f, 0f, 0f), false),
-        new NPCLocationInfo(new Vector3(-17.5f, 0, -11.4f), new Vector3(0f, 0f, 0f), false),
-        new NPCLocationInfo(new Vector3(-15f, 0, -17f), new Vector3(0f, 0f, 0f), false),
-        new NPCLocationInfo(new Vector3(-17.7f, 0, -19.8f), new Vector3(0f, 0f, 0f), false),
-        new NPCLocationInfo(new Vector3(-21f, 0, -19.9f), new Vector3(0f, 0f, 0f), false),
-        new NPCLocationInfo(new Vector3(-22f, 0, -18.1f), new Vector3(0f, 0f, 0f), false),
-
-        new NPCLocationInfo(new Vector3(-10.8f, 0, -13.4f), new Vector3(0f, 0f, 0f), false),
-        new NPCLocationInfo(new Vector3(-6.5f, 0, -11.4f), new Vector3(0f, 0f, 0f), false),
-        new NPCLocationInfo(new Vector3(-4f, 0, -17f), new Vector3(0f, 0f, 0f), false),
-        new NPCLocationInfo(new Vector3(-6.7f, 0, -19.8f), new Vector3(0f, 0f, 0f), false),
-        new NPCLocationInfo(new Vector3(-10f, 0, -19.9f), new Vector3(0f, 0f, 0f), false),
-        new NPCLocationInfo(new Vector3(-11f, 0, -18.1f), new Vector3(0f, 0f, 0f), false)
-    };*/
+    [SerializeField] private string originalLocationsFilePath = "/Scripts/originalNPCLocations.json";
+    [SerializeField] private string NPCLocationsFilePath = "/Scripts/NPCLocations.json";
 
     private string[] NPCStateNames = {"Exercise_warmingUp_170f",
                                         "idle_phoneTalking_180f",
@@ -211,6 +146,8 @@ public class NPCManager : MonoBehaviour {
 
 
     private void Start() {
+        originalLocationsFilePath = Application.dataPath + originalLocationsFilePath;
+        NPCLocationsFilePath = Application.dataPath + NPCLocationsFilePath;
         // Resets json to original
         string jsonContent = File.ReadAllText(originalLocationsFilePath);
         File.WriteAllText(NPCLocationsFilePath, jsonContent);
@@ -226,8 +163,10 @@ public class NPCManager : MonoBehaviour {
 
 
     private void Update() {
+        // Debug.Log($"{transform.position} and {transform.position + transform.forward}");
         if (pathfinder != null) {
             path = pathfinder.GetPath();
+            lookatVector = pathfinder.lookatVector;
         }
 
         if (path != null) {
@@ -269,36 +208,41 @@ public class NPCManager : MonoBehaviour {
 
     public void moveToRandom() {
         string jsonContent = File.ReadAllText(NPCLocationsFilePath);
-        idleLocations = JsonUtility.FromJson<NPCLocationInfoList>(jsonContent);
-        tentativeNPCLocationIndex = Random.Range(0, idleLocations.idleLocationsList.Count - 1);
-        int i = 0;
-        while (idleLocations.idleLocationsList[tentativeNPCLocationIndex].isSpotTaken == true) {
-            Debug.Log("Spot taken, checking another");
-            tentativeNPCLocationIndex = Random.Range(0, idleLocations.idleLocationsList.Count - 1);
-            i++;
-            if (i > 1000) { // 1000 is an arbitrary number
-                Debug.LogError("WARNING: NOT ENOUGH SPOTS FOR ALL NPCS"); 
-                break;
+        NPCLocationInfoList idleLocationsListObj = JsonUtility.FromJson<NPCLocationInfoList>(jsonContent);
+        List<NPCLocationInfo> idleLocations = idleLocationsListObj.idleLocationsList;
+        
+        List<NPCLocationInfo> availableLocations = new List<NPCLocationInfo>();
+        List<int> availableLocationsIndices = new List<int>();
+        for (int i = 0; i < idleLocations.Count; i++) {
+            if (!idleLocations[i].isSpotTaken) {
+                availableLocations.Add(idleLocations[i]);
+                availableLocationsIndices.Add(i);
             }
         }
 
-        Vector3 newLocation = idleLocations.idleLocationsList[tentativeNPCLocationIndex].position;
-        lookatVector = idleLocations.idleLocationsList[tentativeNPCLocationIndex].lookat;
+        if (availableLocations.Count == 0) {
+            Debug.LogError("WARNING: All NPC locations are taken!");
+        }
+        else {
+            int randomIndex = Random.Range(0, availableLocations.Count - 1); // index of location within availableLocations
+            tentativeNPCLocationIndex = availableLocationsIndices[randomIndex]; // index of location within idleLocations
 
-        setPathTo(newLocation);
+            Vector3 newLocation = availableLocations[randomIndex].position;
+            setPathTo(newLocation);
+        }
     }
 
     public void ChangeLocationStatus() {
         string jsonContent = File.ReadAllText(NPCLocationsFilePath);
-        idleLocations = JsonUtility.FromJson<NPCLocationInfoList>(jsonContent); // updates since pathfinding can take some time/values might change
+        NPCLocationInfoList idleLocationsListObj = JsonUtility.FromJson<NPCLocationInfoList>(jsonContent); // updates since pathfinding can take some time/values might change
         if (previousNPCLocationIndex != -1) { // if it is its initialized state (no previous location)
-            idleLocations.idleLocationsList[previousNPCLocationIndex].isSpotTaken = false;
+            idleLocationsListObj.idleLocationsList[previousNPCLocationIndex].isSpotTaken = false;
         }
         previousNPCLocationIndex = NPCLocationIndex;
         NPCLocationIndex = tentativeNPCLocationIndex;
 
-        idleLocations.idleLocationsList[NPCLocationIndex].isSpotTaken = true;
-        string updatedJson = JsonUtility.ToJson(idleLocations, true); 
+        idleLocationsListObj.idleLocationsList[NPCLocationIndex].isSpotTaken = true;
+        string updatedJson = JsonUtility.ToJson(idleLocationsListObj, true); // true: format
         File.WriteAllText(NPCLocationsFilePath, updatedJson); // Update the path as necessary
     }
 

@@ -12,7 +12,30 @@
 
 **D**: Patch / Refactoring
 
-## [v.1.3.6.2] - 2024-06-13
+## [v.1.4.6.4] - 2024-06-15
+**Author:** Antoine
+-   No longer need `lookat` Vectors: `AStarPathfinder.cs` finds it using logic
+-   Made it so if two NPCs walk through the same door it doesnt open, close, open close: stop and then replace instead of overlapping
+-   Adjusted volumes
+-   Trimmed audio lengths
+-   Added `Arduino` Inputs and outputs, not tested yet
+
+*BUGS*
+-   Audio wheels should play slightly earlier AND should *FADE* out
+-   `Look rotation viewing vector is zero` "bug", not game breaking
+-   `locom_m_basicWalk_30f` too fast for the audio clip. This can be dealt with later
+-   Should add a `Collidable` parent class for cleaner code
+-   Make onPhone independant, static
+-   Find better closing sound
+
+*NEXT STEPS*
+-   Change furniture
+-   Light switches interactions and sound effect
+-   Smoke   
+-   Paintings
+
+
+## [v.1.4.6.4] - 2024-06-13
 **Author:** Antoine
 -   **IMPORTANT:** Interactions are now handles by the object script (must extend interatable)
 -   Therefore, door interactions are now handled within the `doors.cs` script
