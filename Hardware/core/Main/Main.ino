@@ -10,7 +10,7 @@ char inputData[BUFFER_SIZE];
 
 void loop() {
   if (Serial.available() > 0) {
-    int dataLen = Serial.readBytes(inputData, BUFFER_SIZE)
+    int dataLen = Serial.readBytes(inputData, BUFFER_SIZE);
 
     if (inputData[0] == '0') {
       digitalWrite(2, LOW);

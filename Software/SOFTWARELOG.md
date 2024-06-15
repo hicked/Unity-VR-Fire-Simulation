@@ -24,7 +24,7 @@
 -   Audio wheels should play slightly earlier AND should *FADE* out
 -   `Look rotation viewing vector is zero` "bug", not game breaking
 -   `locom_m_basicWalk_30f` too fast for the audio clip. This can be dealt with later
--   Should add a `Collidable` parent class for cleaner code
+-   Should add a `Collidable` parent class for cleaner code (maybe)
 -   Make onPhone independant, static
 -   Find better closing sound
 
