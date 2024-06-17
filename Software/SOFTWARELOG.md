@@ -12,16 +12,20 @@
 
 **D**: Patch / Refactoring
 
-## [v.1.4.6.4] - 2024-06-15
+## [v.2.7.6.7] - 2024-06-15
 **Author:** Antoine
+-   Setup the foundation for particles but theres an issue: particles only collide with objects, not other particles
 -   No longer need `lookat` Vectors: `AStarPathfinder.cs` finds it using logic
 -   Made it so if two NPCs walk through the same door it doesnt open, close, open close: stop and then replace instead of overlapping
 -   Adjusted volumes
 -   Trimmed audio lengths
 -   Added `Arduino` Inputs and outputs, not tested yet
+-   Added kitchens
+
+**HIGH PRIOTITY:** Refactor hierachy and project tree, its a mess.
 
 *BUGS*
--   Audio wheels should play slightly earlier AND should *FADE* out
+-   Audio wheels should *FADE* out
 -   `Look rotation viewing vector is zero` "bug", not game breaking
 -   `locom_m_basicWalk_30f` too fast for the audio clip. This can be dealt with later
 -   Should add a `Collidable` parent class for cleaner code (maybe)
