@@ -12,7 +12,27 @@
 
 **D**: Patch / Refactoring
 
-## [v.2.7.6.7] - 2024-06-15
+## [v.2.0.1.1] - 2024-06-15
+**Author:** Antoine
+-   Refactored Hierachy although tree is still messy.
+-   Tried getting colliders with smoke particles working but still doesnt work
+-   Tried applying threads to smoke collisions
+
+**HIGH PRIOTITY:** Refactor project tree, its a mess.
+
+*BUGS*
+-   Audio wheels should *FADE* out
+-   `Look rotation viewing vector is zero` "bug", not game breaking
+-   `locom_m_basicWalk_30f` too fast for the audio clip. This can be dealt with later
+-   Should add a `Collidable` parent class for cleaner code (maybe)
+-   Make onPhone independant, static
+-   Find better closing sound
+
+*NEXT STEPS*
+-   Light switches interactions and sound effect
+
+
+## [v.2.0.0.0] - 2024-06-15
 **Author:** Antoine
 -   Setup the foundation for particles but theres an issue: particles only collide with objects, not other particles
 -   No longer need `lookat` Vectors: `AStarPathfinder.cs` finds it using logic
