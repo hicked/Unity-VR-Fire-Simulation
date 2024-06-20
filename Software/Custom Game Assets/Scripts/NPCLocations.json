@@ -14,7 +14,7 @@
                 "y": 0.0,
                 "z": -6.099999904632568
             },
-            "isSpotTaken": true
+            "isSpotTaken": false
         },
         {
             "position": {
@@ -30,7 +30,7 @@
                 "y": 0.0,
                 "z": -6.0
             },
-            "isSpotTaken": true
+            "isSpotTaken": false
         },
         {
             "position": {
@@ -46,7 +46,7 @@
                 "y": 0.0,
                 "z": -9.600000381469727
             },
-            "isSpotTaken": false
+            "isSpotTaken": true
         },
         {
             "position": {
@@ -54,7 +54,7 @@
                 "y": 0.0,
                 "z": -9.699999809265137
             },
-            "isSpotTaken": true
+            "isSpotTaken": false
         },
         {
             "position": {
@@ -62,7 +62,7 @@
                 "y": 0.0,
                 "z": -6.0
             },
-            "isSpotTaken": false
+            "isSpotTaken": true
         },
         {
             "position": {
@@ -126,7 +126,7 @@
                 "y": 0.0,
                 "z": 2.4000000953674318
             },
-            "isSpotTaken": false
+            "isSpotTaken": true
         },
         {
             "position": {
@@ -142,7 +142,7 @@
                 "y": 0.0,
                 "z": -4.199999809265137
             },
-            "isSpotTaken": false
+            "isSpotTaken": true
         },
         {
             "position": {

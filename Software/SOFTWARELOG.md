@@ -12,7 +12,27 @@
 
 **D**: Patch / Refactoring
 
-## [v.2.0.1.1] - 2024-06-15
+## [v.1.6.8.5] - 2024-06-20
+**Author:** Antoine
+-   **<ins>SMOKE NOW WORKS</ins>** -> *parameters need to be tweaked for more realism*
+
+**HIGH PRIOTITY:** Refactor project tree, its a mess.
+
+*BUGS*
+-   Realism of smoke
+-   smoke should not collide with doors... or should they? consult. Same goes for players and NPCs
+-   Audio wheels should *FADE* out
+-   `Look rotation viewing vector is zero` "bug", not game breaking
+-   `locom_m_basicWalk_30f` too fast for the audio clip. This can be dealt with later
+-   Should add a `Collidable` parent class for cleaner code (maybe)
+-   Make onPhone independant, static
+-   Find better closing sound
+
+*NEXT STEPS*
+-   Light switches interactions and sound effect
+-   Make NPCs multithreaded
+
+## [v.1.5.7.5] - 2024-06-15
 **Author:** Antoine
 -   Refactored Hierachy although tree is still messy.
 -   Tried getting colliders with smoke particles working but still doesnt work
@@ -32,7 +52,7 @@
 -   Light switches interactions and sound effect
 
 
-## [v.2.0.0.0] - 2024-06-15
+## [v.1.5.7.4] - 2024-06-15
 **Author:** Antoine
 -   Setup the foundation for particles but theres an issue: particles only collide with objects, not other particles
 -   No longer need `lookat` Vectors: `AStarPathfinder.cs` finds it using logic
