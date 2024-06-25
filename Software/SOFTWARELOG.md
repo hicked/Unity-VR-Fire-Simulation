@@ -19,9 +19,8 @@
 **HIGH PRIOTITY:** Refactor project tree, its a mess.
 
 *BUGS*
--   Realism of smoke
--   smoke should not collide with doors... or should they? consult. Same goes for players and NPCs
--   Audio wheels should *FADE* out
+-   Audio wheels should *FADE* out. Also playback speed based on wheelspeed
+-   NPC walk sound offset (not on time)
 -   `Look rotation viewing vector is zero` "bug", not game breaking
 -   `locom_m_basicWalk_30f` too fast for the audio clip. This can be dealt with later
 -   Should add a `Collidable` parent class for cleaner code (maybe)
@@ -29,8 +28,11 @@
 -   Find better closing sound
 
 *NEXT STEPS*
--   Light switches interactions and sound effect
 -   Make NPCs multithreaded
+-   Hand tracking/interactions (Meta Quest Pro)
+-   Hardware (Arduino + gyroscope)
+-   Light switches interactions and sound effect
+-   Refine smoke interactions
 
 ## [v.1.5.7.5] - 2024-06-15
 **Author:** Antoine

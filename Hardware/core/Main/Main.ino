@@ -2,6 +2,7 @@ void setup() {
   Serial.begin(19600);
   pinMode(2, OUTPUT); // LED
   pinMode(3, INPUT); // button
+  // should be a gyroscope so it wont be a singular button
 }
 
 
