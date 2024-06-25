@@ -1,164 +1,25 @@
 {
     "idleLocationsList": [
-        {
-            "position": {
-                "x": -36.0,
-                "y": 0.0,
-                "z": -9.399999618530274
-            },
-            "isSpotTaken": false
-        },
-        {
-            "position": {
-                "x": -36.0,
-                "y": 0.0,
-                "z": -6.099999904632568
-            },
-            "isSpotTaken": false
-        },
-        {
-            "position": {
-                "x": -28.690000534057618,
-                "y": 0.0,
-                "z": -9.5600004196167
-            },
-            "isSpotTaken": false
-        },
-        {
-            "position": {
-                "x": -28.510000228881837,
-                "y": 0.0,
-                "z": -6.0
-            },
-            "isSpotTaken": false
-        },
-        {
-            "position": {
-                "x": -13.899999618530274,
-                "y": 0.0,
-                "z": -6.0
-            },
-            "isSpotTaken": false
-        },
-        {
-            "position": {
-                "x": -13.899999618530274,
-                "y": 0.0,
-                "z": -9.600000381469727
-            },
-            "isSpotTaken": true
-        },
-        {
-            "position": {
-                "x": -5.300000190734863,
-                "y": 0.0,
-                "z": -9.699999809265137
-            },
-            "isSpotTaken": false
-        },
-        {
-            "position": {
-                "x": -5.300000190734863,
-                "y": 0.0,
-                "z": -6.0
-            },
-            "isSpotTaken": true
-        },
-        {
-            "position": {
-                "x": 1.399999976158142,
-                "y": 0.0,
-                "z": -9.399999618530274
-            },
-            "isSpotTaken": false
-        },
-        {
-            "position": {
-                "x": 6.0,
-                "y": 0.0,
-                "z": -5.900000095367432
-            },
-            "isSpotTaken": false
-        },
-        {
-            "position": {
-                "x": 2.75,
-                "y": 0.0,
-                "z": -10.899999618530274
-            },
-            "isSpotTaken": false
-        },
-        {
-            "position": {
-                "x": 2.799999952316284,
-                "y": 0.0,
-                "z": -23.5
-            },
-            "isSpotTaken": false
-        },
-        {
-            "position": {
-                "x": 6.300000190734863,
-                "y": 0.0,
-                "z": -23.5
-            },
-            "isSpotTaken": false
-        },
-        {
-            "position": {
-                "x": -3.5,
-                "y": 0.0,
-                "z": 4.199999809265137
-            },
-            "isSpotTaken": false
-        },
-        {
-            "position": {
-                "x": 1.190000057220459,
-                "y": 0.0,
-                "z": 4.099999904632568
-            },
-            "isSpotTaken": false
-        },
-        {
-            "position": {
-                "x": 2.5,
-                "y": 0.0,
-                "z": 2.4000000953674318
-            },
-            "isSpotTaken": true
-        },
-        {
-            "position": {
-                "x": 2.299999952316284,
-                "y": 0.0,
-                "z": -2.200000047683716
-            },
-            "isSpotTaken": false
-        },
-        {
-            "position": {
-                "x": -1.7999999523162842,
-                "y": 0.0,
-                "z": -4.199999809265137
-            },
-            "isSpotTaken": true
-        },
-        {
-            "position": {
-                "x": 1.0,
-                "y": 0.0,
-                "z": -0.6000000238418579
-            },
-            "isSpotTaken": true
-        },
-        {
-            "position": {
-                "x": -0.5,
-                "y": 0.0,
-                "z": -1.399999976158142
-            },
-            "isSpotTaken": false
-        }
+        {"position": {"x": -36.0, "y": 0.0, "z": -9.4}, "isSpotTaken": false},
+        {"position": {"x": -36.0, "y": 0.0, "z": -6.1}, "isSpotTaken": false},
+        {"position": {"x": -28.69, "y": 0.0, "z": -9.56}, "isSpotTaken": false},
+        {"position": {"x": -28.51, "y": 0.0, "z": -6.0}, "isSpotTaken": false},
+        {"position": {"x": -13.9, "y": 0.0, "z": -6.0}, "isSpotTaken": false},
+        {"position": {"x": -13.9, "y": 0.0, "z": -9.6}, "isSpotTaken": false},
+        {"position": {"x": -5.3, "y": 0.0, "z": -9.7}, "isSpotTaken": false},
+        {"position": {"x": -5.3, "y": 0.0, "z": -6.0}, "isSpotTaken": false},
+        {"position": {"x": 1.4, "y": 0.0, "z": -9.4}, "isSpotTaken": false},
+        {"position": {"x": 6.0, "y": 0.0, "z": -5.9}, "isSpotTaken": false},
+        {"position": {"x": 2.75, "y": 0.0, "z": -10.9}, "isSpotTaken": false},
+        {"position": {"x": 2.8, "y": 0.0, "z": -23.5}, "isSpotTaken": false},
+        {"position": {"x": 6.3, "y": 0.0, "z": -23.5}, "isSpotTaken": false},
+        
+        {"position": {"x": -3.5, "y": 0.0, "z": 4.2}, "isSpotTaken": false},
+        {"position": {"x": 1.19, "y": 0.0, "z": 4.1}, "isSpotTaken": false},
+        {"position": {"x": 2.5, "y": 0.0, "z": 2.4}, "isSpotTaken": false},
+        {"position": {"x": 2.3, "y": 0.0, "z": -2.2}, "isSpotTaken": false},
+        {"position": {"x": -1.8, "y": 0.0, "z": -4.2}, "isSpotTaken": false},
+        {"position": {"x": 1.0, "y": 0.0, "z": -0.6}, "isSpotTaken": false},
+        {"position": {"x": -0.5, "y": 0.0, "z": -1.4}, "isSpotTaken": false}
     ]
 }

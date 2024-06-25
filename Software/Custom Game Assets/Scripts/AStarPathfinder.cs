@@ -1,13 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.IO;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
+using System.Threading;
+using System;
 
 
-public class AStarPathfinder : MonoBehaviour {
+public class AStarPathfinder : Threadable {
     [SerializeField] public float tileSize = 1f; // square meters
     [SerializeField] private LayerMask layer;
     [SerializeField] NPCManager NPC;
@@ -41,13 +44,14 @@ public class AStarPathfinder : MonoBehaviour {
     }
     
     private void Update() {
+        runQueuedFunctions();
         if (path != null) {
             for (int i = 1; i < path.Count; i++) {
                 Debug.DrawLine(path[i].vector + new Vector3(0, 0.5f, 0), path[i-1].vector + new Vector3(0, 0.5f, 0), Color.yellow);
             }
         }
     }
-
+        
     public IEnumerator FindPathCoroutine(Vector3 start, Vector3 end) {
         isPathfinding = true;
 

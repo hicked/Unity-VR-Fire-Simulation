@@ -4,6 +4,7 @@ using UnityEngine;
 using System.Threading;
 
 public class ParticleInteractions : Threadable {
+    [SerializeField] public float maxParticleHeight; 
     public ParticleSystem particleSystem;
     public float interactionRadius = 1f;
     public float forceStrength = 1f;
@@ -16,7 +17,7 @@ public class ParticleInteractions : Threadable {
     private int particleCount;
 
     void Start() {
-        //RunOnlyLatestQueuedFunc(true); // we only want the lastest particle velocities to be applied
+        RunOnlyLatestQueuedFunc(true); // we only want the lastest particle velocities to be applied
 
         particleSystem = GetComponent<ParticleSystem>();
 
@@ -49,6 +50,10 @@ public class ParticleInteractions : Threadable {
 
                 int particleCount = particlesWForces.Length;
                 for (int i = 0; i < particleCount; i++) {
+                    if (particlesWForces[i].position.y > maxParticleHeight) {
+                        particlesWForces[i].remainingLifetime = 0f;
+                        continue;
+                    }
                     
                     //particlesWForces[i].velocity = 1 * Vector3.right;
 
@@ -68,7 +73,6 @@ public class ParticleInteractions : Threadable {
                 // Update particles array in the main thread
                 Action setParticleVelocities = () => {
                     particleSystem.SetParticles(particlesWForces, particleCount);
-                    Debug.Log("applying forces");
                 };
 
                 QueueFunction(setParticleVelocities);

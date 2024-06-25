@@ -12,6 +12,30 @@
 
 **D**: Patch / Refactoring
 
+## [v.1.7.8.5] - 2024-06-25
+**Author:** Antoine
+-   Npcs are now multithreaded, although they are still slow since they need to make callbacks to update()
+-   Added a maximum height to particles before they die
+-   Adjusted smoke parameters
+
+**HIGH PRIOTITY:** Refactor project tree, its a mess.
+
+*BUGS*
+-   Audio wheels should *FADE* out. Also playback speed based on wheelspeed
+-   NPC walk sound offset (not on time)
+-   `Look rotation viewing vector is zero` "bug", not game breaking
+-   `locom_m_basicWalk_30f` too fast for the audio clip. This can be dealt with later
+-   Should add a `Collidable` parent class for cleaner code (maybe)
+-   Make onPhone independant, static
+-   Find better closing sound
+
+*NEXT STEPS*
+-   Hand tracking/interactions (Meta Quest Pro)
+-   Hardware (Arduino + gyroscope)
+-   Light switches interactions and sound effect
+-   Refine smoke interactions
+
+
 ## [v.1.6.8.5] - 2024-06-20
 **Author:** Antoine
 -   **<ins>SMOKE NOW WORKS</ins>** -> *parameters need to be tweaked for more realism*

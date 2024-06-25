@@ -3647,6 +3647,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 267443770}
+  - {fileID: 1930975448}
   m_Father: {fileID: 229584761}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &203005861
@@ -4649,7 +4650,6 @@ Transform:
   - {fileID: 183482034}
   - {fileID: 559248682}
   - {fileID: 398613254}
-  - {fileID: 930286913}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &230065128
@@ -9383,7 +9383,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 930286913}
+    m_TransformParent: {fileID: 562495153}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 802c581a8c85bd8488b53d503421ad11,
         type: 3}
@@ -13204,6 +13204,7 @@ Transform:
   - {fileID: 705040340}
   - {fileID: 1183945221}
   - {fileID: 1716930066}
+  - {fileID: 1558901734}
   m_Father: {fileID: 229584761}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &562495152
@@ -13237,6 +13238,7 @@ Transform:
   m_Children:
   - {fileID: 452561187}
   - {fileID: 1667328019}
+  - {fileID: 385987982}
   m_Father: {fileID: 229584761}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &575483719
@@ -14651,7 +14653,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 930286913}
+    m_TransformParent: {fileID: 865186174}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 802c581a8c85bd8488b53d503421ad11,
         type: 3}
@@ -14760,7 +14762,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pointLights:
-  - {fileID: 0}
+  - {fileID: 2109923878}
+  - {fileID: 1402945626}
+  - {fileID: 5963347}
 --- !u!65 &630752014
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -16234,6 +16238,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1534680229}
+  - {fileID: 1819564928}
   m_Father: {fileID: 229584761}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &685819906
@@ -16278,6 +16283,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 1203697140459770176, guid: f0ac6fb9ada49f24683e3eca20786103,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1203697140459770176, guid: f0ac6fb9ada49f24683e3eca20786103,
         type: 3}
@@ -16502,6 +16512,10 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5557327951299580288, guid: f0ac6fb9ada49f24683e3eca20786103,
         type: 3}
       insertIndex: -1
+      addedObject: {fileID: 685819924}
+    - targetCorrespondingSourceObject: {fileID: 5557327951299580288, guid: f0ac6fb9ada49f24683e3eca20786103,
+        type: 3}
+      insertIndex: -1
       addedObject: {fileID: 685819920}
     - targetCorrespondingSourceObject: {fileID: 5557327951299580288, guid: f0ac6fb9ada49f24683e3eca20786103,
         type: 3}
@@ -16539,7 +16553,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 685819907}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 41b9d8d3a29e1a44bb58543e416b058a, type: 3}
   m_Name: 
@@ -16551,8 +16565,8 @@ MonoBehaviour:
   NPCRadius: 0.4
   timeChangeIdle: 20
   changeIdleVariance: 10
-  timeBeforeMove: 60
-  moveVariance: 30
+  timeBeforeMove: 20
+  moveVariance: 5
   NPCWalkSpeedMultiplier: 2.5
   NPCRunningSpeedMultiplier: 4
   NPCTurnSpeed: 6
@@ -16655,7 +16669,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 685819907}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 50b21b753ccd92f45b8045ae48146010, type: 3}
   m_Name: 
@@ -16764,6 +16778,26 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &685819924
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 685819907}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f1551a690784bf4b93446e1a2752416, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tileSize: 1
+  layer:
+    serializedVersion: 2
+    m_Bits: 3008
+  NPC: {fileID: 0}
+  maxTilesAllowedToCheck: 5000
+  isPathfinding: 0
+  lookatVector: {x: 0, y: 0, z: 0}
 --- !u!64 &689191186
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -19101,7 +19135,7 @@ PrefabInstance:
     - target: {fileID: 2100208028559941110, guid: f71041fd118fbb34aa9d2dd6a1d96fce,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.11751175
+      value: -7.33
       objectReference: {fileID: 0}
     - target: {fileID: 2100208028559941110, guid: f71041fd118fbb34aa9d2dd6a1d96fce,
         type: 3}
@@ -19111,7 +19145,7 @@ PrefabInstance:
     - target: {fileID: 2100208028559941110, guid: f71041fd118fbb34aa9d2dd6a1d96fce,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.9929923
+      value: -8.17
       objectReference: {fileID: 0}
     - target: {fileID: 2100208028559941110, guid: f71041fd118fbb34aa9d2dd6a1d96fce,
         type: 3}
@@ -19182,6 +19216,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 5459872135671498636, guid: f71041fd118fbb34aa9d2dd6a1d96fce,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5459872135671498636, guid: f71041fd118fbb34aa9d2dd6a1d96fce,
         type: 3}
@@ -19291,6 +19330,10 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1616406060653692748, guid: f71041fd118fbb34aa9d2dd6a1d96fce,
         type: 3}
       insertIndex: -1
+      addedObject: {fileID: 966587632}
+    - targetCorrespondingSourceObject: {fileID: 1616406060653692748, guid: f71041fd118fbb34aa9d2dd6a1d96fce,
+        type: 3}
+      insertIndex: -1
       addedObject: {fileID: 966587628}
     - targetCorrespondingSourceObject: {fileID: 1616406060653692748, guid: f71041fd118fbb34aa9d2dd6a1d96fce,
         type: 3}
@@ -19352,6 +19395,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 1062303292210733664, guid: 87a7b985b15a4244091de35d7df9169a,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1062303292210733664, guid: 87a7b985b15a4244091de35d7df9169a,
         type: 3}
@@ -19586,6 +19634,10 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5986958801767457440, guid: 87a7b985b15a4244091de35d7df9169a,
         type: 3}
       insertIndex: -1
+      addedObject: {fileID: 790958542}
+    - targetCorrespondingSourceObject: {fileID: 5986958801767457440, guid: 87a7b985b15a4244091de35d7df9169a,
+        type: 3}
+      insertIndex: -1
       addedObject: {fileID: 790958538}
     - targetCorrespondingSourceObject: {fileID: 5986958801767457440, guid: 87a7b985b15a4244091de35d7df9169a,
         type: 3}
@@ -19623,7 +19675,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 790958526}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 41b9d8d3a29e1a44bb58543e416b058a, type: 3}
   m_Name: 
@@ -19635,8 +19687,8 @@ MonoBehaviour:
   NPCRadius: 0.4
   timeChangeIdle: 20
   changeIdleVariance: 10
-  timeBeforeMove: 60
-  moveVariance: 30
+  timeBeforeMove: 20
+  moveVariance: 5
   NPCWalkSpeedMultiplier: 2.5
   NPCRunningSpeedMultiplier: 4
   NPCTurnSpeed: 6
@@ -19739,7 +19791,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 790958526}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 50b21b753ccd92f45b8045ae48146010, type: 3}
   m_Name: 
@@ -19848,6 +19900,26 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &790958542
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 790958526}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f1551a690784bf4b93446e1a2752416, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tileSize: 1
+  layer:
+    serializedVersion: 2
+    m_Bits: 3008
+  NPC: {fileID: 0}
+  maxTilesAllowedToCheck: 5000
+  isPathfinding: 0
+  lookatVector: {x: 0, y: 0, z: 0}
 --- !u!1 &798298081
 GameObject:
   m_ObjectHideFlags: 0
@@ -21580,7 +21652,7 @@ ParticleSystem:
     gravityModifier:
       serializedVersion: 2
       minMaxState: 0
-      scalar: -0.005
+      scalar: -0.01
       minScalar: 0
       maxCurve:
         serializedVersion: 2
@@ -25752,9 +25824,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5bc3167fd969ed4cacf60b4dd823752, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxParticleHeight: 6
   particleSystem: {fileID: 0}
-  interactionRadius: 1
-  forceStrength: 0.3
+  interactionRadius: 0.75
+  forceStrength: 0.1
 --- !u!114 &862005574
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25767,7 +25840,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd36bed2bbe219b4997c3a8f24df6f62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  particleSystem: {fileID: 0}
 --- !u!1 &865186173
 GameObject:
   m_ObjectHideFlags: 0
@@ -25801,6 +25873,7 @@ Transform:
   - {fileID: 2002318020}
   - {fileID: 1728809689}
   - {fileID: 754478808}
+  - {fileID: 630752015}
   m_Father: {fileID: 229584761}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &870258688
@@ -27429,6 +27502,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5838175529488836818, guid: 2435736d6adca23458edd7c80c901e3e,
         type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5838175529488836818, guid: 2435736d6adca23458edd7c80c901e3e,
+        type: 3}
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: c126435712d8bde4d8f277325f1b297c, type: 2}
@@ -27520,6 +27598,10 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 913845681951795218, guid: 2435736d6adca23458edd7c80c901e3e,
         type: 3}
       insertIndex: -1
+      addedObject: {fileID: 906605418}
+    - targetCorrespondingSourceObject: {fileID: 913845681951795218, guid: 2435736d6adca23458edd7c80c901e3e,
+        type: 3}
+      insertIndex: -1
       addedObject: {fileID: 906605414}
     - targetCorrespondingSourceObject: {fileID: 913845681951795218, guid: 2435736d6adca23458edd7c80c901e3e,
         type: 3}
@@ -27557,7 +27639,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 906605402}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 41b9d8d3a29e1a44bb58543e416b058a, type: 3}
   m_Name: 
@@ -27569,8 +27651,8 @@ MonoBehaviour:
   NPCRadius: 0.4
   timeChangeIdle: 20
   changeIdleVariance: 10
-  timeBeforeMove: 60
-  moveVariance: 30
+  timeBeforeMove: 20
+  moveVariance: 5
   NPCWalkSpeedMultiplier: 2.5
   NPCRunningSpeedMultiplier: 4
   NPCTurnSpeed: 6
@@ -27673,7 +27755,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 906605402}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 50b21b753ccd92f45b8045ae48146010, type: 3}
   m_Name: 
@@ -27782,6 +27864,26 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &906605418
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 906605402}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f1551a690784bf4b93446e1a2752416, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tileSize: 1
+  layer:
+    serializedVersion: 2
+    m_Bits: 3008
+  NPC: {fileID: 0}
+  maxTilesAllowedToCheck: 5000
+  isPathfinding: 0
+  lookatVector: {x: 0, y: 0, z: 0}
 --- !u!1 &907177535
 GameObject:
   m_ObjectHideFlags: 0
@@ -28538,43 +28640,6 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
---- !u!1 &930286912
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 930286913}
-  m_Layer: 0
-  m_Name: Switches
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &930286913
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 930286912}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 630752015}
-  - {fileID: 1819564928}
-  - {fileID: 1984110047}
-  - {fileID: 1558901734}
-  - {fileID: 1930975448}
-  - {fileID: 385987982}
-  m_Father: {fileID: 229584761}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &930764729 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -1857309847194865932, guid: f7cb6eea40fe5124c9b64c33143d2930,
@@ -29094,8 +29159,8 @@ MonoBehaviour:
   NPCRadius: 0.4
   timeChangeIdle: 20
   changeIdleVariance: 10
-  timeBeforeMove: 60
-  moveVariance: 30
+  timeBeforeMove: 20
+  moveVariance: 5
   NPCWalkSpeedMultiplier: 2.5
   NPCRunningSpeedMultiplier: 4
   NPCTurnSpeed: 6
@@ -29199,7 +29264,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 966587611}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 50b21b753ccd92f45b8045ae48146010, type: 3}
   m_Name: 
@@ -29308,6 +29373,26 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &966587632
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 966587611}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f1551a690784bf4b93446e1a2752416, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tileSize: 1.5
+  layer:
+    serializedVersion: 2
+    m_Bits: 3008
+  NPC: {fileID: 0}
+  maxTilesAllowedToCheck: 5000
+  isPathfinding: 0
+  lookatVector: {x: 0, y: 0, z: 0}
 --- !u!1 &969799171
 GameObject:
   m_ObjectHideFlags: 0
@@ -35089,6 +35174,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4370438862957244606, guid: 314b13a2c4f89c74299eabc2a4c725c7,
         type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4370438862957244606, guid: 314b13a2c4f89c74299eabc2a4c725c7,
+        type: 3}
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: c126435712d8bde4d8f277325f1b297c, type: 2}
@@ -35245,6 +35335,10 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6993270559495516286, guid: 314b13a2c4f89c74299eabc2a4c725c7,
         type: 3}
       insertIndex: -1
+      addedObject: {fileID: 1104556582}
+    - targetCorrespondingSourceObject: {fileID: 6993270559495516286, guid: 314b13a2c4f89c74299eabc2a4c725c7,
+        type: 3}
+      insertIndex: -1
       addedObject: {fileID: 1104556578}
     - targetCorrespondingSourceObject: {fileID: 6993270559495516286, guid: 314b13a2c4f89c74299eabc2a4c725c7,
         type: 3}
@@ -35282,7 +35376,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1104556565}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 41b9d8d3a29e1a44bb58543e416b058a, type: 3}
   m_Name: 
@@ -35294,8 +35388,8 @@ MonoBehaviour:
   NPCRadius: 0.4
   timeChangeIdle: 20
   changeIdleVariance: 10
-  timeBeforeMove: 60
-  moveVariance: 30
+  timeBeforeMove: 20
+  moveVariance: 5
   NPCWalkSpeedMultiplier: 2.5
   NPCRunningSpeedMultiplier: 4
   NPCTurnSpeed: 6
@@ -35398,7 +35492,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1104556565}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 50b21b753ccd92f45b8045ae48146010, type: 3}
   m_Name: 
@@ -35507,6 +35601,26 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1104556582
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1104556565}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f1551a690784bf4b93446e1a2752416, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tileSize: 1
+  layer:
+    serializedVersion: 2
+    m_Bits: 3008
+  NPC: {fileID: 0}
+  maxTilesAllowedToCheck: 5000
+  isPathfinding: 0
+  lookatVector: {x: 0, y: 0, z: 0}
 --- !u!1 &1116534050
 GameObject:
   m_ObjectHideFlags: 0
@@ -45207,6 +45321,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6862504200042160624, guid: bcc8732b8b44622449c23934f89e68c0,
         type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6862504200042160624, guid: bcc8732b8b44622449c23934f89e68c0,
+        type: 3}
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: c126435712d8bde4d8f277325f1b297c, type: 2}
@@ -45273,6 +45392,10 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 186757882122740016, guid: bcc8732b8b44622449c23934f89e68c0,
         type: 3}
       insertIndex: -1
+      addedObject: {fileID: 1495330862}
+    - targetCorrespondingSourceObject: {fileID: 186757882122740016, guid: bcc8732b8b44622449c23934f89e68c0,
+        type: 3}
+      insertIndex: -1
       addedObject: {fileID: 1495330858}
     - targetCorrespondingSourceObject: {fileID: 186757882122740016, guid: bcc8732b8b44622449c23934f89e68c0,
         type: 3}
@@ -45310,7 +45433,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1495330845}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 41b9d8d3a29e1a44bb58543e416b058a, type: 3}
   m_Name: 
@@ -45322,8 +45445,8 @@ MonoBehaviour:
   NPCRadius: 0.4
   timeChangeIdle: 20
   changeIdleVariance: 10
-  timeBeforeMove: 60
-  moveVariance: 30
+  timeBeforeMove: 20
+  moveVariance: 5
   NPCWalkSpeedMultiplier: 2.5
   NPCRunningSpeedMultiplier: 4
   NPCTurnSpeed: 6
@@ -45426,7 +45549,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1495330845}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 50b21b753ccd92f45b8045ae48146010, type: 3}
   m_Name: 
@@ -45535,6 +45658,26 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1495330862
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1495330845}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f1551a690784bf4b93446e1a2752416, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tileSize: 1
+  layer:
+    serializedVersion: 2
+    m_Bits: 3008
+  NPC: {fileID: 0}
+  maxTilesAllowedToCheck: 5000
+  isPathfinding: 0
+  lookatVector: {x: 0, y: 0, z: 0}
 --- !u!1001 &1500305653
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -45825,8 +45968,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.74294114, y: 0.93457806, z: 2.9454706}
-  m_Center: {x: 0.37147057, y: 0.11113329, z: 0}
+  m_Size: {x: 0.74294114, y: 2, z: 2.9454706}
+  m_Center: {x: 0.37147057, y: 0.7, z: 0}
 --- !u!23 &1507619219
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -46955,7 +47098,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 930286913}
+    m_TransformParent: {fileID: 559248682}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 802c581a8c85bd8488b53d503421ad11,
         type: 3}
@@ -47759,6 +47902,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1233159124}
+  - {fileID: 1984110047}
   m_Father: {fileID: 229584761}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1609801002
@@ -51723,6 +51867,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 489417422609642697, guid: bae26acf817c6dc4e82f95d9ef4ab46a,
         type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 489417422609642697, guid: bae26acf817c6dc4e82f95d9ef4ab46a,
+        type: 3}
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: c126435712d8bde4d8f277325f1b297c, type: 2}
@@ -51959,6 +52108,10 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6584613354768528393, guid: bae26acf817c6dc4e82f95d9ef4ab46a,
         type: 3}
       insertIndex: -1
+      addedObject: {fileID: 1761021532}
+    - targetCorrespondingSourceObject: {fileID: 6584613354768528393, guid: bae26acf817c6dc4e82f95d9ef4ab46a,
+        type: 3}
+      insertIndex: -1
       addedObject: {fileID: 1761021528}
     - targetCorrespondingSourceObject: {fileID: 6584613354768528393, guid: bae26acf817c6dc4e82f95d9ef4ab46a,
         type: 3}
@@ -51996,7 +52149,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1761021516}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 41b9d8d3a29e1a44bb58543e416b058a, type: 3}
   m_Name: 
@@ -52008,8 +52161,8 @@ MonoBehaviour:
   NPCRadius: 0.4
   timeChangeIdle: 20
   changeIdleVariance: 10
-  timeBeforeMove: 60
-  moveVariance: 30
+  timeBeforeMove: 20
+  moveVariance: 5
   NPCWalkSpeedMultiplier: 2.5
   NPCRunningSpeedMultiplier: 4
   NPCTurnSpeed: 6
@@ -52112,7 +52265,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1761021516}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 50b21b753ccd92f45b8045ae48146010, type: 3}
   m_Name: 
@@ -52221,6 +52374,26 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1761021532
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1761021516}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f1551a690784bf4b93446e1a2752416, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tileSize: 1
+  layer:
+    serializedVersion: 2
+    m_Bits: 3008
+  NPC: {fileID: 0}
+  maxTilesAllowedToCheck: 5000
+  isPathfinding: 0
+  lookatVector: {x: 0, y: 0, z: 0}
 --- !u!1 &1765065130
 GameObject:
   m_ObjectHideFlags: 0
@@ -53959,7 +54132,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 930286913}
+    m_TransformParent: {fileID: 685171738}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 802c581a8c85bd8488b53d503421ad11,
         type: 3}
@@ -55265,6 +55438,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3868671272202102698, guid: bcc8c8f342f71a7439ac0579aa86f030,
         type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868671272202102698, guid: bcc8c8f342f71a7439ac0579aa86f030,
+        type: 3}
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: c126435712d8bde4d8f277325f1b297c, type: 2}
@@ -55431,6 +55609,10 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7501788059647666026, guid: bcc8c8f342f71a7439ac0579aa86f030,
         type: 3}
       insertIndex: -1
+      addedObject: {fileID: 1876443910}
+    - targetCorrespondingSourceObject: {fileID: 7501788059647666026, guid: bcc8c8f342f71a7439ac0579aa86f030,
+        type: 3}
+      insertIndex: -1
       addedObject: {fileID: 1876443906}
     - targetCorrespondingSourceObject: {fileID: 7501788059647666026, guid: bcc8c8f342f71a7439ac0579aa86f030,
         type: 3}
@@ -55468,7 +55650,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1876443893}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 41b9d8d3a29e1a44bb58543e416b058a, type: 3}
   m_Name: 
@@ -55480,8 +55662,8 @@ MonoBehaviour:
   NPCRadius: 0.4
   timeChangeIdle: 20
   changeIdleVariance: 10
-  timeBeforeMove: 60
-  moveVariance: 30
+  timeBeforeMove: 20
+  moveVariance: 5
   NPCWalkSpeedMultiplier: 2.5
   NPCRunningSpeedMultiplier: 4
   NPCTurnSpeed: 6
@@ -55584,7 +55766,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1876443893}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 50b21b753ccd92f45b8045ae48146010, type: 3}
   m_Name: 
@@ -55693,6 +55875,26 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1876443910
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1876443893}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f1551a690784bf4b93446e1a2752416, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tileSize: 1
+  layer:
+    serializedVersion: 2
+    m_Bits: 3008
+  NPC: {fileID: 0}
+  maxTilesAllowedToCheck: 5000
+  isPathfinding: 0
+  lookatVector: {x: 0, y: 0, z: 0}
 --- !u!1 &1878788627
 GameObject:
   m_ObjectHideFlags: 0
@@ -56194,7 +56396,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 930286913}
+    m_TransformParent: {fileID: 183482034}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 802c581a8c85bd8488b53d503421ad11,
         type: 3}
@@ -57767,7 +57969,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 930286913}
+    m_TransformParent: {fileID: 1608881966}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 802c581a8c85bd8488b53d503421ad11,
         type: 3}
@@ -58190,6 +58392,7 @@ GameObject:
   - component: {fileID: 1992687674}
   - component: {fileID: 1992687673}
   - component: {fileID: 1992687672}
+  - component: {fileID: 1992687679}
   m_Layer: 9
   m_Name: Dresser Closet_01
   m_TagString: Untagged
@@ -58370,6 +58573,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1992687670}
   m_Mesh: {fileID: 2879778210526968629, guid: 95cac277c5a04ef43add167566755e63, type: 3}
+--- !u!65 &1992687679
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1992687670}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.1604373, y: 0.67, z: 1.9918191}
+  m_Center: {x: 0.000000834465, y: 4, z: 6.4188093e-15}
 --- !u!1 &1996788310
 GameObject:
   m_ObjectHideFlags: 0

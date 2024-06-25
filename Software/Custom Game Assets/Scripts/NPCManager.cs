@@ -118,7 +118,7 @@ public class NPCManager : MonoBehaviour {
     private List<Location> path;
     private Vector3 lookatVector;
     private int currentPathIndex;
-    private AStarPathfinder pathfinder;
+    private AStarMultithreaded pathfinder;
 
     private IEnumerator IdleCoroutine() {
         while (true) {
@@ -154,7 +154,7 @@ public class NPCManager : MonoBehaviour {
 
         animator = GetComponent<Animator>();
         path = new List<Location>();
-        pathfinder = GetComponent<AStarPathfinder>();
+        pathfinder = GetComponent<AStarMultithreaded>();
         setRandomIdle();
 
         StartCoroutine(IdleCoroutine());
@@ -248,7 +248,8 @@ public class NPCManager : MonoBehaviour {
 
 
     private void setPathTo(Vector3 location) {
-        StartCoroutine(pathfinder.FindPathCoroutine(transform.position, location));
+        Debug.Log("Setting path in NPCManager.cs");
+        pathfinder.FindPath(transform.position, location);
         currentPathIndex = 0;
     }
 
