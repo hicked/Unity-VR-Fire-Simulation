@@ -12,6 +12,7 @@
 
 **D**: Patch / Refactoring
 
+
 ## [v.0.3.4.5] - 2024-06-25
 **Author:** Antoine
 -   Wheel audio fades in and out
@@ -204,7 +205,7 @@ memory
 
 ## [v.0.2.1.1] - 2024-06-08
 **Author:** Antoine
--   **MASSIVE UPDATE, FIRST OFFICIAL VERSION (v1)**
+-   **MASSIVE UPDATE**
 -   NPC pathfinding now works
 -   Opens doors, avoids walls obviously
 
@@ -216,6 +217,8 @@ memory
 
 
 **NOTE BUG: Changes animations twice in NPCAI when time is passed**
+
+
 ## [v.0.1.1.1] - 2024-05-10
 
 **Author:** Antoine
