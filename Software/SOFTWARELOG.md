@@ -12,7 +12,31 @@
 
 **D**: Patch / Refactoring
 
-## [v.1.7.8.5] - 2024-06-25
+## [v.0.3.4.5] - 2024-06-25
+**Author:** Antoine
+-   Wheel audio fades in and out
+    -   now based on speed of the wheel -> speed of playback
+-   Added lightswitch audio
+-   Changed door audio
+-   Made smmoke collisions run on `FixedUpdate`
+-   Added some randomness to the smoke force to reduce endless force cycles
+
+**HIGH PRIOTITY:** Refactor project tree, its a mess.
+
+*BUGS*
+-   NPC walk sound offset (not on time)
+-   `Look rotation viewing vector is zero` "bug", not game breaking
+-   `locom_m_basicWalk_30f` too fast for the audio clip. This can be dealt with later
+-   Should add a `Collidable` parent class for cleaner code (maybe)
+-   Make onPhone independant, static
+
+*NEXT STEPS*
+-   Hand tracking/interactions (Meta Quest Pro)
+-   Hardware (Arduino + gyroscope)
+-   Refine smoke interactions
+
+
+## [v.0.3.4.4] - 2024-06-25
 **Author:** Antoine
 -   Npcs are now multithreaded, although they are still slow since they need to make callbacks to update()
 -   Added a maximum height to particles before they die
@@ -36,7 +60,7 @@
 -   Refine smoke interactions
 
 
-## [v.1.6.8.5] - 2024-06-20
+## [v.0.3.4.3] - 2024-06-20
 **Author:** Antoine
 -   **<ins>SMOKE NOW WORKS</ins>** -> *parameters need to be tweaked for more realism*
 
@@ -58,7 +82,7 @@
 -   Light switches interactions and sound effect
 -   Refine smoke interactions
 
-## [v.1.5.7.5] - 2024-06-15
+## [v.0.2.4.3] - 2024-06-15
 **Author:** Antoine
 -   Refactored Hierachy although tree is still messy.
 -   Tried getting colliders with smoke particles working but still doesnt work
@@ -78,7 +102,7 @@
 -   Light switches interactions and sound effect
 
 
-## [v.1.5.7.4] - 2024-06-15
+## [v.0.2.4.2] - 2024-06-15
 **Author:** Antoine
 -   Setup the foundation for particles but theres an issue: particles only collide with objects, not other particles
 -   No longer need `lookat` Vectors: `AStarPathfinder.cs` finds it using logic
@@ -105,7 +129,7 @@
 -   Paintings
 
 
-## [v.1.4.6.4] - 2024-06-13
+## [v.0.2.3.2] - 2024-06-13
 **Author:** Antoine
 -   **IMPORTANT:** Interactions are now handles by the object script (must extend interatable)
 -   Therefore, door interactions are now handled within the `doors.cs` script
@@ -128,7 +152,7 @@
 -   Paintings
 
 
-## [v.1.3.6.2] - 2024-06-12
+## [v.0.2.2.2] - 2024-06-12
 **Author:** Antoine
 -   Refactored the doors scripts, added audio clips
 -   Made pathfinding take into account locked doors (dont go through locked ones)
@@ -152,7 +176,7 @@ memory
 -   Paintings
 
 
-## [v.1.2.5.2] - 2024-06-10
+## [v.0.2.2.1] - 2024-06-10
 **Author:** Antoine
 -   Finalized pathfinding
 -   Doors now move on a "points along path" basis instead of facing the direction
@@ -178,7 +202,7 @@ memory
 -   Smoke   
 
 
-## [v.1.1.1.1] - 2024-06-08
+## [v.0.2.1.1] - 2024-06-08
 **Author:** Antoine
 -   **MASSIVE UPDATE, FIRST OFFICIAL VERSION (v1)**
 -   NPC pathfinding now works
@@ -192,7 +216,7 @@ memory
 
 
 **NOTE BUG: Changes animations twice in NPCAI when time is passed**
-## [v.0.1.1.0] - 2024-05-10
+## [v.0.1.1.1] - 2024-05-10
 
 **Author:** Antoine
 
@@ -209,7 +233,7 @@ Instead of the Frame staying still, and only the door swinging.
 Doors should be able to be pushed closed with a collisions, this can be done later though.
 
 
-## [v.0.1.0.0] - 2024-05-09
+## [v.0.1.0.1] - 2024-05-09
 
 **Author:** Antoine
 
@@ -225,7 +249,7 @@ Doors should be able to be pushed closed with a collisions, this can be done lat
 *NOTE: This will have to be reworked in order do work with two wheels and thus will have to make the movement work like its on a hinge. Core script should remain similar*
 
 
-## [v.0.0.1.0] - 2024-04-05
+## [v.0.0.0.1] - 2024-04-05
 
 **Author:** Antoine
 

@@ -9,7 +9,7 @@ using UnityEngine;
 using System;
 
 public class AStarMultithreaded : Threadable {
-    [SerializeField] public static int maxPathfindingThreads = 3;
+    [SerializeField] public static int maxPathfindingThreads = 5;
     private static List<Thread> activePathfindingThreads = new List<Thread>();
     private static Queue<Thread> queuedPathfindingThreads = new Queue<Thread>();
     
@@ -70,21 +70,18 @@ public class AStarMultithreaded : Threadable {
         // Process pathfinding threads and manage thread pools
         for (int i = 0; i < activePathfindingThreads.Count; i++) {
             if (!activePathfindingThreads[i].IsAlive) {
-                Debug.Log("Thread finished running.");
                 threadsToRemove.Add(activePathfindingThreads[i]);
                 activePathfindingThreads.RemoveAt(i);
             }
         }
         foreach (Thread thread in threadsToRemove) {
             DestroyThread(thread);
-            Debug.Log("Thread destroyed.");
         }
 
         if (activePathfindingThreads.Count < maxPathfindingThreads && queuedPathfindingThreads.Count > 0) {
             while ((maxPathfindingThreads - activePathfindingThreads.Count) > 0 && queuedPathfindingThreads.Count != 0) {
                 Thread threadToStart = queuedPathfindingThreads.Dequeue();
                 threadToStart.Start();
-                Debug.Log("Spot found, starting thread.");
                 activePathfindingThreads.Add(threadToStart);
             }
         }
@@ -127,7 +124,6 @@ public class AStarMultithreaded : Threadable {
     }
 
     private void FindPathThread(Vector3 start, Vector3 end) {
-        Debug.Log("pathfinding started in thread");
         isPathfinding = true;
 
         path = null;
@@ -158,8 +154,12 @@ public class AStarMultithreaded : Threadable {
                     currentLocation = openList[i];
                 }
             }
-            openList.Remove(currentLocation);
-            closedList.Add(currentLocation);
+            lock (openList){
+                openList.Remove(currentLocation);
+            }
+            lock (closedList){
+                closedList.Add(currentLocation);
+            }
 
             if (Vector3.Distance(currentLocation.vector, end) <= tileSize &&
                 !IsBlocked(currentLocation.vector, currentLocation.vector - end, (currentLocation.vector - end).magnitude, layer)) {
@@ -168,7 +168,6 @@ public class AStarMultithreaded : Threadable {
                 currentLocation = endLocation;
                 Action setPath = () => {
                     path = ReconstructPath(cameFrom, currentLocation);
-                    Debug.Log(path);
                 };
 
                 QueueFunction(setPath);
@@ -179,10 +178,6 @@ public class AStarMultithreaded : Threadable {
                         lookatVector += direction;
                     }
                 }
-                Action debugFoundPath = () => {
-                    Debug.Log("Path found!");
-                };
-                QueueFunction(debugFoundPath);
                 isPathfinding = false;
                 NPC.ChangeLocationStatus();
                 return;
@@ -233,21 +228,8 @@ public class AStarMultithreaded : Threadable {
         });
 
         resetEvent.Wait();
-        Debug.Log("Waiting for physics callback to return...");
-        Debug.Log($"Hit result: {hitResult}");
         return hitResult;
     }
-    /*private List<Location> GetValidNeighbors(Location currentLocation, Vector3 end, float currentG) {
-        validNeighbors.Clear();
-        for (int i = 0; i < directions.Count(); i++) {
-            if (!IsBlocked(new Vector3(currentLocation.x, currentLocation.y, currentLocation.z), directions[i], tileSize, layer)) {
-                Vector3 neighborPos = currentLocation.vector + directions[i].normalized * tileSize;
-                float tentativeG = currentG + Vector3.Distance(currentLocation.vector, neighborPos);
-                validNeighbors.Add(new Location(neighborPos, tentativeG, Heuristic(neighborPos, end)));
-            }
-        }
-        return validNeighbors;
-    }*/
 
     private List<Location> GetValidNeighbors(Location currentLocation, Vector3 end, float currentG) {
         validNeighbors.Clear();
@@ -313,6 +295,4 @@ public class AStarMultithreaded : Threadable {
     public void SetPath(List<Location> paramPath) {
         this.path = paramPath;
     }
-
-    // Other existing methods...
 }  

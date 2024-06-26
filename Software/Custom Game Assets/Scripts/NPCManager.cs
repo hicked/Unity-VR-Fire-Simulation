@@ -248,7 +248,6 @@ public class NPCManager : MonoBehaviour {
 
 
     private void setPathTo(Vector3 location) {
-        Debug.Log("Setting path in NPCManager.cs");
         pathfinder.FindPath(transform.position, location);
         currentPathIndex = 0;
     }

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class LightSwitch : MonoBehaviour, Interactable {
     [SerializeField] private List<Light> pointLights;
+    [SerializeField] private List<AudioClip> switchSounds;
+    [SerializeField] public AudioSource switchAudioSource;
 
     // Start is called before the first frame update
     void Start()
@@ -18,6 +20,13 @@ public class LightSwitch : MonoBehaviour, Interactable {
     }
 
     public void Interact() {
+        if (pointLights.Count == 0) {
+            //Debug.LogError("No lights attached to light switch");
+            return;
+        }
+
+        switchAudioSource.clip = switchSounds[Random.Range(0, switchSounds.Count)];
+        switchAudioSource.Play();
         if (pointLights[0].gameObject.activeInHierarchy) {
             foreach (Light pointLight in pointLights) {
                 pointLight.gameObject.SetActive(false);
