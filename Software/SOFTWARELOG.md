@@ -13,7 +13,7 @@
 **D**: Patch / Refactoring
 
 
-## [v.0.3.4.5] - 2024-06-25
+## [v.0.3.4.5] - 2024-06-26
 **Author:** Antoine
 -   Wheel audio fades in and out
     -   now based on speed of the wheel -> speed of playback
