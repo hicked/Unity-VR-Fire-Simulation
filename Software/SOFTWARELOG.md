@@ -6,7 +6,7 @@
 
 **A**: New Release
 
-**B**: Medium Feature
+**B**: Major Feature
 
 **C**: Minor Feature / Bug Fix
 
