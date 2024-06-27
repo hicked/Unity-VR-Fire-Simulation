@@ -35,6 +35,7 @@
 -   Hand tracking/interactions (Meta Quest Pro)
 -   Hardware (Arduino + gyroscope)
 -   Refine smoke interactions
+-   Add flame to smoke
 
 
 ## [v.0.3.4.4] - 2024-06-25
