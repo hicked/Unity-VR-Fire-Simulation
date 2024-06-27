@@ -4,7 +4,7 @@
 
 **v.A.B.C.D**
 
-**A**: Major Feature
+**A**: New Release
 
 **B**: Medium Feature
 
