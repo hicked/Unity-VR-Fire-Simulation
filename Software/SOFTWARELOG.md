@@ -36,7 +36,6 @@
 -   Hardware (Arduino + gyroscope)
 -   Refine smoke interactions
 -   Add flame to smoke
-- wwwww
 
 
 ## [v.0.3.4.4] - 2024-06-25
