@@ -2,8 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour
-{
+public class Player : MonoBehaviour {
     [SerializeField] private float baseSpeedMultiplier = 2f;
     [SerializeField] private float sprintSpeedMultiplier = 3.5f;
     [SerializeField] private float maxDistance = 0.2f;
@@ -178,6 +177,4 @@ public class Player : MonoBehaviour
         audioSource.volume = targetVolume;
         audioSource.Stop();
     }
-
 }
-

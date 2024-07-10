@@ -1,79 +1,113 @@
 using System.Collections;
 using UnityEngine;
-using TMPro;
+using UnityEngine.XR.Interaction.Toolkit;
 
-public class Doors : MonoBehaviour, Interactable {
+public class Doors : Audible {
     [SerializeField] public AudioSource doorAudioSource;
     [SerializeField] public AudioClip openDoorClip;
     [SerializeField] public AudioClip closeDoorClip;
-    [SerializeField] public AudioClip lockedDoorClip;
+
     [SerializeField] public float closeOffset = 0.55f;
     [SerializeField] public float openOffset = 0.55f;
     [SerializeField] private float doorSpeed = 90f;
 
-    [SerializeField] private float lockedDoorMessageFadeIn = 0.5f;
-    [SerializeField] private float lockedDoorMessageTime = 2f;
-    [SerializeField] private float lockedDoorMessageFadeOut = 0.5f;
+    [SerializeField] private float angleSnap = 5f; // door will snap closed if the angle is less than this
+    [SerializeField] public GameObject doorHandle;
+    [SerializeField] private HingeJoint doorHinge;
+    private Rigidbody doorRigidBody;
+    
 
-    public GameObject lockedDoorMessage; // Reference to UI element showing the locked door message
-    private bool isMessageDisplaying; // Flag to track if message is already displaying
-
+    // used for npcs opening doors, not player
     private Quaternion targetRotation;
     private float rotationOpen;
     private float rotationClosed;
-    public bool isOpen = false;
     public bool isMoving = false;
-    public bool isLocked;
+
+    
     private Coroutine temporaryOpenCoroutine;
 
-    public void Interact() {
-        if (isLocked) {
-            if (!isMessageDisplaying) {
-                doorAudioSource.clip = lockedDoorClip;
-                doorAudioSource.Play();
-                StartCoroutine(ShowLockedDoorMessage(lockedDoorMessageFadeIn, lockedDoorMessageTime, lockedDoorMessageFadeOut));
-            }
-        }
-        else {
-            if (isOpen) {
-                Close();
-            }
-            else {
-                Open();
-            }
-        }
-    }
+
+    // void Awake() {
+    //     grabInteractable = GetComponent<XRGrabInteractable>();
+    //     //doorRigidBody = GetComponent<Rigidbody>();
+
+    //     grabInteractable.selectExited.AddListener(OnRelease);
+    // }
+
+    // private void OnDestroy() {
+    //     grabInteractable.selectExited.RemoveListener(OnRelease);
+    // }
+
+    // private void OnRelease(SelectExitEventArgs args) {
+    //     Debug.Log("Object Released");
+    //     // Your logic when the object is released
+    // }
+
+
+    // public void KeyboardInteract() {
+    //     if (isLocked) {
+    //         if (!isMessageDisplaying) {
+    //             doorAudioSource.clip = lockedDoorClip;
+    //             doorAudioSource.Play();
+    //             StartCoroutine(ShowLockedDoorMessage(lockedDoorMessageFadeIn, lockedDoorMessageTime, lockedDoorMessageFadeOut));
+    //         }
+    //     }
+    //     else {
+    //         if (isOpen) {
+    //             Close();
+    //         }
+    //         else {
+    //             Open();
+    //         }
+    //     }
+    // }
 
     // Start is called before the first frame update
     void Start() {
+        doorRigidBody = GetComponent<Rigidbody>();
+        audioSource = doorAudioSource;
         rotationClosed = transform.eulerAngles.y;
         rotationOpen = rotationClosed - 90f;
-        targetRotation = transform.rotation;
     }
 
     // Update is called once per frame
     void Update() {
-        if (isMoving) {
+        /*if (isMoving) { // only for NCPs
+            Debug.Log("ISMOVING");
             // Smoothly rotate towards the target rotation
             transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, doorSpeed * Time.deltaTime);
+            doorHandle.transform.position = this.transform.position + doorHandleVector; // handle tracks door while npc opens it
             // Check if the rotation is close enough to the target
             if (Quaternion.Angle(transform.rotation, targetRotation) < 0.1f) {
                 isMoving = false; // Stop moving
                 transform.rotation = targetRotation; // Ensure exact alignment
             }
         }
+
+        else 
+        */
+
+        if (!(doorHandle.GetComponent<DoorHandle>().IsGrabbed())) { // this means the player has let go of the door handle
+            if (Mathf.Abs(doorHinge.angle - doorHinge.limits.max) < angleSnap) { // door is closed
+                StartCoroutine(closeCoroutine());
+                transform.rotation = Quaternion.Euler(transform.eulerAngles.x, rotationClosed, transform.eulerAngles.z);;
+            }
+        }
     }
 
+
+
+
+
+    // NPC STUFF
     public void Open() {
         targetRotation = Quaternion.Euler(transform.eulerAngles.x, rotationOpen, transform.eulerAngles.z);
-        isOpen = true;
         isMoving = true;
         StartCoroutine(openCoroutine());
     }
 
     public void Close() {
         targetRotation = Quaternion.Euler(transform.eulerAngles.x, rotationClosed, transform.eulerAngles.z);
-        isOpen = false;
         isMoving = true;
         StartCoroutine(closeCoroutine());
     }
@@ -100,41 +134,5 @@ public class Doors : MonoBehaviour, Interactable {
         yield return new WaitForSeconds(openOffset);
         doorAudioSource.clip = openDoorClip;
         doorAudioSource.Play();
-    }
-    
-    private IEnumerator ShowLockedDoorMessage(float fadeInDuration, float displayDuration, float fadeOutDuration) {
-        isMessageDisplaying = true;
-        TextMeshProUGUI messageText = lockedDoorMessage.GetComponent<TextMeshProUGUI>();
-        lockedDoorMessage.SetActive(true);
-        Color originalColor = messageText.color;
-        originalColor.a = 0f; // Start with fully transparent
-
-        // Fade in
-        float timer = 0f;
-        while (timer < fadeInDuration) {
-            timer += Time.deltaTime;
-            float alpha = Mathf.Lerp(0f, 1f, timer / fadeInDuration);
-            messageText.color = new Color(originalColor.r, originalColor.g, originalColor.b, alpha);
-            yield return null;
-        }
-
-        // Hold for display duration
-        yield return new WaitForSeconds(displayDuration);
-
-        // Fade out
-        timer = 0f;
-        while (timer < fadeOutDuration) {
-            timer += Time.deltaTime;
-            float alpha = Mathf.Lerp(1f, 0f, timer / fadeOutDuration);
-            messageText.color = new Color(originalColor.r, originalColor.g, originalColor.b, alpha);
-            yield return null;
-        }
-
-        // Ensure fully transparent at the end
-        messageText.color = new Color(originalColor.r, originalColor.g, originalColor.b, 0f);
-
-        // Hide the message
-        lockedDoorMessage.SetActive(false);
-        isMessageDisplaying = false;
     }
 }

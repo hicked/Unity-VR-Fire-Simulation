@@ -13,6 +13,69 @@
 **D**: Patch / Refactoring
 
 
+## [v.0.3.5.6] - 2024-07-10
+**Author:** Antoine
+-   Interactions now work.
+-   Doors might work? Not tested in VR
+
+**HIGH PRIOTITY:** Refactor project tree, its a mess.
+
+*BUGS*
+-   `Look rotation viewing vector is zero` "bug", not game breaking
+-   `locom_m_basicWalk_30f` too fast for the audio clip. This can be dealt with later
+-   Make onPhone independant, static
+-   Add different walk and run sounds
+-   Smoke ignoring colliders are X time
+
+*NEXT STEPS*
+-   Custom interactions -> `override` function. Need to read XR Docs
+-   Hardware (Arduino + gyroscope)
+
+
+## [v.0.3.5.5] - 2024-06-27
+**Author:** Antoine
+-   Hand tracking now works, but not interactions
+-   Audio is cut more when it goes through a wall
+
+**HIGH PRIOTITY:** Refactor project tree, its a mess.
+
+*BUGS*
+-   `Look rotation viewing vector is zero` "bug", not game breaking
+-   `locom_m_basicWalk_30f` too fast for the audio clip. This can be dealt with later
+-   Should add a `Collidable` parent class for cleaner code (maybe)
+-   Make onPhone independant, static
+-   Add different walk and run sounds
+-   Smoke ignoring colliders are X time
+
+*NEXT STEPS*
+-   Hand tracking/interactions (Meta Quest Pro)
+-   Hardware (Arduino + gyroscope)
+
+
+## [v.0.3.4.5] - 2024-06-27
+**Author:** Antoine
+-   Added flames and explosion with sound
+-   Changed Smoke texture. Also changes over time
+-   Smoke collisions give downwards velocity automatically
+>   *MAKE SURE LIGHTS ARE ARENT REFLECTING PROPERLY ARE SET TO HIGH IMPORTANCE*
+
+**HIGH PRIOTITY:** Refactor project tree, its a mess.
+
+*BUGS*
+-   `Look rotation viewing vector is zero` "bug", not game breaking
+-   `locom_m_basicWalk_30f` too fast for the audio clip. This can be dealt with later
+-   Should add a `Collidable` parent class for cleaner code (maybe)
+-   Make onPhone independant, static
+-   Add different walk and run sounds
+-   Smoke ignoring colliders are X time
+
+*NEXT STEPS*
+-   Hand tracking/interactions (Meta Quest Pro)
+-   Hardware (Arduino + gyroscope)
+-   Refine smoke interactions
+-   Audio needs collisions with walls (get muffled if goes through walls)
+
+
 ## [v.0.3.4.5] - 2024-06-26
 **Author:** Antoine
 -   Wheel audio fades in and out

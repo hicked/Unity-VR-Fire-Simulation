@@ -14,12 +14,12 @@ public class LightSwitch : MonoBehaviour, Interactable {
     }
 
     // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    void Update() {}
+    public void GrabInteract(GameObject hand) {}
+    public void PinchInteract() {}
+    public void PokeInteract() {}
 
-    public void Interact() {
+    public void KeyboardInteract() {
         if (pointLights.Count == 0) {
             //Debug.LogError("No lights attached to light switch");
             return;
@@ -43,7 +43,7 @@ public class LightSwitch : MonoBehaviour, Interactable {
     private IEnumerator blah() {
         while (true) {
             yield return new WaitForSeconds(10);
-            Interact();
+            KeyboardInteract();
         }
     }
 }

@@ -63,7 +63,7 @@ public class SmokeInteractions : Threadable {
                         float distance = direction.magnitude;
 
                         if (distance < interactionRadius) {
-                            Vector3 force = direction.normalized * forceStrength * (interactionRadius - distance) * random.Next(3, 17)/10; // *0.3 -> 1.7
+                            Vector3 force = (direction.normalized + Vector3.down/3f) * forceStrength * (interactionRadius - distance) * random.Next(3, 17)/10; // *0.3 -> 1.7
                             particlesWForces[i].velocity += force;
                             particlesWForces[j].velocity -= force;
                         }

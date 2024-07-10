@@ -62,6 +62,18 @@ public class AStarMultithreaded : Threadable {
         NPCRadius = NPC.NPCRadius;
     }
 
+    bool PerformCapsuleCast(PhysicsRequest request, out RaycastHit hitInfo) {
+        return Physics.CapsuleCast(
+            new Vector3(request.Location.x, request.Location.y + NPCHeight / 2f, request.Location.z),
+            new Vector3(request.Location.x, request.Location.y - NPCHeight / 2f, request.Location.z),
+            NPCRadius * 1.2f,
+            request.Direction,
+            out hitInfo,
+            request.Distance,
+            request.Layer
+        );
+    }
+
     private void Update() {
         runQueuedFunctions();
 
@@ -89,15 +101,42 @@ public class AStarMultithreaded : Threadable {
         // Process physics requests
         while (physicsRequests.TryDequeue(out PhysicsRequest request)) {
             RaycastHit hitInfo;
-            bool hit = Physics.CapsuleCast(
-                new Vector3(request.Location.x, request.Location.y + NPCHeight / 2f, request.Location.z),
-                new Vector3(request.Location.x, request.Location.y - NPCHeight / 2f, request.Location.z),
-                NPCRadius * 1.2f,
-                request.Direction,
-                out hitInfo,
-                request.Distance,
-                request.Layer
-            );
+            
+            bool hit = PerformCapsuleCast(request, out hitInfo);
+
+            // Check for NPC and Doors layers and handle recasting
+            if (hit) {
+                bool needsRecast = false;
+                int newLayer = request.Layer;
+
+                if (LayerMask.LayerToName(hitInfo.collider.gameObject.layer) == "NPC") {
+                    NPCManager NPC = hitInfo.collider.gameObject.GetComponent<NPCManager>();
+                    if (NPC.isIdle) {
+                        needsRecast = true;
+                        newLayer &= ~(1 << LayerMask.NameToLayer("NPC"));
+                    }
+                }
+                else if (LayerMask.LayerToName(hitInfo.collider.gameObject.layer) == "Doors") {
+                    Doors door = hitInfo.collider.gameObject.GetComponent<Doors>();
+                    DoorHandle handle = door.doorHandle.GetComponent<DoorHandle>();
+
+                    if (!handle.isLocked) {
+                        needsRecast = true;
+                        newLayer &= ~(1 << LayerMask.NameToLayer("Doors"));
+                    }
+                }
+
+                if (needsRecast) {
+                    hit = PerformCapsuleCast(new PhysicsRequest
+                    {
+                        Location = request.Location,
+                        Direction = request.Direction,
+                        Distance = request.Distance,
+                        Layer = newLayer,
+                        Callback = request.Callback
+                    }, out hitInfo);
+                }
+            }
 
             // Queue the result back
             physicsResults.Enqueue(new PhysicsResult {
@@ -111,6 +150,35 @@ public class AStarMultithreaded : Threadable {
         while (physicsResults.TryDequeue(out PhysicsResult result)) {
             result.Request.Callback(result);
         }
+
+
+
+
+        // while (physicsRequests.TryDequeue(out PhysicsRequest request)) {
+        //     RaycastHit hitInfo;
+            
+        //     bool hit = Physics.CapsuleCast(
+        //         new Vector3(request.Location.x, request.Location.y + NPCHeight / 2f, request.Location.z),
+        //         new Vector3(request.Location.x, request.Location.y - NPCHeight / 2f, request.Location.z),
+        //         NPCRadius * 1.2f,
+        //         request.Direction,
+        //         out hitInfo,
+        //         request.Distance,
+        //         request.Layer
+        //     );
+
+        //     // Queue the result back
+        //     physicsResults.Enqueue(new PhysicsResult {
+        //         Hit = hit,
+        //         HitInfo = hitInfo,
+        //         Request = request
+        //     });
+        // }
+
+        // // Process results and invoke callbacks
+        // while (physicsResults.TryDequeue(out PhysicsResult result)) {
+        //     result.Request.Callback(result);
+        // }
     }
 
     public void FindPath(Vector3 start, Vector3 end) {
