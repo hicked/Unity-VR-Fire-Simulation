@@ -4,8 +4,9 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.XR.Interaction.Toolkit;
 
-public class DoorHandle : XRBaseInteractable {
-    [SerializeField] private XRGrabInteractable grabInteractable;
+public class DoorHandle : XRGrabInteractable {
+    [SerializeField] private XRGrabInteractable interactor;
+    [SerializeField] private float maxDistanceFromHandle = 0.5f;
 
     [SerializeField] private GameObject lockedDoorMessage;
     [SerializeField] public AudioClip lockedDoorClip;
@@ -17,51 +18,54 @@ public class DoorHandle : XRBaseInteractable {
 
     [SerializeField] private AudioSource doorAudioSource;
     [SerializeField] private GameObject handle;
-    Rigidbody interactableRigidBody;
-    Rigidbody handleRigidBody;
+    [SerializeField] private GameObject door;
+    private Rigidbody doorRigidBody;
+    private Rigidbody handleRigidBody;
 
     void Start(){
+        doorRigidBody = door.GetComponent<Rigidbody>();
         handleRigidBody = handle.GetComponent<Rigidbody>();
-        interactableRigidBody = this.GetComponent<Rigidbody>();
-        grabInteractable = GetComponent<XRGrabInteractable>();
-        grabInteractable.selectEntered.AddListener(OnGrab);
-        grabInteractable.selectExited.AddListener(OnRelease);
+        interactor.selectEntered.AddListener(OnGrab);
+        interactor.selectExited.AddListener(OnRelease);
     }
 
     void FixedUpdate() {
-        if (Vector3.Distance(this.transform.position, handle.transform.position) > 1f) {
-            // Force drop if the handle gets too far away
-            grabInteractable.enabled = false;
+        if (!IsGrabbed() && Vector3.Distance(this.transform.position, handle.transform.position) > 0.1f) {
             ResetPosition();
-            StartCoroutine(ReenableGrabInteractable()); // adds delay to reenable grabInteractable
+        }
+        else if (IsGrabbed() && Vector3.Distance(this.transform.position, handle.transform.position) > maxDistanceFromHandle) {
+            ForceDrop();
         }
     }
 
+    public void ForceDrop() {
+        interactor.enabled = false;
+        ResetPosition();
+        StartCoroutine(ReenableGrabInteractable()); // adds delay to reenable grabInteractable
+    }
     public void ResetPosition() {
-        this.transform.position = handle.transform.position; 
-        this.transform.rotation = handle.transform.rotation;
-
-        interactableRigidBody.velocity = Vector3.zero;
-        interactableRigidBody.angularVelocity = Vector3.zero;
+        doorRigidBody.velocity = Vector3.zero;
+        doorRigidBody.angularVelocity = Vector3.zero;
         handleRigidBody.velocity = Vector3.zero;
         handleRigidBody.angularVelocity = Vector3.zero;
+        this.transform.position = handle.transform.position; 
+        this.transform.rotation = handle.transform.rotation;
     }
 
     public bool IsGrabbed() {
-        return true;
-        //return grabInteractable.isSelected;
+        return interactor.isSelected;
     }
 
     private void OnDestroy() {
-        grabInteractable.selectEntered.RemoveListener(OnGrab);
-        grabInteractable.selectExited.RemoveListener(OnRelease);
+        interactor.selectEntered.RemoveListener(OnGrab);
+        interactor.selectExited.RemoveListener(OnRelease);
     }
 
     private void OnGrab(SelectEnterEventArgs args) {
         Debug.Log("Object Grabbed");
 
         if (isLocked) {
-            grabInteractable.enabled = false; // Force drop
+            interactor.enabled = false; // Force drop
             ResetPosition();
             StartCoroutine(ReenableGrabInteractable()); // Reenable after a short delay
 
@@ -117,6 +121,6 @@ public class DoorHandle : XRBaseInteractable {
 
     private IEnumerator ReenableGrabInteractable() {
         yield return new WaitForSeconds(0.1f);
-        grabInteractable.enabled = true;
+        interactor.enabled = true;
     }
 }

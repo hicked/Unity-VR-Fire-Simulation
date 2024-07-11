@@ -13,6 +13,7 @@ public class Doors : Audible {
 
     [SerializeField] private float angleSnap = 5f; // door will snap closed if the angle is less than this
     [SerializeField] public GameObject doorHandle;
+    private DoorHandle handleScript;
     [SerializeField] private HingeJoint doorHinge;
     private Rigidbody doorRigidBody;
     
@@ -65,6 +66,7 @@ public class Doors : Audible {
     // Start is called before the first frame update
     void Start() {
         doorRigidBody = GetComponent<Rigidbody>();
+        handleScript = doorHandle.GetComponent<DoorHandle>();
         audioSource = doorAudioSource;
         rotationClosed = transform.eulerAngles.y;
         rotationOpen = rotationClosed - 90f;
@@ -87,15 +89,14 @@ public class Doors : Audible {
         else 
         */
 
-        if (!(doorHandle.GetComponent<DoorHandle>().IsGrabbed())) { // this means the player has let go of the door handle
+        if (!(handleScript.IsGrabbed())) { // this means the player has let go of the door handle
             if (Mathf.Abs(doorHinge.angle - doorHinge.limits.max) < angleSnap) { // door is closed
+                handleScript.ForceDrop();
                 StartCoroutine(closeCoroutine());
                 transform.rotation = Quaternion.Euler(transform.eulerAngles.x, rotationClosed, transform.eulerAngles.z);;
             }
         }
     }
-
-
 
 
 
