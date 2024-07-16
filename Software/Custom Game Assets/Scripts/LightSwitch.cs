@@ -1,25 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit;
 
-public class LightSwitch : MonoBehaviour, Interactable {
+public class LightSwitch : XRSimpleInteractable {
     [SerializeField] private List<Light> pointLights;
     [SerializeField] private List<AudioClip> switchSounds;
     [SerializeField] public AudioSource switchAudioSource;
 
     // Start is called before the first frame update
-    void Start()
-    {
+    void Start() {
         StartCoroutine(blah());
     }
 
-    // Update is called once per frame
-    void Update() {}
-    public void GrabInteract(GameObject hand) {}
-    public void PinchInteract() {}
-    public void PokeInteract() {}
+    [System.Obsolete("No idea why this is obsolete, but it works.")]
+    override protected void OnHoverEntered(XRBaseInteractor interactor) {
+        Interact();
+    }
 
-    public void KeyboardInteract() {
+    public void Interact() {
         if (pointLights.Count == 0) {
             //Debug.LogError("No lights attached to light switch");
             return;
@@ -43,7 +42,7 @@ public class LightSwitch : MonoBehaviour, Interactable {
     private IEnumerator blah() {
         while (true) {
             yield return new WaitForSeconds(10);
-            KeyboardInteract();
+            Interact();
         }
     }
 }

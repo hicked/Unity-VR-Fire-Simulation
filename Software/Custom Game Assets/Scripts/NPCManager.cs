@@ -158,6 +158,8 @@ public class NPCManager : Audible {
 
         StartCoroutine(IdleCoroutine());
         StartCoroutine(ChangeLocationCoroutine());
+
+        setPathTo(new Vector3(-13.5f, 0, -7.5f));
     }
 
 
@@ -254,6 +256,7 @@ public class NPCManager : Audible {
 
 
     private void setPathTo(Vector3 location) {
+        Debug.Log("Setting path to " + location);
         pathfinder.FindPath(transform.position, location);
         currentPathIndex = 0;
     }

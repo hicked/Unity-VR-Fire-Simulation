@@ -11,12 +11,14 @@ public class Doors : Audible {
     [SerializeField] public float openOffset = 0.55f;
     [SerializeField] private float doorSpeed = 90f;
 
+    [SerializeField] public float maxAngle = -90f;
+    [SerializeField] public float minAngle = 0f;
     [SerializeField] private float angleSnap = 5f; // door will snap closed if the angle is less than this
     [SerializeField] public GameObject doorHandle;
     private DoorHandle handleScript;
     [SerializeField] private HingeJoint doorHinge;
-    private Rigidbody doorRigidBody;
-    
+    private Rigidbody doorRigidBody; // MIGHT NOT NEED THIS TO RESET VELOCITY OF DOOR MIGHT NEED HINGEJOINT VELOCITY
+    private Vector3 doorVector;
 
     // used for npcs opening doors, not player
     private Quaternion targetRotation;
@@ -69,32 +71,40 @@ public class Doors : Audible {
         handleScript = doorHandle.GetComponent<DoorHandle>();
         audioSource = doorAudioSource;
         rotationClosed = transform.eulerAngles.y;
-        rotationOpen = rotationClosed - 90f;
+        rotationOpen = rotationClosed + 90f;
     }
 
     // Update is called once per frame
     void Update() {
-        /*if (isMoving) { // only for NCPs
-            Debug.Log("ISMOVING");
+        if (isMoving) { // only for NCPs
             // Smoothly rotate towards the target rotation
             transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, doorSpeed * Time.deltaTime);
-            doorHandle.transform.position = this.transform.position + doorHandleVector; // handle tracks door while npc opens it
+
             // Check if the rotation is close enough to the target
             if (Quaternion.Angle(transform.rotation, targetRotation) < 0.1f) {
                 isMoving = false; // Stop moving
                 transform.rotation = targetRotation; // Ensure exact alignment
+                doorRigidBody.velocity = Vector3.zero; // Stop any residual movement
+                doorRigidBody.angularVelocity = Vector3.zero; // Stop any residual rotation
             }
         }
 
-        else 
-        */
-
-        if (!(handleScript.IsGrabbed())) { // this means the player has let go of the door handle
-            if (Mathf.Abs(doorHinge.angle - doorHinge.limits.max) < angleSnap) { // door is closed
+        else if (!(handleScript.IsGrabbed())) { // this means the player has let go of the door handle
+            if (Mathf.Abs(doorHinge.limits.max - maxAngle) < angleSnap) { // door is closed
                 handleScript.ForceDrop();
                 StartCoroutine(closeCoroutine());
                 transform.rotation = Quaternion.Euler(transform.eulerAngles.x, rotationClosed, transform.eulerAngles.z);;
             }
+        }
+        else if (handleScript.IsGrabbed()) { // this means the player is holding the door handle
+            Vector3 hingeLocation = new Vector3(this.transform.position.x, 0f, this.transform.position.z);
+            Vector3 handleLocation = new Vector3(doorHandle.transform.position.x, 0f, doorHandle.transform.position.z);
+
+            Vector3 dir = handleLocation - hingeLocation;
+            float angle = Mathf.Atan2(dir.z, dir.x) * Mathf.Rad2Deg;
+            //float angle = Vector3.Angle(doorHinge.anchor, doorHandle.transform.position);
+            doorHinge.limits = new JointLimits { min = -angle-0.1f, max = -angle+0.1f }; // angles are inverted for hingejoints
+
         }
     }
 

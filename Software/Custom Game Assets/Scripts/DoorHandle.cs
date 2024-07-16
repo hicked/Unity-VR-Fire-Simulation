@@ -22,11 +22,12 @@ public class DoorHandle : XRGrabInteractable {
     private Rigidbody doorRigidBody;
     private Rigidbody handleRigidBody;
 
-    void Start(){
+    override protected void Awake(){
         doorRigidBody = door.GetComponent<Rigidbody>();
         handleRigidBody = handle.GetComponent<Rigidbody>();
         interactor.selectEntered.AddListener(OnGrab);
         interactor.selectExited.AddListener(OnRelease);
+        base.Awake();
     }
 
     void FixedUpdate() {
@@ -43,6 +44,7 @@ public class DoorHandle : XRGrabInteractable {
         ResetPosition();
         StartCoroutine(ReenableGrabInteractable()); // adds delay to reenable grabInteractable
     }
+
     public void ResetPosition() {
         doorRigidBody.velocity = Vector3.zero;
         doorRigidBody.angularVelocity = Vector3.zero;
@@ -56,7 +58,7 @@ public class DoorHandle : XRGrabInteractable {
         return interactor.isSelected;
     }
 
-    private void OnDestroy() {
+    override protected void OnDestroy() {
         interactor.selectEntered.RemoveListener(OnGrab);
         interactor.selectExited.RemoveListener(OnRelease);
     }
