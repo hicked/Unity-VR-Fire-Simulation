@@ -12,6 +12,25 @@
 
 **D**: Patch / Refactoring
 
+## [v.0.3.5.7] - 2024-07-16
+**Author:** Antoine
+-   Massive refactor of project tree and files
+-   Doors now work and swing properly
+
+*BUGS*
+-   Cant interact with doors vr bug
+-   doors a little bit jittery when standing still
+-   **PROJECT TREE CLEANUP STILL NEEDS TO BE COMPLETED**
+-   `Look rotation viewing vector is zero` "bug", not game breaking
+-   `locom_m_basicWalk_30f` too fast for the audio clip. This can be dealt with later
+-   Make onPhone independant, static
+-   Add different walk and run sounds
+-   Smoke ignoring colliders are X time
+
+*NEXT STEPS*
+-   Custom interactions -> `override` function. Need to read XR Docs
+-   Hardware (Arduino + gyroscope)
+
 
 ## [v.0.3.5.6] - 2024-07-10
 **Author:** Antoine
