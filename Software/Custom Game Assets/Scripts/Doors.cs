@@ -13,7 +13,7 @@ public class Doors : Audible {
 
     [SerializeField] public float maxAngle = -90f;
     [SerializeField] public float minAngle = 0f;
-    [SerializeField] private float angleSnap = 5f; // door will snap closed if the angle is less than this
+    [SerializeField] private float angleSnap = 10f; // door will snap closed if the angle is less than this
     [SerializeField] public GameObject doorHandle;
     private DoorHandle handleScript;
     [SerializeField] private HingeJoint doorHinge;
@@ -76,6 +76,7 @@ public class Doors : Audible {
 
     // Update is called once per frame
     void Update() {
+        Debug.Log(handleScript.IsGrabbed());
         if (isMoving) { // only for NCPs
             // Smoothly rotate towards the target rotation
             transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, doorSpeed * Time.deltaTime);
@@ -91,11 +92,13 @@ public class Doors : Audible {
 
         else if (!(handleScript.IsGrabbed())) { // this means the player has let go of the door handle
             if (Mathf.Abs(doorHinge.limits.max - maxAngle) < angleSnap) { // door is closed
+                Debug.Log("Door is closed");
                 handleScript.ForceDrop();
                 StartCoroutine(closeCoroutine());
                 transform.rotation = Quaternion.Euler(transform.eulerAngles.x, rotationClosed, transform.eulerAngles.z);;
             }
         }
+        
         else if (handleScript.IsGrabbed()) { // this means the player is holding the door handle
             Vector3 hingeLocation = new Vector3(this.transform.position.x, 0f, this.transform.position.z);
             Vector3 handleLocation = new Vector3(doorHandle.transform.position.x, 0f, doorHandle.transform.position.z);
@@ -103,7 +106,7 @@ public class Doors : Audible {
             Vector3 dir = handleLocation - hingeLocation;
             float angle = Mathf.Atan2(dir.z, dir.x) * Mathf.Rad2Deg;
             //float angle = Vector3.Angle(doorHinge.anchor, doorHandle.transform.position);
-            doorHinge.limits = new JointLimits { min = -angle-0.1f, max = -angle+0.1f }; // angles are inverted for hingejoints
+            doorHinge.limits = new JointLimits { min = -angle-0.5f, max = -angle+0.5f }; // angles are inverted for hingejoints
 
         }
     }

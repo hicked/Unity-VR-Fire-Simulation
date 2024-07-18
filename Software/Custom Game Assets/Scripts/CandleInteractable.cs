@@ -5,7 +5,7 @@ public class CandleInteractable : XRGrabInteractable {
     private ParticleSystem flameParticleSystem;
     public float pinchThreshold = 0.02f;
 
-    protected override void Awake() {
+    protected void Start() {
         base.Awake();
         flameParticleSystem = GetComponent<ParticleSystem>();
     }

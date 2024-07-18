@@ -22,11 +22,11 @@ public class DoorHandle : XRGrabInteractable {
     private Rigidbody doorRigidBody;
     private Rigidbody handleRigidBody;
 
-    override protected void Awake(){
+    protected void Start(){
         doorRigidBody = door.GetComponent<Rigidbody>();
         handleRigidBody = handle.GetComponent<Rigidbody>();
-        interactor.selectEntered.AddListener(OnGrab);
-        interactor.selectExited.AddListener(OnRelease);
+        this.selectEntered.AddListener(OnGrab);
+        this.selectExited.AddListener(OnRelease);
         base.Awake();
     }
 
@@ -40,7 +40,7 @@ public class DoorHandle : XRGrabInteractable {
     }
 
     public void ForceDrop() {
-        interactor.enabled = false;
+        this.enabled = false;
         ResetPosition();
         StartCoroutine(ReenableGrabInteractable()); // adds delay to reenable grabInteractable
     }
@@ -55,19 +55,19 @@ public class DoorHandle : XRGrabInteractable {
     }
 
     public bool IsGrabbed() {
-        return interactor.isSelected;
+        return this.isSelected;
     }
 
     override protected void OnDestroy() {
-        interactor.selectEntered.RemoveListener(OnGrab);
-        interactor.selectExited.RemoveListener(OnRelease);
+        this.selectEntered.RemoveListener(OnGrab);
+        this.selectExited.RemoveListener(OnRelease);
     }
 
     private void OnGrab(SelectEnterEventArgs args) {
         Debug.Log("Object Grabbed");
 
         if (isLocked) {
-            interactor.enabled = false; // Force drop
+            this.enabled = false; // Force drop
             ResetPosition();
             StartCoroutine(ReenableGrabInteractable()); // Reenable after a short delay
 
@@ -123,6 +123,6 @@ public class DoorHandle : XRGrabInteractable {
 
     private IEnumerator ReenableGrabInteractable() {
         yield return new WaitForSeconds(0.1f);
-        interactor.enabled = true;
+        this.enabled = true;
     }
 }
