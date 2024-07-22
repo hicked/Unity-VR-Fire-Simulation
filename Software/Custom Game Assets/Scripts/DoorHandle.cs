@@ -5,18 +5,18 @@ using TMPro;
 using UnityEngine.XR.Interaction.Toolkit;
 
 public class DoorHandle : XRGrabInteractable {
-    [SerializeField] private XRGrabInteractable interactor;
-    [SerializeField] private float maxDistanceFromHandle = 0.5f;
+    [SerializeField] public XRGrabInteractable interactor;
+    [SerializeField] public float maxDistanceFromHandle = 0.5f;
 
-    [SerializeField] private GameObject lockedDoorMessage;
+    [SerializeField] public GameObject lockedDoorMessage;
     [SerializeField] public AudioClip lockedDoorClip;
-    [SerializeField] private float lockedDoorMessageFadeIn = 0.5f;
-    [SerializeField] private float lockedDoorMessageTime = 2f;
-    [SerializeField] private float lockedDoorMessageFadeOut = 0.5f;
+    [SerializeField] public float lockedDoorMessageFadeIn = 0.5f;
+    [SerializeField] public float lockedDoorMessageTime = 2f;
+    [SerializeField] public float lockedDoorMessageFadeOut = 0.5f;
     public bool isLocked = false; // Flag to track if door is locked
-    private bool isMessageDisplaying = false; // Flag to track if message is already displaying
+    public bool isMessageDisplaying = false; // Flag to track if message is already displaying
 
-    [SerializeField] private AudioSource doorAudioSource;
+    [SerializeField] public AudioSource doorAudioSource;
     [SerializeField] private GameObject handle;
     [SerializeField] private GameObject door;
     private Rigidbody doorRigidBody;
@@ -85,7 +85,7 @@ public class DoorHandle : XRGrabInteractable {
         ResetPosition();
     }
 
-    private IEnumerator ShowLockedDoorMessage(float fadeInDuration, float displayDuration, float fadeOutDuration) {
+    public IEnumerator ShowLockedDoorMessage(float fadeInDuration, float displayDuration, float fadeOutDuration) {
         isMessageDisplaying = true;
         TextMeshProUGUI messageText = lockedDoorMessage.GetComponent<TextMeshProUGUI>();
         lockedDoorMessage.SetActive(true);

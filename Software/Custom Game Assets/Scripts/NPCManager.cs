@@ -158,8 +158,6 @@ public class NPCManager : Audible {
 
         StartCoroutine(IdleCoroutine());
         StartCoroutine(ChangeLocationCoroutine());
-
-        setPathTo(new Vector3(-13.5f, 0, -7.5f));
     }
 
 
