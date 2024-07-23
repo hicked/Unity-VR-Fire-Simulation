@@ -1,13 +1,15 @@
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
+using System.Collections;
 
 public class CandleInteractable : XRGrabInteractable {
     private ParticleSystem flameParticleSystem;
-    public float pinchThreshold = 0.02f;
+    private Light flameLight;
 
     protected void Start() {
         base.Awake();
         flameParticleSystem = GetComponent<ParticleSystem>();
+        flameLight = GetComponentInChildren<Light>();
     }
 
     [System.Obsolete("Apparently this is obsolete")]
@@ -16,8 +18,6 @@ public class CandleInteractable : XRGrabInteractable {
     }
 
     private void ExtinguishFlame() {
-        if (flameParticleSystem != null && flameParticleSystem.isPlaying) {
-            flameParticleSystem.Stop();
-        }
+        gameObject.SetActive(false);
     }
 }

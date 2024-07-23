@@ -12,14 +12,16 @@
 
 **D**: Patch / Refactoring
 
-## [v.0.3.5.8-alpha] - 2024-07-18
+## [v.0.3.7.8-alpha] - 2024-07-18
 **Author:** Antoine
--   Doors now completely work (jitter sometimes? rb problem)
--   Mirrors work-ish need to prerender them. Might be good enough. Consult
+-   Stopped doors from swinging the wrong way
+-   Added damper to doors
+-   Candles now properly go out on pinch
+-   Light switches now work
 
 *BUGS*:
--   Candle not lighting bug
--   doors jitter very minor
+-   **IMPORTANT** Doors need to change their min/max based on their orientation to begin
+
 -   **PROJECT TREE CLEANUP STILL NEEDS TO BE COMPLETED**: Fire, NPCs, Doors, Lights
 -   `Look rotation viewing vector is zero` "bug", not game breaking
 -   `locom_m_basicWalk_30f` too fast for the audio clip. This can be dealt with later
@@ -29,8 +31,33 @@
 
 *NEXT STEPS*
 -   **POKE INTERACTIONS** light switch
+-   Add flame going out sound
+-   Resize objects for more realism (props mostly)
+-   ALARM
 -   Hardware (Arduino + gyroscope)
+-   UI/Menu
 
+
+## [v.0.3.5.8-alpha] - 2024-07-18
+**Author:** Antoine
+-   Doors now completely work (jitter sometimes? rb problem)
+-   Mirrors work-ish need to prerender them. Might be good enough. Consult
+
+*BUGS*:
+-   **PROJECT TREE CLEANUP STILL NEEDS TO BE COMPLETED**: Fire, NPCs, Doors, Lights
+-   `Look rotation viewing vector is zero` "bug", not game breaking
+-   `locom_m_basicWalk_30f` too fast for the audio clip. This can be dealt with later
+-   Make onPhone independant, static
+-   Add different walk and run sounds
+-   Smoke ignoring colliders are X time
+
+*NEXT STEPS*
+-   **POKE INTERACTIONS** light switch
+-   Add flame going out sound
+-   Resize objects for more realism (props mostly)
+-   ALARM
+-   Hardware (Arduino + gyroscope)
+-   UI/Menu
 
 ## [v.0.3.5.7-alpha] - 2024-07-16
 **Author:** Antoine

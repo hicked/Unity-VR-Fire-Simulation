@@ -9,9 +9,6 @@ public class LightSwitch : XRSimpleInteractable {
     [SerializeField] public AudioSource switchAudioSource;
 
     // Start is called before the first frame update
-    void Start() {
-        StartCoroutine(blah());
-    }
 
     [System.Obsolete("No idea why this is obsolete, but it works.")]
     override protected void OnHoverEntered(XRBaseInteractor interactor) {
@@ -36,7 +33,7 @@ public class LightSwitch : XRSimpleInteractable {
                 pointLight.gameObject.SetActive(true);
             }
         }
-        transform.Rotate(transform.up, 180, Space.World);
+        transform.Rotate(transform.up, 180, Space.World); // flip the switch
     }
 
     private IEnumerator blah() {

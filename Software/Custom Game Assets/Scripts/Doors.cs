@@ -75,23 +75,22 @@ public class Doors : Audible, Interactable {
     // Update is called once per frame
     void Update() {
         if (isMoving) { // only for NCPs
-            Debug.Log("Door is moving");
             // Check if the rotation is close enough to the target
             if (Mathf.Abs(angle - targetRotation) < 0.1f) {
                 isMoving = false; // Stop moving
                 angle = targetRotation; // Ensure exact alignment
-                doorHinge.limits = new JointLimits { min = angle-0.5f, max = angle+0.5f }; // Ensure exact alignment
+                doorHinge.limits = new JointLimits { min = angle-0.1f, max = angle+0.1f }; // Ensure exact alignment
                 doorRigidBody.velocity = Vector3.zero; // Stop any residual movement
                 doorRigidBody.angularVelocity = Vector3.zero; // Stop any residual rotation
             }
             
             else if (angle > targetRotation) {
                 angle -= 1f * doorSpeed * Time.deltaTime;
-                doorHinge.limits = new JointLimits { min = angle-0.5f, max = angle+0.5f };
+                doorHinge.limits = new JointLimits { min = angle-0.1f, max = angle+0.1f };
             }
             else if (angle < targetRotation) {
                 angle += 1f * doorSpeed * Time.deltaTime;
-                doorHinge.limits = new JointLimits { min = angle-0.5f, max = angle+0.5f };
+                doorHinge.limits = new JointLimits { min = angle-0.1f, max = angle+0.1f };
             }
         }
 
@@ -111,8 +110,11 @@ public class Doors : Audible, Interactable {
             Vector3 dir = handleLocation - hingeLocation;
             angle = -Mathf.Atan2(dir.z, dir.x) * Mathf.Rad2Deg;
             //float angle = Vector3.Angle(doorHinge.anchor, doorHandle.transform.position);
-            doorHinge.limits = new JointLimits { min = angle-0.5f, max = angle+0.5f };
-
+            if (angle <= closedAngle && angle >= openAngle) { // if its swinging the right way, move it
+                doorHinge.limits = new JointLimits { min = angle-0.1f, max = angle+0.1f };
+                doorRigidBody.velocity = Vector3.zero; // Stop any residual movement
+                doorRigidBody.angularVelocity = Vector3.zero; // Stop any residual rotation
+            }
         }
     }
 
