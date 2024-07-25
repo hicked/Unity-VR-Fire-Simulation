@@ -12,7 +12,32 @@
 
 **D**: Patch / Refactoring
 
-## [v.0.3.7.8-alpha] - 2024-07-18
+## [v.0.5.5.8-alpha] - 2024-07-25
+**Author:** Antoine
+-   Made doors open/close angle static (based on starting angle) FINALLY
+-   Candle sound now properly plays
+-   Fixed bug with doors being knocked open
+-   Fixed bug where candle audio would be cut because of `setactive = false` before playing the sound
+
+*BUGS*:
+-   **PROJECT TREE CLEANUP STILL NEEDS TO BE COMPLETED**: Fire, NPCs, Doors, Lights
+-   Some switches dont have assigned lights
+-   `Look rotation viewing vector is zero` "bug", not game breaking
+-   `locom_m_basicWalk_30f` too fast for the audio clip. This can be dealt with later
+-   Make onPhone independant, static
+-   Add different walk and run sounds
+-   Smoke ignoring colliders at X time
+
+*NEXT STEPS*
+-   Make doors keep momentum slightly (swing)
+-   Add flame going out sound
+-   Resize objects for more realism (props mostly)
+-   ALARM
+-   Hardware (Arduino + gyroscope)
+-   UI/Menu
+-   
+
+## [v.0.4.5.8-alpha] - 2024-07-18
 **Author:** Antoine
 -   Stopped doors from swinging the wrong way
 -   Added damper to doors

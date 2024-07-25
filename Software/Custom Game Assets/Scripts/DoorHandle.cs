@@ -46,10 +46,9 @@ public class DoorHandle : XRGrabInteractable {
     }
 
     public void ResetPosition() {
+        Debug.Log("RESSETTING");
         doorRigidBody.velocity = Vector3.zero;
         doorRigidBody.angularVelocity = Vector3.zero;
-        handleRigidBody.velocity = Vector3.zero;
-        handleRigidBody.angularVelocity = Vector3.zero;
         this.transform.position = handle.transform.position; 
         this.transform.rotation = handle.transform.rotation;
     }

@@ -13,12 +13,12 @@ public class Doors : Audible, Interactable {
 
     [SerializeField] public float openAngle = -90f;
     [SerializeField] public float closedAngle = 0f;
-    [SerializeField] private float angleSnap = 10f; // door will snap closed if the angle is less than this
+    [SerializeField] private float angleSnap = 5f; // door will snap closed if the angle is less than this
     [SerializeField] public GameObject doorHandle;
     private DoorHandle handleScript;
     [SerializeField] private HingeJoint doorHinge;
     private Rigidbody doorRigidBody; // MIGHT NOT NEED THIS TO RESET VELOCITY OF DOOR MIGHT NEED HINGEJOINT VELOCITY
-    private Vector3 doorVector;
+    private Vector3 closedVector;
 
     // used for npcs opening doors, not player
     private float targetRotation;
@@ -27,24 +27,6 @@ public class Doors : Audible, Interactable {
 
     
     private Coroutine temporaryOpenCoroutine;
-
-
-    // void Awake() {
-    //     grabInteractable = GetComponent<XRGrabInteractable>();
-    //     //doorRigidBody = GetComponent<Rigidbody>();
-
-    //     grabInteractable.selectExited.AddListener(OnRelease);
-    // }
-
-    // private void OnDestroy() {
-    //     grabInteractable.selectExited.RemoveListener(OnRelease);
-    // }
-
-    // private void OnRelease(SelectExitEventArgs args) {
-    //     Debug.Log("Object Released");
-    //     // Your logic when the object is released
-    // }
-
 
     public void KeyboardInteract() {
         handleScript = doorHandle.GetComponent<DoorHandle>();
@@ -67,6 +49,7 @@ public class Doors : Audible, Interactable {
 
     // Start is called before the first frame update
     void Start() {
+        closedVector = transform.parent.forward;
         doorRigidBody = GetComponent<Rigidbody>();
         handleScript = doorHandle.GetComponent<DoorHandle>();
         audioSource = doorAudioSource;
@@ -95,7 +78,6 @@ public class Doors : Audible, Interactable {
         }
 
         else if (!(handleScript.IsGrabbed()) && (doorHinge.limits.max != closedAngle) && (Mathf.Abs(angle - closedAngle) < angleSnap)) { // this means the player has let go of the door handle
-            Debug.Log("Door is closed");
             handleScript.ForceDrop();
             angle = closedAngle; // Ensure exact alignment
             doorHinge.limits = new JointLimits { min = angle, max = angle }; 
@@ -108,16 +90,26 @@ public class Doors : Audible, Interactable {
             Vector3 handleLocation = new Vector3(doorHandle.transform.position.x, 0f, doorHandle.transform.position.z);
 
             Vector3 dir = handleLocation - hingeLocation;
-            angle = -Mathf.Atan2(dir.z, dir.x) * Mathf.Rad2Deg;
+
+            // Debug.DrawLine(hingeLocation, closedVector, Color.red);
+            // Debug.DrawLine(hingeLocation, handleLocation, Color.yellow);
+            Debug.DrawLine(hingeLocation, closedVector, Color.red);
+            Debug.DrawLine(hingeLocation, handleLocation, Color.yellow);
+
+
+            // Now calculate the angle between the closedVector and the dir vector
+            angle = Vector3.Angle(closedVector, dir);
+            // this should always be between 0-90, so we need to flip the sign later in the limits
+            
+            Debug.Log(angle);
             //float angle = Vector3.Angle(doorHinge.anchor, doorHandle.transform.position);
-            if (angle <= closedAngle && angle >= openAngle) { // if its swinging the right way, move it
-                doorHinge.limits = new JointLimits { min = angle-0.1f, max = angle+0.1f };
+            if (-angle <= closedAngle && -angle >= openAngle) { // if its swinging the right way, move it
+                doorHinge.limits = new JointLimits { min = -angle-0.1f, max = -angle+0.1f };
                 doorRigidBody.velocity = Vector3.zero; // Stop any residual movement
                 doorRigidBody.angularVelocity = Vector3.zero; // Stop any residual rotation
             }
         }
     }
-
 
 
     // NPC STUFF
