@@ -14,10 +14,7 @@
 
 ## [v.0.5.5.8-alpha] - 2024-07-25
 **Author:** Antoine
--   Made doors open/close angle static (based on starting angle) FINALLY
--   Candle sound now properly plays
--   Fixed bug with doors being knocked open
--   Fixed bug where candle audio would be cut because of `setactive = false` before playing the sound
+-   
 
 *BUGS*:
 -   **PROJECT TREE CLEANUP STILL NEEDS TO BE COMPLETED**: Fire, NPCs, Doors, Lights
@@ -30,12 +27,10 @@
 
 *NEXT STEPS*
 -   Make doors keep momentum slightly (swing)
--   Add flame going out sound
 -   Resize objects for more realism (props mostly)
 -   ALARM
 -   Hardware (Arduino + gyroscope)
 -   UI/Menu
--   
 
 ## [v.0.4.5.8-alpha] - 2024-07-18
 **Author:** Antoine
