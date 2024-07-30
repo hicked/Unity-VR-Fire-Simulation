@@ -12,9 +12,10 @@
 
 **D**: Patch / Refactoring
 
-## [v.0.5.5.8-alpha] - 2024-07-25
+## [v.0.5.5.8-beta] - 2024-07-25
 **Author:** Antoine
--   
+**First beta version: Most Core Elements Completed**
+*NOTE*: There is a limit of 8 lights per-camera per-object. Might be worth looking at `HDRP`, or simply baking the lights in instead or something.
 
 *BUGS*:
 -   **PROJECT TREE CLEANUP STILL NEEDS TO BE COMPLETED**: Fire, NPCs, Doors, Lights
@@ -30,7 +31,7 @@
 -   Resize objects for more realism (props mostly)
 -   ALARM
 -   Hardware (Arduino + gyroscope)
--   UI/Menu
+-   UI/Menu -> only at the end
 
 ## [v.0.4.5.8-alpha] - 2024-07-18
 **Author:** Antoine
