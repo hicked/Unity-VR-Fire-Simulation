@@ -12,8 +12,158 @@
 
 **D**: Patch / Refactoring
 
+## [v.0.5.5.8-beta] - 2024-07-25
+**Author:** Antoine
+**First beta version: Most Core Elements Completed**
+*NOTE*: There is a limit of 8 lights per-camera per-object. Might be worth looking at `HDRP`, or simply baking the lights in instead or something.
 
-## [v.0.3.4.5] - 2024-06-26
+*BUGS*:
+-   **PROJECT TREE CLEANUP STILL NEEDS TO BE COMPLETED**: Fire, NPCs, Doors, Lights
+-   Some switches dont have assigned lights
+-   `Look rotation viewing vector is zero` "bug", not game breaking
+-   `locom_m_basicWalk_30f` too fast for the audio clip. This can be dealt with later
+-   Make onPhone independant, static
+-   Add different walk and run sounds
+-   Smoke ignoring colliders at X time
+
+*NEXT STEPS*
+-   Make doors keep momentum slightly (swing)
+-   Resize objects for more realism (props mostly)
+-   ALARM
+-   Hardware (Arduino + gyroscope)
+-   UI/Menu -> only at the end
+
+## [v.0.4.5.8-alpha] - 2024-07-18
+**Author:** Antoine
+-   Stopped doors from swinging the wrong way
+-   Added damper to doors
+-   Candles now properly go out on pinch
+-   Light switches now work
+
+*BUGS*:
+-   **IMPORTANT** Doors need to change their min/max based on their orientation to begin
+
+-   **PROJECT TREE CLEANUP STILL NEEDS TO BE COMPLETED**: Fire, NPCs, Doors, Lights
+-   `Look rotation viewing vector is zero` "bug", not game breaking
+-   `locom_m_basicWalk_30f` too fast for the audio clip. This can be dealt with later
+-   Make onPhone independant, static
+-   Add different walk and run sounds
+-   Smoke ignoring colliders are X time
+
+*NEXT STEPS*
+-   **POKE INTERACTIONS** light switch
+-   Add flame going out sound
+-   Resize objects for more realism (props mostly)
+-   ALARM
+-   Hardware (Arduino + gyroscope)
+-   UI/Menu
+
+
+## [v.0.3.5.8-alpha] - 2024-07-18
+**Author:** Antoine
+-   Doors now completely work (jitter sometimes? rb problem)
+-   Mirrors work-ish need to prerender them. Might be good enough. Consult
+
+*BUGS*:
+-   **PROJECT TREE CLEANUP STILL NEEDS TO BE COMPLETED**: Fire, NPCs, Doors, Lights
+-   `Look rotation viewing vector is zero` "bug", not game breaking
+-   `locom_m_basicWalk_30f` too fast for the audio clip. This can be dealt with later
+-   Make onPhone independant, static
+-   Add different walk and run sounds
+-   Smoke ignoring colliders are X time
+
+*NEXT STEPS*
+-   **POKE INTERACTIONS** light switch
+-   Add flame going out sound
+-   Resize objects for more realism (props mostly)
+-   ALARM
+-   Hardware (Arduino + gyroscope)
+-   UI/Menu
+
+## [v.0.3.5.7-alpha] - 2024-07-16
+**Author:** Antoine
+-   Massive refactor of project tree and files
+-   Doors now work and swing properly
+
+*BUGS*
+-   Cant interact with doors vr bug
+-   doors a little bit jittery when standing still
+-   **PROJECT TREE CLEANUP STILL NEEDS TO BE COMPLETED**
+-   `Look rotation viewing vector is zero` "bug", not game breaking
+-   `locom_m_basicWalk_30f` too fast for the audio clip. This can be dealt with later
+-   Make onPhone independant, static
+-   Add different walk and run sounds
+-   Smoke ignoring colliders are X time
+
+*NEXT STEPS*
+-   Custom interactions -> `override` function. Need to read XR Docs
+-   Hardware (Arduino + gyroscope)
+
+
+## [v.0.3.5.6-prealpha] - 2024-07-10
+**Author:** Antoine
+-   Interactions now work.
+-   Doors might work? Not tested in VR
+
+**HIGH PRIOTITY:** Refactor project tree, its a mess.
+
+*BUGS*
+-   `Look rotation viewing vector is zero` "bug", not game breaking
+-   `locom_m_basicWalk_30f` too fast for the audio clip. This can be dealt with later
+-   Make onPhone independant, static
+-   Add different walk and run sounds
+-   Smoke ignoring colliders are X time
+
+*NEXT STEPS*
+-   Custom interactions -> `override` function. Need to read XR Docs
+-   Hardware (Arduino + gyroscope)
+
+
+## [v.0.3.5.5-prealpha] - 2024-06-27
+**Author:** Antoine
+-   Hand tracking now works, but not interactions
+-   Audio is cut more when it goes through a wall
+
+**HIGH PRIOTITY:** Refactor project tree, its a mess.
+
+*BUGS*
+-   `Look rotation viewing vector is zero` "bug", not game breaking
+-   `locom_m_basicWalk_30f` too fast for the audio clip. This can be dealt with later
+-   Should add a `Collidable` parent class for cleaner code (maybe)
+-   Make onPhone independant, static
+-   Add different walk and run sounds
+-   Smoke ignoring colliders are X time
+
+*NEXT STEPS*
+-   Hand tracking/interactions (Meta Quest Pro)
+-   Hardware (Arduino + gyroscope)
+
+
+## [v.0.3.4.5-prealpha] - 2024-06-27
+**Author:** Antoine
+-   Added flames and explosion with sound
+-   Changed Smoke texture. Also changes over time
+-   Smoke collisions give downwards velocity automatically
+>   *MAKE SURE LIGHTS ARE ARENT REFLECTING PROPERLY ARE SET TO HIGH IMPORTANCE*
+
+**HIGH PRIOTITY:** Refactor project tree, its a mess.
+
+*BUGS*
+-   `Look rotation viewing vector is zero` "bug", not game breaking
+-   `locom_m_basicWalk_30f` too fast for the audio clip. This can be dealt with later
+-   Should add a `Collidable` parent class for cleaner code (maybe)
+-   Make onPhone independant, static
+-   Add different walk and run sounds
+-   Smoke ignoring colliders are X time
+
+*NEXT STEPS*
+-   Hand tracking/interactions (Meta Quest Pro)
+-   Hardware (Arduino + gyroscope)
+-   Refine smoke interactions
+-   Audio needs collisions with walls (get muffled if goes through walls)
+
+
+## [v.0.3.4.5-prealpha] - 2024-06-26
 **Author:** Antoine
 -   Wheel audio fades in and out
     -   now based on speed of the wheel -> speed of playback
@@ -38,7 +188,7 @@
 -   Add flame to smoke
 
 
-## [v.0.3.4.4] - 2024-06-25
+## [v.0.3.4.4-prealpha] - 2024-06-25
 **Author:** Antoine
 -   Npcs are now multithreaded, although they are still slow since they need to make callbacks to update()
 -   Added a maximum height to particles before they die
@@ -62,7 +212,7 @@
 -   Refine smoke interactions
 
 
-## [v.0.3.4.3] - 2024-06-20
+## [v.0.3.4.3-prealpha] - 2024-06-20
 **Author:** Antoine
 -   **<ins>SMOKE NOW WORKS</ins>** -> *parameters need to be tweaked for more realism*
 
@@ -84,7 +234,7 @@
 -   Light switches interactions and sound effect
 -   Refine smoke interactions
 
-## [v.0.2.4.3] - 2024-06-15
+## [v.0.2.4.3-prealpha] - 2024-06-15
 **Author:** Antoine
 -   Refactored Hierachy although tree is still messy.
 -   Tried getting colliders with smoke particles working but still doesnt work
@@ -104,7 +254,7 @@
 -   Light switches interactions and sound effect
 
 
-## [v.0.2.4.2] - 2024-06-15
+## [v.0.2.4.2-prealpha] - 2024-06-15
 **Author:** Antoine
 -   Setup the foundation for particles but theres an issue: particles only collide with objects, not other particles
 -   No longer need `lookat` Vectors: `AStarPathfinder.cs` finds it using logic
@@ -131,7 +281,7 @@
 -   Paintings
 
 
-## [v.0.2.3.2] - 2024-06-13
+## [v.0.2.3.2-prealpha] - 2024-06-13
 **Author:** Antoine
 -   **IMPORTANT:** Interactions are now handles by the object script (must extend interatable)
 -   Therefore, door interactions are now handled within the `doors.cs` script
@@ -154,7 +304,7 @@
 -   Paintings
 
 
-## [v.0.2.2.2] - 2024-06-12
+## [v.0.2.2.2-prealpha] - 2024-06-12
 **Author:** Antoine
 -   Refactored the doors scripts, added audio clips
 -   Made pathfinding take into account locked doors (dont go through locked ones)
@@ -178,7 +328,7 @@ memory
 -   Paintings
 
 
-## [v.0.2.2.1] - 2024-06-10
+## [v.0.2.2.1-prealpha] - 2024-06-10
 **Author:** Antoine
 -   Finalized pathfinding
 -   Doors now move on a "points along path" basis instead of facing the direction
@@ -204,7 +354,7 @@ memory
 -   Smoke   
 
 
-## [v.0.2.1.1] - 2024-06-08
+## [v.0.2.1.1-prealpha] - 2024-06-08
 **Author:** Antoine
 -   **MASSIVE UPDATE**
 -   NPC pathfinding now works
@@ -220,7 +370,7 @@ memory
 **NOTE BUG: Changes animations twice in NPCAI when time is passed**
 
 
-## [v.0.1.1.1] - 2024-05-10
+## [v.0.1.1.1-prealpha] - 2024-05-10
 
 **Author:** Antoine
 
@@ -237,7 +387,7 @@ Instead of the Frame staying still, and only the door swinging.
 Doors should be able to be pushed closed with a collisions, this can be done later though.
 
 
-## [v.0.1.0.1] - 2024-05-09
+## [v.0.1.0.1-prealpha] - 2024-05-09
 
 **Author:** Antoine
 
@@ -253,7 +403,7 @@ Doors should be able to be pushed closed with a collisions, this can be done lat
 *NOTE: This will have to be reworked in order do work with two wheels and thus will have to make the movement work like its on a hinge. Core script should remain similar*
 
 
-## [v.0.0.0.1] - 2024-04-05
+## [v.0.0.0.1-prealpha] - 2024-04-05
 
 **Author:** Antoine
 

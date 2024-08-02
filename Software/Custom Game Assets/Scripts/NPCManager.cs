@@ -17,7 +17,7 @@ public class NPCLocationInfoList {
     public List<NPCLocationInfo> idleLocationsList;
 }
 
-public class NPCManager : MonoBehaviour {
+public class NPCManager : Audible {
     [SerializeField] private LayerMask doorLayer;
     [SerializeField] public float NPCHeight = 1.75f;
     [SerializeField] public float NPCRadius = 0.3f;
@@ -48,6 +48,7 @@ public class NPCManager : MonoBehaviour {
     public bool isRunning = false;
     private GameObject lastDoorBlocked;
 
+    private IEnumerator activeMouvementCoroutine = null;
 
     [SerializeField] private string originalLocationsFilePath = "/Scripts/originalNPCLocations.json";
     [SerializeField] private string NPCLocationsFilePath = "/Scripts/NPCLocations.json";
@@ -84,33 +85,29 @@ public class NPCManager : MonoBehaviour {
 
     //----------------------------------------------------------------------
     public string[] NPCIdleStatesW = new string[] {
-                                        "Exercise_warmingUp_170f",
-                                        "idle_f_1_150f",
-                                        "idle_f_2_190f",
-                                        "idle_phoneTalking_180f",
-                                        "idle_selfcheck_1_300f"};
-    public string[] NPCWalkingStatesW = new string[] {
-                                        // "locom_m_basicWalk_30f", unfortunetly this is too fast for the audio clip. This can be dealt with later
-                                        "locom_f_phoneWalking_40f",
-                                        "locom_f_slowWalk_40f"};
-    public string[] NPCRunningStatesW = new string[] {
-                                        "locom_m_jogging_30f",
-                                        "locom_f_running_20f"};
+        "Exercise_warmingUp_170f",
+        "idle_f_1_150f",
+        "idle_f_2_190f",
+        "idle_phoneTalking_180f",
+        "idle_selfcheck_1_300f"};
 
     //----------------------------------------------------------------------
     public string[] NPCIdleStatesM = new string[] {
-                                        "Exercise_warmingUp_170f",
-                                        "idle_phoneTalking_180f",
-                                        "idle_m_1_200f",
-                                        "idle_m_2_220f"};
-    public string[] NPCWalkingStatesM = new string[] {
-                                        // "locom_m_basicWalk_30f",
-                                        "locom_m_phoneWalking_40f",
-                                        "locom_m_slowWalk_40f"};
+        "Exercise_warmingUp_170f",
+        "idle_phoneTalking_180f",
+        "idle_m_1_200f",
+        "idle_m_2_220f"};
+    
+    public Dictionary<string, float> NPCWalkingStates = new Dictionary<string, float>() {
+        //{ "locom_m_basicWalk_30f", 0.5f },
+        { "locom_m_phoneWalking_40f", 0.65f },
+        { "locom_m_slowWalk_40f", 0.75f }
+    };
 
-    public string[] NPCRunningStatesM = new string[] {
-                                        "locom_m_jogging_30f",
-                                        "locom_m_running_20f"};
+    public Dictionary<string, float> NPCRunningStates = new Dictionary<string, float>() {
+        { "locom_m_jogging_30f", 0.3f},
+        { "locom_m_running_20f", 0.3f }
+    };
     //----------------------------------------------------------------------
 
     AnimatorClipInfo[] animatorInfo;
@@ -146,6 +143,8 @@ public class NPCManager : MonoBehaviour {
 
 
     private void Start() {
+        audioSource = NPCAudioSource;
+        
         originalLocationsFilePath = Application.dataPath + originalLocationsFilePath;
         NPCLocationsFilePath = Application.dataPath + NPCLocationsFilePath;
         // Resets json to original
@@ -185,18 +184,21 @@ public class NPCManager : MonoBehaviour {
         if (animatorInfo.Length == 1) {
             currentAnimation = animatorInfo[0].clip.name;
             // Makes sure we have to correct animation based on the state of the NPC
-
-            if (isRunning && !(NPCRunningStatesM.Contains(currentAnimation) || NPCRunningStatesW.Contains(currentAnimation))) { 
+            if (isRunning && !(NPCRunningStates.ContainsKey(currentAnimation) || NPCRunningStates.ContainsKey(currentAnimation))) { 
                 setRandomRunning();
-                StartCoroutine(runCoroutine());
+                if (activeMouvementCoroutine != null) {StopCoroutine(activeMouvementCoroutine);}
+                activeMouvementCoroutine = runCoroutine(NPCRunningStates[currentAnimation]);
+                StartCoroutine(activeMouvementCoroutine);
             }
-            else if (isWalking && !(NPCWalkingStatesM.Contains(currentAnimation) || NPCWalkingStatesW.Contains(currentAnimation))) { 
+            else if (isWalking && !(NPCWalkingStates.ContainsKey(currentAnimation) || NPCWalkingStates.ContainsKey(currentAnimation))) { 
                 setRandomWalking();
-                StartCoroutine(walkCoroutine());
+                if (activeMouvementCoroutine != null) {StopCoroutine(activeMouvementCoroutine);}
+                activeMouvementCoroutine = walkCoroutine(NPCWalkingStates[currentAnimation]);
+                StartCoroutine(activeMouvementCoroutine);
             }
             else if (isIdle && !(NPCIdleStatesM.Contains(currentAnimation) || NPCIdleStatesW.Contains(currentAnimation))) { 
+                if (activeMouvementCoroutine != null) {StopCoroutine(activeMouvementCoroutine);}
                 setRandomIdle();
-                NPCAudioSource.Stop();
             }
 
             //if (alarm.isOn) {MoveAlongPath(run=true);}
@@ -205,6 +207,10 @@ public class NPCManager : MonoBehaviour {
             // Dont need to move NPC forward since that is automatically done above (isRunning
         }
     }
+
+
+// ====================================================================================================
+
 
     public void moveToRandom() {
         string jsonContent = File.ReadAllText(NPCLocationsFilePath);
@@ -248,6 +254,7 @@ public class NPCManager : MonoBehaviour {
 
 
     private void setPathTo(Vector3 location) {
+        Debug.Log("Setting path to " + location);
         pathfinder.FindPath(transform.position, location);
         currentPathIndex = 0;
     }
@@ -338,6 +345,7 @@ public class NPCManager : MonoBehaviour {
     public void changeState(string state) {
         if (!NPCStateNames.Contains(state)) { throw new UnityException("animation provided not found"); }
         animator.CrossFadeInFixedTime(state, crossFadeDuration, 0, Random.value * getAnimation(state).length);
+        currentAnimation = state;
     }
 
     public void setRandomIdle() {
@@ -351,19 +359,19 @@ public class NPCManager : MonoBehaviour {
 
     public void setRandomWalking() {
         if (isMan) {
-            changeState(NPCWalkingStatesM[Random.Range(0, NPCWalkingStatesM.Length)]);
+            changeState(NPCWalkingStates.Keys.ToList()[Random.Range(0, NPCWalkingStates.Count)]);
         }
         else {
-            changeState(NPCWalkingStatesW[Random.Range(0, NPCWalkingStatesW.Length)]);
+            changeState(NPCWalkingStates.Keys.ToList()[Random.Range(0, NPCWalkingStates.Count)]);
         }
     }
 
     public void setRandomRunning() {
         if (isMan) {
-            changeState(NPCRunningStatesM[Random.Range(0, NPCRunningStatesM.Length)]);
+            changeState(NPCRunningStates.Keys.ToList()[Random.Range(0, NPCRunningStates.Count)]);
         }
         else {
-            changeState(NPCRunningStatesW[Random.Range(0, NPCRunningStatesW.Length)]);
+            changeState(NPCRunningStates.Keys.ToList()[Random.Range(0, NPCRunningStates.Count)]);
         }
     }
 
@@ -375,14 +383,21 @@ public class NPCManager : MonoBehaviour {
         }
         throw new UnityException("Animation provided not found");
     }
-    private IEnumerator walkCoroutine() {
+    private IEnumerator walkCoroutine(float walkDelay) {
         yield return new WaitForSeconds(walkOffset);
         NPCAudioSource.clip = walkAudio;
-        NPCAudioSource.Play();
+        while (true) {
+            yield return new WaitForSeconds(walkDelay);
+            NPCAudioSource.Play();
+        }
     }
-    private IEnumerator runCoroutine() {
+
+    private IEnumerator runCoroutine(float runDelay) {
         yield return new WaitForSeconds(runOffset);
         NPCAudioSource.clip = runAudio;
-        NPCAudioSource.Play();
+        while (true) {
+            yield return new WaitForSeconds(runDelay);
+            NPCAudioSource.Play();
+        }
     }
 }

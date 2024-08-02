@@ -1,22 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit;
 
-public class LightSwitch : MonoBehaviour, Interactable {
+public class LightSwitch : XRSimpleInteractable {
     [SerializeField] private List<Light> pointLights;
     [SerializeField] private List<AudioClip> switchSounds;
     [SerializeField] public AudioSource switchAudioSource;
 
     // Start is called before the first frame update
-    void Start()
-    {
-        StartCoroutine(blah());
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    [System.Obsolete("No idea why this is obsolete, but it works.")]
+    override protected void OnHoverEntered(XRBaseInteractor interactor) {
+        Interact();
     }
 
     public void Interact() {
@@ -37,7 +33,7 @@ public class LightSwitch : MonoBehaviour, Interactable {
                 pointLight.gameObject.SetActive(true);
             }
         }
-        transform.Rotate(transform.up, 180, Space.World);
+        transform.Rotate(transform.up, 180, Space.World); // flip the switch
     }
 
     private IEnumerator blah() {

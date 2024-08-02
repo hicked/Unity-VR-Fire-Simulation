@@ -1,4 +1,3 @@
-public interface Interactable
-{
-    void Interact();
+interface Interactable {
+  void KeyboardInteract();
 }

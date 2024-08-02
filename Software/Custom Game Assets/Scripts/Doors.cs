@@ -1,41 +1,44 @@
 using System.Collections;
 using UnityEngine;
-using TMPro;
+using UnityEngine.XR.Interaction.Toolkit;
 
-public class Doors : MonoBehaviour, Interactable {
+public class Doors : Audible, Interactable {
     [SerializeField] public AudioSource doorAudioSource;
     [SerializeField] public AudioClip openDoorClip;
     [SerializeField] public AudioClip closeDoorClip;
-    [SerializeField] public AudioClip lockedDoorClip;
+
     [SerializeField] public float closeOffset = 0.55f;
     [SerializeField] public float openOffset = 0.55f;
     [SerializeField] private float doorSpeed = 90f;
 
-    [SerializeField] private float lockedDoorMessageFadeIn = 0.5f;
-    [SerializeField] private float lockedDoorMessageTime = 2f;
-    [SerializeField] private float lockedDoorMessageFadeOut = 0.5f;
+    [SerializeField] public float openAngle = -90f;
+    [SerializeField] public float closedAngle = 0f;
+    [SerializeField] private float angleSnap = 5f; // door will snap closed if the angle is less than this
+    [SerializeField] public GameObject doorHandle;
+    private DoorHandle handleScript;
+    [SerializeField] private HingeJoint doorHinge;
+    private Rigidbody doorRigidBody; // MIGHT NOT NEED THIS TO RESET VELOCITY OF DOOR MIGHT NEED HINGEJOINT VELOCITY
+    private Vector3 closedVector;
 
-    public GameObject lockedDoorMessage; // Reference to UI element showing the locked door message
-    private bool isMessageDisplaying; // Flag to track if message is already displaying
-
-    private Quaternion targetRotation;
-    private float rotationOpen;
-    private float rotationClosed;
-    public bool isOpen = false;
+    // used for npcs opening doors, not player
+    private float targetRotation;
+    public float angle;
     public bool isMoving = false;
-    public bool isLocked;
+
+    
     private Coroutine temporaryOpenCoroutine;
 
-    public void Interact() {
-        if (isLocked) {
-            if (!isMessageDisplaying) {
-                doorAudioSource.clip = lockedDoorClip;
-                doorAudioSource.Play();
-                StartCoroutine(ShowLockedDoorMessage(lockedDoorMessageFadeIn, lockedDoorMessageTime, lockedDoorMessageFadeOut));
+    public void KeyboardInteract() {
+        handleScript = doorHandle.GetComponent<DoorHandle>();
+        if (handleScript.isLocked) {
+            if (!(handleScript.isMessageDisplaying)) {
+                handleScript.doorAudioSource.clip = handleScript.lockedDoorClip;
+                handleScript.doorAudioSource.Play();
+                StartCoroutine(handleScript.ShowLockedDoorMessage(handleScript.lockedDoorMessageFadeIn, handleScript.lockedDoorMessageTime, handleScript.lockedDoorMessageFadeOut));
             }
         }
         else {
-            if (isOpen) {
+            if (angle == openAngle) {
                 Close();
             }
             else {
@@ -46,40 +49,87 @@ public class Doors : MonoBehaviour, Interactable {
 
     // Start is called before the first frame update
     void Start() {
-        rotationClosed = transform.eulerAngles.y;
-        rotationOpen = rotationClosed - 90f;
-        targetRotation = transform.rotation;
+        closedVector = transform.parent.forward;
+        doorRigidBody = GetComponent<Rigidbody>();
+        handleScript = doorHandle.GetComponent<DoorHandle>();
+        audioSource = doorAudioSource;
     }
 
     // Update is called once per frame
     void Update() {
-        if (isMoving) {
-            // Smoothly rotate towards the target rotation
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, doorSpeed * Time.deltaTime);
+        if (isMoving) { // only for NCPs
             // Check if the rotation is close enough to the target
-            if (Quaternion.Angle(transform.rotation, targetRotation) < 0.1f) {
+            if (Mathf.Abs(angle - targetRotation) < 0.1f) {
                 isMoving = false; // Stop moving
-                transform.rotation = targetRotation; // Ensure exact alignment
+                angle = targetRotation; // Ensure exact alignment
+                doorHinge.limits = new JointLimits { min = angle-0.1f, max = angle+0.1f }; // Ensure exact alignment
+                doorRigidBody.velocity = Vector3.zero; // Stop any residual movement
+                doorRigidBody.angularVelocity = Vector3.zero; // Stop any residual rotation
+            }
+            
+            else if (angle > targetRotation) {
+                angle -= 1f * doorSpeed * Time.deltaTime;
+                doorHinge.limits = new JointLimits { min = angle-0.1f, max = angle+0.1f };
+            }
+            else if (angle < targetRotation) {
+                angle += 1f * doorSpeed * Time.deltaTime;
+                doorHinge.limits = new JointLimits { min = angle-0.1f, max = angle+0.1f };
+            }
+        }
+
+        else if (!(handleScript.IsGrabbed()) && (doorHinge.limits.max != closedAngle) && (Mathf.Abs(angle - closedAngle) < angleSnap)) { // this means the player has let go of the door handle
+            handleScript.ForceDrop();
+            angle = closedAngle; // Ensure exact alignment
+            doorHinge.limits = new JointLimits { min = angle, max = angle }; 
+            
+            StartCoroutine(closeSoundCoroutine());
+        }
+        
+        else if (handleScript.IsGrabbed()) { // this means the player is holding the door handle
+            Vector3 hingeLocation = new Vector3(this.transform.position.x, 0f, this.transform.position.z);
+            Vector3 handleLocation = new Vector3(doorHandle.transform.position.x, 0f, doorHandle.transform.position.z);
+
+            Vector3 dir = handleLocation - hingeLocation;
+
+            // Debug.DrawLine(hingeLocation, closedVector, Color.red);
+            // Debug.DrawLine(hingeLocation, handleLocation, Color.yellow);
+            Debug.DrawLine(hingeLocation, closedVector, Color.red);
+            Debug.DrawLine(hingeLocation, handleLocation, Color.yellow);
+
+
+            // Now calculate the angle between the closedVector and the dir vector
+            angle = Vector3.Angle(closedVector, dir);
+            // this should always be between 0-90, so we need to flip the sign later in the limits
+            
+            Debug.Log(angle);
+            //float angle = Vector3.Angle(doorHinge.anchor, doorHandle.transform.position);
+            if (-angle <= closedAngle && -angle >= openAngle) { // if its swinging the right way, move it
+                doorHinge.limits = new JointLimits { min = -angle-0.1f, max = -angle+0.1f };
+                doorRigidBody.velocity = Vector3.zero; // Stop any residual movement
+                doorRigidBody.angularVelocity = Vector3.zero; // Stop any residual rotation
             }
         }
     }
 
+
+    // NPC STUFF
+    // These two functions directly change the doors target angle, which is will move toward.
     public void Open() {
-        targetRotation = Quaternion.Euler(transform.eulerAngles.x, rotationOpen, transform.eulerAngles.z);
-        isOpen = true;
+        targetRotation = openAngle;
         isMoving = true;
-        StartCoroutine(openCoroutine());
+        StartCoroutine(openSoundCoroutine());
     }
 
     public void Close() {
-        targetRotation = Quaternion.Euler(transform.eulerAngles.x, rotationClosed, transform.eulerAngles.z);
-        isOpen = false;
+        targetRotation = closedAngle;
         isMoving = true;
-        StartCoroutine(closeCoroutine());
+        StartCoroutine(closeSoundCoroutine());
     }
 
+
+    // Open the door for a set amount of time
     public void OpenDoorTemporarily(float timeOpen) {
-        if (temporaryOpenCoroutine != null) {
+        if (temporaryOpenCoroutine != null) { // ensures it is not already in the process of opening/closing
             StopCoroutine(temporaryOpenCoroutine);
         }
         temporaryOpenCoroutine = StartCoroutine(TemporaryOpenCoroutine(timeOpen));
@@ -91,50 +141,17 @@ public class Doors : MonoBehaviour, Interactable {
         Close();
         temporaryOpenCoroutine = null;
     }
-    private IEnumerator closeCoroutine() {
+
+
+    // These two functions are used to play the door sound effect
+    private IEnumerator closeSoundCoroutine() {
         yield return new WaitForSeconds(closeOffset);
         doorAudioSource.clip = closeDoorClip;
         doorAudioSource.Play();
     }
-    private IEnumerator openCoroutine() {
+    private IEnumerator openSoundCoroutine() {
         yield return new WaitForSeconds(openOffset);
         doorAudioSource.clip = openDoorClip;
         doorAudioSource.Play();
-    }
-    
-    private IEnumerator ShowLockedDoorMessage(float fadeInDuration, float displayDuration, float fadeOutDuration) {
-        isMessageDisplaying = true;
-        TextMeshProUGUI messageText = lockedDoorMessage.GetComponent<TextMeshProUGUI>();
-        lockedDoorMessage.SetActive(true);
-        Color originalColor = messageText.color;
-        originalColor.a = 0f; // Start with fully transparent
-
-        // Fade in
-        float timer = 0f;
-        while (timer < fadeInDuration) {
-            timer += Time.deltaTime;
-            float alpha = Mathf.Lerp(0f, 1f, timer / fadeInDuration);
-            messageText.color = new Color(originalColor.r, originalColor.g, originalColor.b, alpha);
-            yield return null;
-        }
-
-        // Hold for display duration
-        yield return new WaitForSeconds(displayDuration);
-
-        // Fade out
-        timer = 0f;
-        while (timer < fadeOutDuration) {
-            timer += Time.deltaTime;
-            float alpha = Mathf.Lerp(1f, 0f, timer / fadeOutDuration);
-            messageText.color = new Color(originalColor.r, originalColor.g, originalColor.b, alpha);
-            yield return null;
-        }
-
-        // Ensure fully transparent at the end
-        messageText.color = new Color(originalColor.r, originalColor.g, originalColor.b, 0f);
-
-        // Hide the message
-        lockedDoorMessage.SetActive(false);
-        isMessageDisplaying = false;
     }
 }
