@@ -18,6 +18,7 @@
 *NOTE*: There is a limit of 8 lights per-camera per-object. Might be worth looking at `HDRP`, or simply baking the lights in instead or something.
 
 *BUGS*:
+-   DOULBE PREFAB FOR COMPUTER TABLE AND BEIGE CHAIR SMALL COFFEE TABLE
 -   **PROJECT TREE CLEANUP STILL NEEDS TO BE COMPLETED**: Fire, NPCs, Doors, Lights
 -   Some switches dont have assigned lights
 -   `Look rotation viewing vector is zero` "bug", not game breaking
