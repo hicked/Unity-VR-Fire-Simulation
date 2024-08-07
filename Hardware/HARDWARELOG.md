@@ -12,7 +12,13 @@ Date is in YYYY/MM/DD format.
 
 **D**: Patch / Refactoring
 
-## [v.0.0.1.1-prealpha] - 2024-04-05
+## [v.0.0.2.1-prealpha] - 2024-08-07
+
+**Author:** Antoine
+-   Got outgoing messages and serial port communication running, unity does not have access to the port yet
+
+
+## [v.0.0.1.1-prealpha] - 2024-08-03
 
 **Author:** Antoine
 **Plan:**

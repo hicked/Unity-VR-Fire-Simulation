@@ -26,6 +26,7 @@
 -   Smoke ignoring colliders at X time
 
 *NEXT STEPS*
+-   Last room (3)
 -   Make doors keep momentum slightly (swing)
 -   Resize objects for more realism (props mostly)
 -   ALARM
