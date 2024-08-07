@@ -58,9 +58,14 @@ public class Player : MonoBehaviour {
 
     //Wheel Chair control (for now with arrows and wasd)
     private void Update() {
-        // Later, should update using arduino input gyroscopes
         float leftWheelSpeed = 0f;
         float rightWheelSpeed = 0f;
+
+        // Arduino inputs
+        lock (ArduinoIO.speeds) {
+            leftWheelSpeed += ArduinoIO.leftSpeed;
+            rightWheelSpeed += ArduinoIO.rightSpeed;
+        }
 
         // Left wheel
         if (Input.GetKey(KeyCode.W) && !isBlocked(transform.forward, maxDistance)) {

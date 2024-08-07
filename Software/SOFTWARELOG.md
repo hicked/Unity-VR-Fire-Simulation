@@ -12,6 +12,26 @@
 
 **D**: Patch / Refactoring
 
+## [v.0.5.6.8-beta] - 2024-08-07
+**Author:** Antoine
+-   Assigned lights to switches.
+-   Changed candle prefab to be seperate `XR interactable` (doesnt change anything functionnaly, just resolves a warning). *Note this is broken since the candle lights dont track with the candlestick.
+-   Communication Unity -> Arduino works but port access is denied for whatever reason
+
+*BUGS*:
+-   **PROJECT TREE CLEANUP STILL NEEDS TO BE COMPLETED**: Fire, NPCs, Doors, Lights AS WELL AS DUPLICATES
+-   `Look rotation viewing vector is zero` "bug", not game breaking
+-   Make onPhone independant, static
+-   Add different walk and run sounds
+-   Smoke ignoring colliders at X time
+
+*NEXT STEPS*
+-   Make doors keep momentum slightly (swing)
+-   Resize objects for more realism (props mostly)
+-   ALARM
+-   UI/Menu -> only at the end
+
+
 ## [v.0.5.5.8-beta] - 2024-07-25
 **Author:** Antoine
 **First beta version: Most Core Elements Completed**

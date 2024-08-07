@@ -99,9 +99,9 @@ public class NPCManager : Audible {
         "idle_m_2_220f"};
     
     public Dictionary<string, float> NPCWalkingStates = new Dictionary<string, float>() {
-        //{ "locom_m_basicWalk_30f", 0.5f },
-        { "locom_m_phoneWalking_40f", 0.65f },
-        { "locom_m_slowWalk_40f", 0.75f }
+        { "locom_m_basicWalk_30f", 0.5f },
+        { "locom_m_phoneWalking_40f", 0.55f },
+        { "locom_m_slowWalk_40f", 0.69f }
     };
 
     public Dictionary<string, float> NPCRunningStates = new Dictionary<string, float>() {
@@ -184,20 +184,24 @@ public class NPCManager : Audible {
         if (animatorInfo.Length == 1) {
             currentAnimation = animatorInfo[0].clip.name;
             // Makes sure we have to correct animation based on the state of the NPC
-            if (isRunning && !(NPCRunningStates.ContainsKey(currentAnimation) || NPCRunningStates.ContainsKey(currentAnimation))) { 
+            if (isRunning && !(NPCRunningStates.ContainsKey(currentAnimation))) { //|| NPCRunningStates.ContainsKey(currentAnimation))) { 
                 setRandomRunning();
                 if (activeMouvementCoroutine != null) {StopCoroutine(activeMouvementCoroutine);}
                 activeMouvementCoroutine = runCoroutine(NPCRunningStates[currentAnimation]);
                 StartCoroutine(activeMouvementCoroutine);
             }
-            else if (isWalking && !(NPCWalkingStates.ContainsKey(currentAnimation) || NPCWalkingStates.ContainsKey(currentAnimation))) { 
+            else if (isWalking && !(NPCWalkingStates.ContainsKey(currentAnimation))) { //|| NPCWalkingStates.ContainsKey(currentAnimation))) { 
                 setRandomWalking();
                 if (activeMouvementCoroutine != null) {StopCoroutine(activeMouvementCoroutine);}
                 activeMouvementCoroutine = walkCoroutine(NPCWalkingStates[currentAnimation]);
                 StartCoroutine(activeMouvementCoroutine);
             }
             else if (isIdle && !(NPCIdleStatesM.Contains(currentAnimation) || NPCIdleStatesW.Contains(currentAnimation))) { 
-                if (activeMouvementCoroutine != null) {StopCoroutine(activeMouvementCoroutine);}
+                if (activeMouvementCoroutine != null) {
+                    StopCoroutine(activeMouvementCoroutine);
+                    activeMouvementCoroutine = null;
+                    NPCAudioSource.Stop();
+                }
                 setRandomIdle();
             }
 
