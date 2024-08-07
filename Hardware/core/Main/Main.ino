@@ -13,17 +13,17 @@ float data[2] = {0, 0};
 
 void loop() {
   if (Serial.available() > 0) {
-    leftSpeed = digitalRead(3);
-    rightSpeed = digitalRead(4);
-    data[0] = leftSpeed;
-    data[1] = rightSpeed;
+    // leftSpeed = digitalRead(3);
+    // rightSpeed = digitalRead(4);
+    // data[0] = leftSpeed;
+    // data[1] = rightSpeed;
+    data[0] = 20;
+    data[1] = 30;
 
-    // Convert float array to byte array
-    byte byteData[sizeof(data)];
-    memcpy(byteData, data, sizeof(data));
+    String data = String(leftSpeed) + "," + String(rightSpeed);
 
     // Send the byte array through Serial
-    int dataLen = Serial.write(byteData, sizeof(byteData));
+    Serial.print(data);
 
     // if (inputData[0] == '0') {
     //   digitalWrite(2, LOW);
