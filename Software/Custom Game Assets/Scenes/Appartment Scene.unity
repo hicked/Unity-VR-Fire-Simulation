@@ -1558,6 +1558,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4bd0c5c4e1f77149967b74fcbbb6b92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  leftWheelSpeed: 0
+  rightWheelSpeed: 0
   baseSpeedMultiplier: 3
   sprintSpeedMultiplier: 4.5
   maxDistance: 0.2
@@ -1662,6 +1664,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a41433112bea0941a72586c625bdd62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  arduinoPort: COM8
+  arduinoBaudRate: 115200
 --- !u!1001 &180669838
 PrefabInstance:
   m_ObjectHideFlags: 0

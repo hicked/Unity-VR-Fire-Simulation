@@ -258,7 +258,7 @@ public class NPCManager : Audible {
 
 
     private void setPathTo(Vector3 location) {
-        Debug.Log("Setting path to " + location);
+        //Debug.Log("Setting path to " + location);
         pathfinder.FindPath(transform.position, location);
         currentPathIndex = 0;
     }

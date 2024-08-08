@@ -8,7 +8,7 @@ byte buttonPin = 5;
 
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   pinMode(LEDPin, OUTPUT); // LED
   pinMode(leftWheelPin, INPUT); // Left Wheel
   pinMode(rightWheelPin, INPUT); // Right Wheel
@@ -16,28 +16,26 @@ void setup() {
 }
 
 void loop() {
-  if (Serial.available() > 0) {
-
+  if (Serial.available()) {
     // READING STUFF FROM UNITY
+    String incomingData = Serial.readString();
+  }
+  else {
+    if (!digitalRead(buttonPin)) { // for some reason the current is inverted here?
+      leftSpeed = 2;
+      rightSpeed = 2;
+    }
+    else {
+      leftSpeed = 0;
+      rightSpeed = 0;
+    }
+
+    String data = String(leftSpeed) + "," + String(rightSpeed);
+
+    Serial.println(data);
   }
   // leftSpeed = digitalRead(3);
   // rightSpeed = digitalRead(4);
-  // data[0] = leftSpeed;
-  // data[1] = rightSpeed;
-  if (!digitalRead(buttonPin)) { // for some reason the current is inverted here?
-    leftSpeed = 3;
-    rightSpeed = 3;
-  }
-  else {
-    leftSpeed = 0;
-    rightSpeed = 0;
-  }
-
-  String data = String(leftSpeed) + "," + String(rightSpeed);
-
-  // Send the byte array through Serial
-  Serial.println(data);
-
-
-  delay(200);
+  
+  delay(50);
 }

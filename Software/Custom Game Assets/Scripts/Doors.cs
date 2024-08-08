@@ -101,7 +101,6 @@ public class Doors : Audible, Interactable {
             angle = Vector3.Angle(closedVector, dir);
             // this should always be between 0-90, so we need to flip the sign later in the limits
             
-            Debug.Log(angle);
             //float angle = Vector3.Angle(doorHinge.anchor, doorHandle.transform.position);
             if (-angle <= closedAngle && -angle >= openAngle) { // if its swinging the right way, move it
                 doorHinge.limits = new JointLimits { min = -angle-0.1f, max = -angle+0.1f };

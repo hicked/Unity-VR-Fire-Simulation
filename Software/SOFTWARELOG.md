@@ -12,6 +12,31 @@
 
 **D**: Patch / Refactoring
 
+## [v.0.6.6.8-beta] - 2024-08-08
+**Author:** Antoine
+*Changes*:
+-   **Arduino + Unity connection now works**
+-   Candle flames now properly follow stick
+-   Reworked candle flame extinguishing
+> ***NOTE: `locking` wheelspeeds for threadsafety messes with input delay, so ive disabled it for now unless we start getting race conditions***
+
+*Current Bugs*:
+-   Missing `Wine Cabinet` prefab
+-   PROJECT TREE CLEANUP STILL NEEDS TO BE COMPLETED: Fire, NPCs, Doors, Lights AS WELL AS DUPLICATES
+-   `Look rotation viewing vector is zero` "bug", not game breaking
+-   Add different walk and run sounds
+-   Smoke ignoring colliders at X time
+
+*Next Steps*:
+-   Last room (3)
+-   Make doors keep momentum slightly (swing)
+-   Resize objects for more realism (props mostly)
+-   ALARM
+-   UI/Menu -> only at the end
+-   Make wheelaudio change based on wheel speeds (should be simple)
+-   Make onPhone independant, static
+
+
 ## [v.0.5.6.8-beta] - 2024-08-07
 **Author:** Antoine
 -   Assigned lights to switches.

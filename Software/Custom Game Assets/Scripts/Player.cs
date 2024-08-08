@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour {
+    [SerializeField] public float leftWheelSpeed = 0f;
+    [SerializeField] public float rightWheelSpeed = 0f;
     [SerializeField] private float baseSpeedMultiplier = 2f;
     [SerializeField] private float sprintSpeedMultiplier = 3.5f;
     [SerializeField] private float maxDistance = 0.2f;
@@ -27,7 +29,7 @@ public class Player : MonoBehaviour {
         playerHitBox = GetComponent<BoxCollider>();
     }
 
-    //KEYBOARD AND MOUSE CONTROLS!!!
+    //KEYBOARD AND MOUSE CONTROLS!!! WASD and mouse to look around
 
     // private void Update() {
     //     Vector3 inputVector = new Vector3(0f, 0f, 0f);
@@ -56,17 +58,33 @@ public class Player : MonoBehaviour {
     //     this.transform.eulerAngles += new Vector3(0, horizontalRotation * lookingSpeed, 0);
     // }
 
-    //Wheel Chair control (for now with arrows and wasd)
+
+    //Wheel Chair control WS up down + Arduino
     private void Update() {
-        float leftWheelSpeed = 0f;
-        float rightWheelSpeed = 0f;
+        leftWheelSpeed = 0f;
+        rightWheelSpeed = 0f;
 
         // Arduino inputs
-        lock (ArduinoIO.speeds) {
+        //lock (ArduinoIO.lockObject) {
+        if (ArduinoIO.leftSpeed > 0.1f && !isBlocked(transform.forward, maxDistance)) {
             leftWheelSpeed += ArduinoIO.leftSpeed;
+        }
+        else if (ArduinoIO.leftSpeed < -0.1f && !isBlocked(-transform.forward, maxDistance)) {
+            leftWheelSpeed += ArduinoIO.leftSpeed;
+        }
+        //}
+
+        //lock (ArduinoIO.lockObject) {
+        if (ArduinoIO.rightSpeed > 0.1f && !isBlocked(transform.forward, maxDistance)) {
             rightWheelSpeed += ArduinoIO.rightSpeed;
         }
+        else if (ArduinoIO.rightSpeed < -0.1f && !isBlocked(-transform.forward, maxDistance)) {
+            rightWheelSpeed += ArduinoIO.rightSpeed;
+        }
+        //}
 
+
+        // WS up down
         // Left wheel
         if (Input.GetKey(KeyCode.W) && !isBlocked(transform.forward, maxDistance)) {
             leftWheelSpeed = 1f;
@@ -114,6 +132,8 @@ public class Player : MonoBehaviour {
             isWheelAudioPlaying = false;
         }
         
+
+        // SPEED OF THE WHEEL IMPACTS SPEED THE AUDIO CLIP PLAYS AT
         if (isWheelAudioPlaying) {
             wheelAudioSource.pitch = Mathf.Max(Mathf.Abs(leftWheelSpeed), Mathf.Abs(rightWheelSpeed)) * 1;
             // currently it is times one as this is with keyboard input, but will need to be adjusted for arduino input

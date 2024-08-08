@@ -46,7 +46,6 @@ public class DoorHandle : XRGrabInteractable {
     }
 
     public void ResetPosition() {
-        Debug.Log("RESSETTING");
         doorRigidBody.velocity = Vector3.zero;
         doorRigidBody.angularVelocity = Vector3.zero;
         this.transform.position = handle.transform.position; 
@@ -63,8 +62,6 @@ public class DoorHandle : XRGrabInteractable {
     }
 
     private void OnGrab(SelectEnterEventArgs args) {
-        Debug.Log("Object Grabbed");
-
         if (isLocked) {
             this.enabled = false; // Force drop
             ResetPosition();
@@ -79,8 +76,6 @@ public class DoorHandle : XRGrabInteractable {
     }
 
     private void OnRelease(SelectExitEventArgs args) {
-        Debug.Log("Object Released");
-
         ResetPosition();
     }
 
