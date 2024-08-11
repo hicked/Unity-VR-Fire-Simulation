@@ -12,6 +12,30 @@ Date is in YYYY/MM/DD format.
 
 **D**: Patch / Refactoring
 
+
+## [v.0.1.1.2-prealpha] - 2024-08-08
+
+**Author:** Antoine
+**Components**:
+-   Rotary Encoders should be considered for mesuring speeds instead of reading voltages
+-   *2* DC Brushless Motors OR GEARMOTOR (PG71 & PG188 RS775-5)
+    -   100-150W
+-   *2* Power Supplies
+    -   12V 5A power should do
+-   H-Bridge Motor Driver or ESC (Sabertooth dual 25A motor driver)
+    -   For controlling the speed and direction
+
+**Specifications**:
+-   Wheel Diameter: 24" or 0.61m
+-   Top Speed: 10km/h or 2.78m/s
+-   Weight: 180lbs for the person and 50lbs for the wheelchair
+>   This will mean that the circumference is 1.92m and at 10km/h this means it must have a frequency of 1.45hz or 87RPM. Assuming a weight of 104.3kg (22.7 + 81.6), a radius of 0.305m, and a coefficient of 0.015, Fg when free falling would be of 1022.2N, making friction 15.33N, and a torque of **4.68Nm**
+
+Therefore, we need a motor that can supply around 4.6Nm of torque, with a max rpm of 87. Note these are overkill.
+Assuming we have a 12V 5A power supply, we will need a 0.92kt(Nm/A) and 7.25kv(RPM/V)
+
+
+
 ## [v.0.1.1.1-prealpha] - 2024-08-08
 
 **Author:** Antoine
