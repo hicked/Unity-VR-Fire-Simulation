@@ -12,6 +12,28 @@
 
 **D**: Patch / Refactoring
 
+## [v.0.6.7.8-beta] - 2024-08-16
+**Author:** Antoine
+*Changes*:
+-   Doors *swing* (buggy)
+
+*Current Bugs*:
+-   Missing `Wine Cabinet` prefab
+-   Door glitching closed
+-   PROJECT TREE CLEANUP STILL NEEDS TO BE COMPLETED: Fire, NPCs, Doors, Lights AS WELL AS DUPLICATES
+-   `Look rotation viewing vector is zero` "bug", not game breaking
+-   Add different walk and run sounds
+-   Smoke ignoring colliders at X time
+
+*Next Steps*:
+-   Last room (3)
+-   Resize objects for more realism (props mostly)
+-   ALARM
+-   UI/Menu -> only at the end
+-   Make wheelaudio change based on wheel speeds (should be simple)
+-   Make onPhone independant, static
+
+
 ## [v.0.6.6.8-beta] - 2024-08-08
 **Author:** Antoine
 *Changes*:

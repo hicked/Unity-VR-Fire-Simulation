@@ -21,6 +21,7 @@ public class DoorHandle : XRGrabInteractable {
     [SerializeField] private GameObject door;
     private Rigidbody doorRigidBody;
     private Rigidbody handleRigidBody;
+    public Vector3 handleVelocity = new Vector3(0f, 0f, 0f);
 
     protected void Start(){
         doorRigidBody = door.GetComponent<Rigidbody>();
@@ -31,6 +32,10 @@ public class DoorHandle : XRGrabInteractable {
     }
 
     void FixedUpdate() {
+        if (IsGrabbed()) {
+            handleVelocity = handleRigidBody.velocity;
+        }
+        
         if (!IsGrabbed() && Vector3.Distance(this.transform.position, handle.transform.position) > 0.1f) {
             ResetPosition();
         }
@@ -48,6 +53,8 @@ public class DoorHandle : XRGrabInteractable {
     public void ResetPosition() {
         doorRigidBody.velocity = Vector3.zero;
         doorRigidBody.angularVelocity = Vector3.zero;
+        handleRigidBody.velocity = Vector3.zero;
+        handleRigidBody.angularVelocity = Vector3.zero;
         this.transform.position = handle.transform.position; 
         this.transform.rotation = handle.transform.rotation;
     }
@@ -73,10 +80,11 @@ public class DoorHandle : XRGrabInteractable {
                 StartCoroutine(ShowLockedDoorMessage(lockedDoorMessageFadeIn, lockedDoorMessageTime, lockedDoorMessageFadeOut));
             }
         }
+        //handleRigidBody.isKinematic = false;
     }
 
     private void OnRelease(SelectExitEventArgs args) {
-        ResetPosition();
+        StartCoroutine(door.GetComponent<Doors>().SwingDoor(handleVelocity));
     }
 
     public IEnumerator ShowLockedDoorMessage(float fadeInDuration, float displayDuration, float fadeOutDuration) {

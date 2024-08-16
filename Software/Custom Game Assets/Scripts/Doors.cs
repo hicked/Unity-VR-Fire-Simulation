@@ -11,7 +11,7 @@ public class Doors : Audible, Interactable {
     [SerializeField] public float openOffset = 0.55f;
     [SerializeField] private float doorSpeed = 90f;
 
-    [SerializeField] public float openAngle = -90f;
+    [SerializeField] public float openAngle = 90f;
     [SerializeField] public float closedAngle = 0f;
     [SerializeField] private float angleSnap = 5f; // door will snap closed if the angle is less than this
     [SerializeField] public GameObject doorHandle;
@@ -23,7 +23,9 @@ public class Doors : Audible, Interactable {
     // used for npcs opening doors, not player
     private float targetRotation;
     public float angle;
-    public bool isMoving = false;
+    public bool movedByNPC = false;
+    public bool swinging = false;
+    [SerializeField] public float swingAmount = 0.5f;
 
     
     private Coroutine temporaryOpenCoroutine;
@@ -57,30 +59,30 @@ public class Doors : Audible, Interactable {
 
     // Update is called once per frame
     void Update() {
-        if (isMoving) { // only for NCPs
+        if (movedByNPC) { // only for NCPs
             // Check if the rotation is close enough to the target
             if (Mathf.Abs(angle - targetRotation) < 0.1f) {
-                isMoving = false; // Stop moving
+                movedByNPC = false; // Stop moving
                 angle = targetRotation; // Ensure exact alignment
-                doorHinge.limits = new JointLimits { min = angle-0.1f, max = angle+0.1f }; // Ensure exact alignment
+                doorHinge.limits = new JointLimits { min = -angle-0.1f, max = -angle+0.1f }; // Ensure exact alignment
                 doorRigidBody.velocity = Vector3.zero; // Stop any residual movement
                 doorRigidBody.angularVelocity = Vector3.zero; // Stop any residual rotation
             }
             
             else if (angle > targetRotation) {
                 angle -= 1f * doorSpeed * Time.deltaTime;
-                doorHinge.limits = new JointLimits { min = angle-0.1f, max = angle+0.1f };
+                doorHinge.limits = new JointLimits { min = -angle-0.1f, max = -angle+0.1f };
             }
             else if (angle < targetRotation) {
                 angle += 1f * doorSpeed * Time.deltaTime;
-                doorHinge.limits = new JointLimits { min = angle-0.1f, max = angle+0.1f };
+                doorHinge.limits = new JointLimits { min = -angle-0.1f, max = -angle+0.1f };
             }
         }
 
-        else if (!(handleScript.IsGrabbed()) && (doorHinge.limits.max != closedAngle) && (Mathf.Abs(angle - closedAngle) < angleSnap)) { // this means the player has let go of the door handle
+        else if (!(handleScript.IsGrabbed()) && (doorHinge.limits.max != -closedAngle) && (Mathf.Abs(angle - closedAngle) < angleSnap)) { // this means the player has let go of the door handle
             handleScript.ForceDrop();
             angle = closedAngle; // Ensure exact alignment
-            doorHinge.limits = new JointLimits { min = angle, max = angle }; 
+            doorHinge.limits = new JointLimits { min = -angle, max = -angle }; 
             
             StartCoroutine(closeSoundCoroutine());
         }
@@ -102,7 +104,15 @@ public class Doors : Audible, Interactable {
             // this should always be between 0-90, so we need to flip the sign later in the limits
             
             //float angle = Vector3.Angle(doorHinge.anchor, doorHandle.transform.position);
-            if (-angle <= closedAngle && -angle >= openAngle) { // if its swinging the right way, move it
+            if (angle >= closedAngle && angle <= openAngle) { // if its swinging the right way, move it
+                doorHinge.limits = new JointLimits { min = -angle-0.1f, max = -angle+0.1f };
+                doorRigidBody.velocity = Vector3.zero; // Stop any residual movement
+                doorRigidBody.angularVelocity = Vector3.zero; // Stop any residual rotation
+            }
+        }
+
+        else if (swinging) {
+            if (angle >= closedAngle && angle <= openAngle) {
                 doorHinge.limits = new JointLimits { min = -angle-0.1f, max = -angle+0.1f };
                 doorRigidBody.velocity = Vector3.zero; // Stop any residual movement
                 doorRigidBody.angularVelocity = Vector3.zero; // Stop any residual rotation
@@ -115,14 +125,14 @@ public class Doors : Audible, Interactable {
     // These two functions directly change the doors target angle, which is will move toward.
     public void Open() {
         targetRotation = openAngle;
-        isMoving = true;
+        movedByNPC = true;
         StartCoroutine(openSoundCoroutine());
     }
 
     public void Close() {
         targetRotation = closedAngle;
-        isMoving = true;
-        StartCoroutine(closeSoundCoroutine());
+        movedByNPC = true;
+        //StartCoroutine(closeSoundCoroutine());
     }
 
 
@@ -152,5 +162,39 @@ public class Doors : Audible, Interactable {
         yield return new WaitForSeconds(openOffset);
         doorAudioSource.clip = openDoorClip;
         doorAudioSource.Play();
+    }
+
+    public IEnumerator SwingDoor(Vector3 handleVelocity) {
+        swinging = true;
+        float velocityMagnitude = handleVelocity.magnitude;
+        float velocityThreshold = 0.1f; // Adjust this threshold as needed
+
+        // If the velocity is below the threshold, do not swing the door
+        if (velocityMagnitude < velocityThreshold) {
+            swinging = false;
+            yield break;
+        }
+
+        float swingDuration = Mathf.Clamp(velocityMagnitude, 0.5f, 3f); // Clamp duration between 0.5 and 3 seconds
+
+        // Determine the swing direction 1: opening, -1: closing
+        float velDoorAngle = Vector3.Angle(handleVelocity, -this.transform.right);
+        
+        float targetSwingAngle = Mathf.Clamp(angle * velocityMagnitude * swingAmount, openAngle, closedAngle); // Adjust multiplier as needed
+
+        float initialAngle = angle;
+        float elapsedTime = 0f;
+
+        while (elapsedTime < swingDuration) {
+            elapsedTime += Time.deltaTime;
+            float t = elapsedTime / swingDuration;
+            angle = Mathf.Lerp(initialAngle, targetSwingAngle, 1 - (1 - t) * (1 - t)); // Ease out
+
+            yield return null;
+        }
+        swinging = false;
+
+        // Ensure exact alignment at the end
+        angle = targetSwingAngle;
     }
 }
