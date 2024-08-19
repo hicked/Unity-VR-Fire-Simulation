@@ -25,8 +25,7 @@ public class Doors : Audible, Interactable {
     public float angle;
     public bool movedByNPC = false;
     public bool swinging = false;
-    [SerializeField] public float swingAmount = 0.5f;
-
+    [SerializeField] public float swingMultiplier = 0.5f;
     
     private Coroutine temporaryOpenCoroutine;
 
@@ -61,7 +60,7 @@ public class Doors : Audible, Interactable {
     void Update() {
         if (movedByNPC) { // only for NCPs
             // Check if the rotation is close enough to the target
-            if (Mathf.Abs(angle - targetRotation) < 0.1f) {
+            if (Mathf.Abs(angle - targetRotation) < angleSnap) {
                 movedByNPC = false; // Stop moving
                 angle = targetRotation; // Ensure exact alignment
                 doorHinge.limits = new JointLimits { min = -angle-0.1f, max = -angle+0.1f }; // Ensure exact alignment
@@ -80,9 +79,8 @@ public class Doors : Audible, Interactable {
         }
 
         else if (!(handleScript.IsGrabbed()) && (doorHinge.limits.max != -closedAngle) && (Mathf.Abs(angle - closedAngle) < angleSnap)) { // this means the player has let go of the door handle
-            handleScript.ForceDrop();
             angle = closedAngle; // Ensure exact alignment
-            doorHinge.limits = new JointLimits { min = -angle, max = -angle }; 
+            doorHinge.limits = new JointLimits { min = -angle-0.1f, max = -angle+0.1f }; 
             
             StartCoroutine(closeSoundCoroutine());
         }
@@ -167,21 +165,28 @@ public class Doors : Audible, Interactable {
     public IEnumerator SwingDoor(Vector3 handleVelocity) {
         swinging = true;
         float velocityMagnitude = handleVelocity.magnitude;
-        float velocityThreshold = 0.1f; // Adjust this threshold as needed
+        float velocityThreshold = 0.25f; // Adjust this threshold as needed
 
         // If the velocity is below the threshold, do not swing the door
         if (velocityMagnitude < velocityThreshold) {
             swinging = false;
             yield break;
         }
-
-        float swingDuration = Mathf.Clamp(velocityMagnitude, 0.5f, 3f); // Clamp duration between 0.5 and 3 seconds
-
-        // Determine the swing direction 1: opening, -1: closing
-        float velDoorAngle = Vector3.Angle(handleVelocity, -this.transform.right);
         
-        float targetSwingAngle = Mathf.Clamp(angle * velocityMagnitude * swingAmount, openAngle, closedAngle); // Adjust multiplier as needed
-
+        float swingDuration = Mathf.Clamp(Mathf.Abs(velocityMagnitude), 0.5f, 3f); // Clamp duration between 0.5 and 3 seconds
+        // Determine the swing projection
+        float velDoorAngle = Mathf.Abs(Vector3.Angle(handleVelocity, -this.transform.right));
+        float dir = 1f;
+        if (velDoorAngle > 90f) {
+            velDoorAngle = 180f - velDoorAngle;
+            dir = -1f;
+        }
+        // Use the inverse of the angle between to determine the swing speed
+        float inverseAngleFactor = 90f-velDoorAngle;
+        
+        // Determine the target swing angle based on the velocity magnitude and the inverse angle factor
+        float targetSwingAngle = Mathf.Clamp(angle + (dir * velocityMagnitude * inverseAngleFactor * swingMultiplier), closedAngle, openAngle);
+        
         float initialAngle = angle;
         float elapsedTime = 0f;
 

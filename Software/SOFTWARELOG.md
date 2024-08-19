@@ -12,15 +12,17 @@
 
 **D**: Patch / Refactoring
 
-## [v.0.6.7.8-beta] - 2024-08-16
+
+## [v.0.6.7.8-beta] - 2024-08-19
 **Author:** Antoine
 *Changes*:
--   Doors *swing* (buggy)
+-   Doors *swings* fully working (with projections)
+-   Added wine cabinet prefab back
+-   Removed duplicate prefabs and moved files around
+-   Fixed Closing jittering (with AND without NPCs)
 
 *Current Bugs*:
--   Missing `Wine Cabinet` prefab
--   Door glitching closed
--   PROJECT TREE CLEANUP STILL NEEDS TO BE COMPLETED: Fire, NPCs, Doors, Lights AS WELL AS DUPLICATES
+-   PROJECT TREE CLEANUP STILL NEEDS TO BE COMPLETED: Fire, NPCs, Doors, Lights
 -   `Look rotation viewing vector is zero` "bug", not game breaking
 -   Add different walk and run sounds
 -   Smoke ignoring colliders at X time

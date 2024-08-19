@@ -11,10 +11,10 @@ public class Alarm : Audible
         
     }
     private void Update() {
-        if (fire.active && !alarmSource.isPlaying) {
+        if (fire.activeInHierarchy && !alarmSource.isPlaying) {
             alarmSource.Play();
         }
-        else if (!fire.active && alarmSource.isPlaying) {
+        else if (!fire.activeInHierarchy && alarmSource.isPlaying) {
             alarmSource.Stop();
         }
         
