@@ -22,7 +22,7 @@
                 "y": 0.0,
                 "z": -9.5600004196167
             },
-            "isSpotTaken": false
+            "isSpotTaken": true
         },
         {
             "position": {
@@ -30,7 +30,7 @@
                 "y": 0.0,
                 "z": -6.0
             },
-            "isSpotTaken": false
+            "isSpotTaken": true
         },
         {
             "position": {
@@ -38,7 +38,7 @@
                 "y": 0.0,
                 "z": -6.0
             },
-            "isSpotTaken": false
+            "isSpotTaken": true
         },
         {
             "position": {
@@ -62,7 +62,7 @@
                 "y": 0.0,
                 "z": -6.0
             },
-            "isSpotTaken": false
+            "isSpotTaken": true
         },
         {
             "position": {
@@ -70,7 +70,7 @@
                 "y": 0.0,
                 "z": -9.399999618530274
             },
-            "isSpotTaken": false
+            "isSpotTaken": true
         },
         {
             "position": {
@@ -78,7 +78,7 @@
                 "y": 0.0,
                 "z": -5.900000095367432
             },
-            "isSpotTaken": false
+            "isSpotTaken": true
         },
         {
             "position": {
@@ -86,7 +86,7 @@
                 "y": 0.0,
                 "z": -10.899999618530274
             },
-            "isSpotTaken": false
+            "isSpotTaken": true
         },
         {
             "position": {
@@ -110,7 +110,7 @@
                 "y": 0.0,
                 "z": 4.199999809265137
             },
-            "isSpotTaken": true
+            "isSpotTaken": false
         },
         {
             "position": {
@@ -142,7 +142,7 @@
                 "y": 0.0,
                 "z": -4.199999809265137
             },
-            "isSpotTaken": false
+            "isSpotTaken": true
         },
         {
             "position": {
@@ -150,7 +150,7 @@
                 "y": 0.0,
                 "z": -0.6000000238418579
             },
-            "isSpotTaken": false
+            "isSpotTaken": true
         },
         {
             "position": {

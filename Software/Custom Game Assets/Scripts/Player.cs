@@ -5,14 +5,19 @@ using UnityEngine;
 public class Player : MonoBehaviour {
     [SerializeField] public float leftWheelSpeed = 0f;
     [SerializeField] public float rightWheelSpeed = 0f;
+    
+    // Only used for keyboard and mouse controls
     [SerializeField] private float baseSpeedMultiplier = 2f;
     [SerializeField] private float sprintSpeedMultiplier = 3.5f;
+
+    // for collisions with the environment
     [SerializeField] private float maxDistance = 0.2f;
     [SerializeField] private LayerMask layersForCollisions; 
     [SerializeField] private float minHeightBeforeCollisions = 0.1f;  // Note this is the height from the top, so well have to do some arithmetic to convert it into the minimum height from the bottom
-    [SerializeField] private float lookingSpeed = 5f;
+    [SerializeField] private float lookingSpeed = 5f; // turning speed
     [SerializeField] private float minWheelSpeedBeforeAudio = 0.5f;
     [SerializeField] private float audioFadeDuration = 0.5f;
+
     private IEnumerator currentAudioCoroutine;
     private bool isWheelAudioPlaying = false;
     public AudioSource wheelAudioSource;
@@ -21,12 +26,15 @@ public class Player : MonoBehaviour {
     private float horizontalRotation;
     public string lastBlockedByType; // This will be used to check if the layer that is blocking the player is a ramp
     public GameObject lastBlockedByObj;
+    public Vector3 spawnPoint;
+    public string roomName;
 
     private void Start() {
         if (!(transform.localScale.x == transform.localScale.z)) {
             throw new UnityException("Player collider x scale and z scale must be the same");
         }
         playerHitBox = GetComponent<BoxCollider>();
+        spawnPoint = transform.position + new Vector3(0, 1f, 0);
     }
 
     //KEYBOARD AND MOUSE CONTROLS!!! WASD and mouse to look around
@@ -61,6 +69,14 @@ public class Player : MonoBehaviour {
 
     //Wheel Chair control WS up down + Arduino
     private void Update() {
+        isBlocked(-transform.up, maxDistance); // updates the room name
+        // Reposition the player if something goes south
+        if (Input.GetKey(KeyCode.R)) {
+            Debug.Log(roomName);
+            transform.position = spawnPoint;
+        }
+
+        
         leftWheelSpeed = 0f;
         rightWheelSpeed = 0f;
 
@@ -164,9 +180,14 @@ public class Player : MonoBehaviour {
         
         Debug.DrawRay(transform.position, dir * maxDistance, hit ? Color.red : Color.green);
         if (hit) {
-            lastBlockedByType = LayerMask.LayerToName(hitInfo.collider.gameObject.layer);
-            lastBlockedByObj = hitInfo.collider.gameObject;
-            lastBlockedLocation = hitInfo.point;
+            if (dir == -transform.up) {
+                roomName = hitInfo.collider.gameObject.tag;
+            }
+            else {
+                lastBlockedByType = LayerMask.LayerToName(hitInfo.collider.gameObject.layer);
+                lastBlockedByObj = hitInfo.collider.gameObject;
+                lastBlockedLocation = hitInfo.point;
+            }
         }
         return hit;
     }

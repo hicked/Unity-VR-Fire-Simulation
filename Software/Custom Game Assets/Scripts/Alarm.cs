@@ -5,16 +5,18 @@ public class Alarm : Audible
     [SerializeField] public AudioSource alarmSource;
     [SerializeField] private AudioClip alarmClip;
     [SerializeField] public GameObject fire;
+    private FireManager fireManager;
 
     private void Start() {
+        fireManager = fire.GetComponent<FireManager>();
         alarmSource.clip = alarmClip;
-        
     }
     private void Update() {
-        if (fire.activeInHierarchy && !alarmSource.isPlaying) {
+        Debug.Log(fireManager.fireParticleSystem.isPlaying);
+        if (fireManager.fireParticleSystem.isPlaying && !alarmSource.isPlaying) {
             alarmSource.Play();
         }
-        else if (!fire.activeInHierarchy && alarmSource.isPlaying) {
+        else if (fireManager.fireParticleSystem.isPlaying && alarmSource.isPlaying) {
             alarmSource.Stop();
         }
         

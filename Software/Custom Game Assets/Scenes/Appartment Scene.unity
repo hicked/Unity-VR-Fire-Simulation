@@ -1272,7 +1272,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &134919093
 Transform:
   m_ObjectHideFlags: 0
@@ -1673,6 +1673,8 @@ MonoBehaviour:
   wheelAudioSource: {fileID: 1984369169}
   lastBlockedByType: 
   lastBlockedByObj: {fileID: 0}
+  spawnPoint: {x: 0, y: 0, z: 0}
+  roomName: 
 --- !u!65 &175292854
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5347,21 +5349,6 @@ PrefabInstance:
       propertyPath: audioListener
       value: 
       objectReference: {fileID: 1344989486}
-    - target: {fileID: 717024131746748142, guid: 638ed67f906b31844a7f6eacfcacfe1a,
-        type: 3}
-      propertyPath: blockedAudioVolume
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3693215321669981096, guid: 638ed67f906b31844a7f6eacfcacfe1a,
-        type: 3}
-      propertyPath: MaxDistance
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 3693215321669981096, guid: 638ed67f906b31844a7f6eacfcacfe1a,
-        type: 3}
-      propertyPath: MinDistance
-      value: 3
-      objectReference: {fileID: 0}
     - target: {fileID: 7425038374684032403, guid: 638ed67f906b31844a7f6eacfcacfe1a,
         type: 3}
       propertyPath: m_Name
@@ -12252,6 +12239,11 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: -8961359253771211100, guid: f7cb6eea40fe5124c9b64c33143d2930,
+        type: 3}
+      propertyPath: m_TagString
+      value: Hallway
+      objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f7cb6eea40fe5124c9b64c33143d2930,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -12447,6 +12439,11 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: -5915725710796691303, guid: f7cb6eea40fe5124c9b64c33143d2930,
+        type: 3}
+      propertyPath: m_TagString
+      value: Room1
+      objectReference: {fileID: 0}
     - target: {fileID: -5766519616100683602, guid: f7cb6eea40fe5124c9b64c33143d2930,
         type: 3}
       propertyPath: m_Layer
@@ -12502,6 +12499,11 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: -4483679678978850093, guid: f7cb6eea40fe5124c9b64c33143d2930,
+        type: 3}
+      propertyPath: m_TagString
+      value: Room3
+      objectReference: {fileID: 0}
     - target: {fileID: -4182589169553536794, guid: f7cb6eea40fe5124c9b64c33143d2930,
         type: 3}
       propertyPath: m_Layer
@@ -12537,6 +12539,11 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: -3293461120713963872, guid: f7cb6eea40fe5124c9b64c33143d2930,
+        type: 3}
+      propertyPath: m_TagString
+      value: Room4
+      objectReference: {fileID: 0}
     - target: {fileID: -3176183279050842084, guid: f7cb6eea40fe5124c9b64c33143d2930,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -12566,6 +12573,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: -2655573560833850164, guid: f7cb6eea40fe5124c9b64c33143d2930,
+        type: 3}
+      propertyPath: m_TagString
+      value: Room6
       objectReference: {fileID: 0}
     - target: {fileID: -2460573699761628931, guid: f7cb6eea40fe5124c9b64c33143d2930,
         type: 3}
@@ -12602,6 +12614,11 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: -1857309847194865932, guid: f7cb6eea40fe5124c9b64c33143d2930,
+        type: 3}
+      propertyPath: m_TagString
+      value: Room1
+      objectReference: {fileID: 0}
     - target: {fileID: -1596494205175041442, guid: f7cb6eea40fe5124c9b64c33143d2930,
         type: 3}
       propertyPath: m_Layer
@@ -12611,6 +12628,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: -1374161610312379201, guid: f7cb6eea40fe5124c9b64c33143d2930,
+        type: 3}
+      propertyPath: m_TagString
+      value: Room6
       objectReference: {fileID: 0}
     - target: {fileID: -1063203228461421988, guid: f7cb6eea40fe5124c9b64c33143d2930,
         type: 3}
@@ -12707,6 +12729,11 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 996808588614277070, guid: f7cb6eea40fe5124c9b64c33143d2930,
+        type: 3}
+      propertyPath: m_TagString
+      value: Room2
+      objectReference: {fileID: 0}
     - target: {fileID: 1093293927481683652, guid: f7cb6eea40fe5124c9b64c33143d2930,
         type: 3}
       propertyPath: m_Layer
@@ -12726,6 +12753,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1395320445879687111, guid: f7cb6eea40fe5124c9b64c33143d2930,
+        type: 3}
+      propertyPath: m_TagString
+      value: Room5
       objectReference: {fileID: 0}
     - target: {fileID: 1428634038561052387, guid: f7cb6eea40fe5124c9b64c33143d2930,
         type: 3}
@@ -12751,6 +12783,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1585015375599971490, guid: f7cb6eea40fe5124c9b64c33143d2930,
+        type: 3}
+      propertyPath: m_TagString
+      value: Room5
       objectReference: {fileID: 0}
     - target: {fileID: 1600787948766561701, guid: f7cb6eea40fe5124c9b64c33143d2930,
         type: 3}
@@ -12832,6 +12869,11 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 3514220960872266841, guid: f7cb6eea40fe5124c9b64c33143d2930,
+        type: 3}
+      propertyPath: m_TagString
+      value: Room2
+      objectReference: {fileID: 0}
     - target: {fileID: 3615449878971091806, guid: f7cb6eea40fe5124c9b64c33143d2930,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -12882,6 +12924,11 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 4731243104702113966, guid: f7cb6eea40fe5124c9b64c33143d2930,
+        type: 3}
+      propertyPath: m_TagString
+      value: End
+      objectReference: {fileID: 0}
     - target: {fileID: 4767400413853537203, guid: f7cb6eea40fe5124c9b64c33143d2930,
         type: 3}
       propertyPath: m_Layer
@@ -12911,6 +12958,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5232257686583486352, guid: f7cb6eea40fe5124c9b64c33143d2930,
+        type: 3}
+      propertyPath: m_TagString
+      value: Room3
       objectReference: {fileID: 0}
     - target: {fileID: 5326429817487046537, guid: f7cb6eea40fe5124c9b64c33143d2930,
         type: 3}
@@ -12972,10 +13024,20 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 6658039781348980952, guid: f7cb6eea40fe5124c9b64c33143d2930,
+        type: 3}
+      propertyPath: m_TagString
+      value: End
+      objectReference: {fileID: 0}
     - target: {fileID: 6691252929750295830, guid: f7cb6eea40fe5124c9b64c33143d2930,
         type: 3}
       propertyPath: m_Layer
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6691252929750295830, guid: f7cb6eea40fe5124c9b64c33143d2930,
+        type: 3}
+      propertyPath: m_TagString
+      value: Room4
       objectReference: {fileID: 0}
     - target: {fileID: 6730934695973959597, guid: f7cb6eea40fe5124c9b64c33143d2930,
         type: 3}
@@ -30556,6 +30618,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 8260567468548849836}
   m_PrefabAsset: {fileID: 0}
+--- !u!82 &4361799309541567 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 7702165527336350179, guid: 2e62e2cbd8223db4aa1ef9de5b2b2ace,
+    type: 3}
+  m_PrefabInstance: {fileID: 8260567468548849836}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &4361799309541569 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 9013792088344702359, guid: 2e62e2cbd8223db4aa1ef9de5b2b2ace,
+    type: 3}
+  m_PrefabInstance: {fileID: 8260567468548849836}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &4430340663568258 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6903932769099179947, guid: cdcf80314b65f114989b70851760770a,
@@ -31083,6 +31157,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 330119415}
     m_Modifications:
+    - target: {fileID: 2372966912496388103, guid: 71e6898b03f596b41b63d607e81dc1a3,
+        type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
     - target: {fileID: 4981638048300022946, guid: 71e6898b03f596b41b63d607e81dc1a3,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -31137,6 +31216,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Bench_Apt_01 (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5131969001540224770, guid: 71e6898b03f596b41b63d607e81dc1a3,
+        type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 5290689592608587777, guid: 71e6898b03f596b41b63d607e81dc1a3,
+        type: 3}
+      propertyPath: m_Layer
+      value: 9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -33464,6 +33553,16 @@ PrefabInstance:
       propertyPath: audioListener
       value: 
       objectReference: {fileID: 1344989486}
+    - target: {fileID: 5669679580275523097, guid: cdcf80314b65f114989b70851760770a,
+        type: 3}
+      propertyPath: explosionAudioSource
+      value: 
+      objectReference: {fileID: 4361799309541567}
+    - target: {fileID: 5669679580275523097, guid: cdcf80314b65f114989b70851760770a,
+        type: 3}
+      propertyPath: explosionParticleSystem
+      value: 
+      objectReference: {fileID: 4361799309541569}
     - target: {fileID: 6903932769099179947, guid: cdcf80314b65f114989b70851760770a,
         type: 3}
       propertyPath: m_LocalPosition.x
