@@ -1,64 +1,103 @@
-float leftSpeed = 0;
-float rightSpeed = 0;
+/* Based on Oleg Mazurov's code for rotary encoder interrupt service routines for AVR micros
+   here https://chome.nerpa.tech/mcu/reading-rotary-encoder-on-arduino/
+   and using interrupts https://chome.nerpa.tech/mcu/rotary-encoder-interrupt-service-routine-for-avr-micros/
 
+   This example does not use the port read method. Tested with Nano and ESP32
+   both encoder A and B pins must be connected to interrupt enabled pins, see here for more info:
+   https://www.arduino.cc/reference/en/language/functions/external-interrupts/attachinterrupt/
+*/
+
+// Define rotary encoder pins
 #define L_ENC_A 2
 #define L_ENC_B 3
 #define R_ENC_A 4
 #define R_ENC_B 5
 
-#define buttonPin 6
+unsigned long _lastIncReadTime = micros(); 
+unsigned long _lastDecReadTime = micros(); 
+int _pauseLength = 25000;
+int _fastIncrement = 10;
 
-void setup() {
-    Serial.begin(115200);
-
-    pinMode(L_ENC_A, INPUT_PULLUP);
-    pinMode(L_ENC_B, INPUT_PULLUP);
-    pinMode(R_ENC_A, INPUT_PULLUP);
-    pinMode(R_ENC_B, INPUT_PULLUP);
-
-    attachInterrupt(digitalPinToInterrupt(L_ENC_A), readEncoder, CHANGE);
-    attachInterrupt(digitalPinToInterrupt(L_ENC_B), readEncoder, CHANGE);
-    attachInterrupt(digitalPinToInterrupt(R_ENC_A), readEncoder, CHANGE);
-    attachInterrupt(digitalPinToInterrupt(R_ENC_B), readEncoder, CHANGE);
-
-    pinMode(buttonPin, INPUT); // temp button
-}
+volatile int L_counter = 0;
+volatile int R_counter = 0;
 
 
 void read_encoder() {
-  // Encoder interrupt routine for both pins. Updates counter
-  // if they are valid and have rotated a full indent
- 
-  static uint8_t old_AB = 3;  // Lookup table index
-  static int8_t encval = 0;   // Encoder value  
+  static uint8_t L_old_AB = 3;  // Lookup table index
+  static uint8_t R_old_AB = 3;  // Lookup table index
+  static int8_t L_encval = 0;   // Encoder value
+  static int8_t R_encval = 0;   // Encoder value  
   static const int8_t enc_states[]  = {0,-1,1,0,1,0,0,-1,-1,0,0,1,0,1,-1,0}; // Lookup table
 
-  old_AB <<=2;  // Remember previous state
+  L_old_AB <<= 2;  // Remember previous state
+  R_old_AB <<= 2;  // Remember previous state
 
-  if (digitalRead(ENC_A)) old_AB |= 0x02; // Add current state of pin A
-  if (digitalRead(ENC_B)) old_AB |= 0x01; // Add current state of pin B
+  if (digitalRead(L_ENC_A)) L_old_AB |= 0x02; // Add current state of pin A
+  if (digitalRead(L_ENC_B)) L_old_AB |= 0x01; // Add current state of pin B
   
-  encval += enc_states[( old_AB & 0x0f )];
+  if (digitalRead(R_ENC_A)) R_old_AB |= 0x02; // Add current state of pin A
+  if (digitalRead(R_ENC_B)) R_old_AB |= 0x01; // Add current state of pin B
 
-  // Update counter if encoder has rotated a full indent, that is at least 4 steps
-  if( encval > 3 ) {        // Four steps forward
+  L_encval += enc_states[(L_old_AB & 0x0f)];
+  R_encval += enc_states[(R_old_AB & 0x0f)];
+
+  Serial.print("R_old_AB: ");
+  Serial.println(R_old_AB, BIN);
+  Serial.print("R_encval: ");
+  Serial.println(R_encval);
+  Serial.print("R_counter: ");
+  Serial.println(R_counter);
+
+  if (L_encval > 3) {        // Four steps forward
     int changevalue = 1;
-    if((micros() - _lastIncReadTime) < _pauseLength) {
+    if ((micros() - _lastIncReadTime) < _pauseLength) {
       changevalue = _fastIncrement * changevalue; 
     }
     _lastIncReadTime = micros();
-    counter = counter + changevalue;              // Update counter
-    encval = 0;
-  }
-  else if( encval < -3 ) {        // Four steps backward
+    L_counter = L_counter + changevalue;              // Update counter
+    L_encval = 0;
+  } else if (L_encval < -3) {        // Four steps backward
     int changevalue = -1;
-    if((micros() - _lastDecReadTime) < _pauseLength) {
+    if ((micros() - _lastDecReadTime) < _pauseLength) {
       changevalue = _fastIncrement * changevalue; 
     }
     _lastDecReadTime = micros();
-    counter = counter + changevalue;              // Update counter
-    encval = 0;
+    L_counter = L_counter + changevalue;              // Update counter
+    L_encval = 0;
   }
+
+  if (R_encval > 3) {        // Four steps forward
+    int changevalue = 1;
+    if ((micros() - _lastIncReadTime) < _pauseLength) {
+      changevalue = _fastIncrement * changevalue; 
+    }
+    _lastIncReadTime = micros();
+    R_counter = R_counter + changevalue;              // Update counter
+    R_encval = 0;
+  } else if (R_encval < -3) {        // Four steps backward
+    int changevalue = -1;
+    if ((micros() - _lastDecReadTime) < _pauseLength) {
+      changevalue = _fastIncrement * changevalue; 
+    }
+    _lastDecReadTime = micros();
+    R_counter = R_counter + changevalue;              // Update counter
+    R_encval = 0;
+  }
+}
+
+void setup() {
+  // Set encoder pins and attach interrupts
+  pinMode(L_ENC_A, INPUT_PULLUP);
+  pinMode(L_ENC_B, INPUT_PULLUP);
+  pinMode(R_ENC_A, INPUT_PULLUP);
+  pinMode(R_ENC_B, INPUT_PULLUP);
+  attachInterrupt(digitalPinToInterrupt(L_ENC_A), read_encoder, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(L_ENC_B), read_encoder, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(R_ENC_A), read_encoder, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(R_ENC_B), read_encoder, CHANGE);
+
+  // Start the serial monitor to show output
+  Serial.begin(115200);
 }
 
 void loop() {
@@ -67,22 +106,138 @@ void loop() {
     String incomingData = Serial.readString();
   }
   else {
-
-    if (!digitalRead(buttonPin)) { // for some reason the current is inverted here?
-      leftSpeed = 2;
-      rightSpeed = 2;
-    }
-    else {
-      leftSpeed = 0;
-      rightSpeed = 0;
-    }
-
-    String data = String(leftSpeed) + "," + String(rightSpeed);
+    String data = String(L_counter) + "," + String(R_counter);
 
     Serial.println(data);
+    
+
+    // String data = String(leftSpeed) + "," + String(rightSpeed);
+
+    // Serial.println(data);
   }
   // leftSpeed = digitalRead(3);
   // rightSpeed = digitalRead(4);
   
-  delay(50);
+  //delay(50); REMOVED DELAY MIGHT BE IMPORTANT FOR THREADS!!!!!!!!!!!!!!!!!!!!!!
 }
+
+
+// float leftSpeed = 0;
+// float rightSpeed = 0;
+
+// #define L_ENC_A 2
+// #define L_ENC_B 3
+// #define R_ENC_A 4
+// #define R_ENC_B 5
+// #define RESOLUTION 100
+
+// #define buttonPin 6
+
+// unsigned long _lastIncReadTime = micros(); 
+// unsigned long _lastDecReadTime = micros(); 
+// int _pauseLength = 25000;
+// int _fastIncrement = 10;
+
+// volatile int counter = 0;
+
+// // int currentStep = 0;
+// // int prev_R_ENC_A;
+
+// void read_encoder() {
+//   // Encoder interrupt routine for both pins. Updates counter
+//   // if they are valid and have rotated a full indent
+ 
+//   static uint8_t R_old_AB = 3;  // Lookup table index
+//   static int8_t R_encval = 0;   // Encoder value  
+//   static uint8_t L_old_AB = 3;  // Lookup table index
+//   static int8_t L_encval = 0;   // Encoder value
+//   static const int8_t enc_states[]  = {0,-1,1,0,1,0,0,-1,-1,0,0,1,0,1,-1,0}; // Lookup table
+
+//   L_old_AB <<=2;  // Remember previous state
+//   //R_old_AB <<=2;  // Remember previous state
+
+//   if (digitalRead(L_ENC_A)) L_old_AB |= 0x02; // Add current state of pin A
+//   if (digitalRead(L_ENC_B)) L_old_AB |= 0x01; // Add current state of pin B
+//   // if (digitalRead(R_ENC_A)) R_old_AB |= 0x02; // Add current state of pin A
+//   // if (digitalRead(R_ENC_B)) R_old_AB |= 0x01; // Add current state of pin B
+  
+//   L_encval += enc_states[( L_old_AB & 0x0f )];
+//   // R_encval += enc_states[( R_old_AB & 0x0f )];
+
+//   // Update counter if encoder has rotated a full indent, that is at least 4 steps
+//   if( L_encval > 3 ) {        // Four steps forward
+//     int changevalue = 1;
+//     if((micros() - _lastIncReadTime) < _pauseLength) {
+//       changevalue = _fastIncrement * changevalue; 
+//     }
+//     _lastIncReadTime = micros();
+//     counter = counter + changevalue;              // Update counter
+//     L_encval = 0;
+//   }
+//   else if( L_encval < -3 ) {        // Four steps backward
+//     int changevalue = -1;
+//     if((micros() - _lastDecReadTime) < _pauseLength) {
+//       changevalue = _fastIncrement * changevalue; 
+//     }
+//     _lastDecReadTime = micros();
+//     counter = counter + changevalue;              // Update counter
+//     L_encval = 0;
+//   }
+// }
+
+// //   if( R_encval > 3 ) {        // Four steps forward
+// //     int changevalue = 1;
+// //     if((micros() - _lastIncReadTime) < _pauseLength) {
+// //       changevalue = _fastIncrement * changevalue; 
+// //     }
+// //     _lastIncReadTime = micros();
+// //     counter = counter + changevalue;              // Update counter
+// //     R_encval = 0;
+// //   }
+// //   else if( R_encval < -3 ) {        // Four steps backward
+// //     int changevalue = -1;
+// //     if((micros() - _lastDecReadTime) < _pauseLength) {
+// //       changevalue = _fastIncrement * changevalue; 
+// //     }
+// //     _lastDecReadTime = micros();
+// //     counter = counter + changevalue;              // Update counter
+// //     encval = 0;
+// //   }
+// // }
+
+
+// void setup() {
+//     Serial.begin(115200);
+
+//     pinMode(L_ENC_A, INPUT_PULLUP);
+//     pinMode(L_ENC_B, INPUT_PULLUP);
+//     pinMode(R_ENC_A, INPUT_PULLUP);
+//     pinMode(R_ENC_B, INPUT_PULLUP);
+
+//     attachInterrupt(digitalPinToInterrupt(L_ENC_A), read_encoder, CHANGE);
+//     attachInterrupt(digitalPinToInterrupt(L_ENC_B), read_encoder, CHANGE);
+//     // attachInterrupt(digitalPinToInterrupt(R_ENC_A), read_encoder, CHANGE);
+//     // attachInterrupt(digitalPinToInterrupt(R_ENC_B), read_encoder, CHANGE);
+
+//     pinMode(buttonPin, INPUT); // temp button
+// }
+
+// void loop() {
+//   if (Serial.available()) {
+//     // READING STUFF FROM UNITY
+//     String incomingData = Serial.readString();
+//   }
+//   else {
+//     read_encoder();
+//     Serial.println(counter);
+    
+
+//     // String data = String(leftSpeed) + "," + String(rightSpeed);
+
+//     // Serial.println(data);
+//   }
+//   // leftSpeed = digitalRead(3);
+//   // rightSpeed = digitalRead(4);
+  
+//   delay(50);
+// }
