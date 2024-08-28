@@ -69,6 +69,7 @@ void read_encoder() {
     R_lastReadTime = micros();
     R_counter = R_counter + changevalue;              // Update counter
     R_encval = 0;
+  }
 }
 
 void setup() {
