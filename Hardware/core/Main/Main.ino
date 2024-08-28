@@ -8,8 +8,8 @@
 */
 
 // Define rotary encoder pins
-#define L_ENC_A 4
-#define L_ENC_B 5
+#define L_ENC_A 6
+#define L_ENC_B 7
 #define R_ENC_A 2
 #define R_ENC_B 3
 #define RESOLUTION 20 // how many "clicks" or counts are in one full 360 degree rotation
@@ -17,60 +17,49 @@
 unsigned long L_lastReadTime = micros();
 unsigned long R_lastReadTime = micros(); 
 
-int _pauseLength = 25000;
-int _fastIncrement = 10;
-
 volatile int L_counter = 0;
 volatile int R_counter = 0;
 float L_rpm = 0.0;
 float R_rpm = 0.0;
 
-void read_encoder() {
-  static uint8_t L_old_AB = 3;  // Lookup table index
-  static uint8_t R_old_AB = 3;  // Lookup table index
-  static int8_t L_encval = 0;   // Encoder value
-  static int8_t R_encval = 0;   // Encoder value  
-  static const int8_t enc_states[]  = {0,-1,1,0,1,0,0,-1,-1,0,0,1,0,1,-1,0}; // Lookup table
+static uint8_t L_old_AB = 3;  // Lookup table index for left encoder
+static uint8_t R_old_AB = 3;  // Lookup table index for right encoder
+static int8_t L_encval = 0;   // Encoder value for left encoder
+static int8_t R_encval = 0;   // Encoder value for right encoder  
+static const int8_t enc_states[]  = {0,-1,1,0,1,0,0,-1,-1,0,0,1,0,1,-1,0}; // Lookup table
 
-  L_old_AB <<= 2;  // Remember previous state
-  R_old_AB <<= 2;  // Remember previous state
-
-  if (digitalRead(L_ENC_A)) L_old_AB |= 0x02; // Add current state of pin A
-  if (digitalRead(L_ENC_B)) L_old_AB |= 0x01; // Add current state of pin B
-  
-  if (digitalRead(R_ENC_A)) R_old_AB |= 0x02; // Add current state of pin A
-  if (digitalRead(R_ENC_B)) R_old_AB |= 0x01; // Add current state of pin B
+void read_L_enc() {
+  L_old_AB <<= 2;
+  if (digitalRead(L_ENC_A)) L_old_AB |= 0x02;
+  if (digitalRead(L_ENC_B)) L_old_AB |= 0x01;
 
   L_encval += enc_states[(L_old_AB & 0x0f)];
-  R_encval += enc_states[(R_old_AB & 0x0f)];
-
-  Serial.print("R_old_AB: ");
-  Serial.println(R_old_AB, BIN);
-  Serial.print("R_encval: ");
-  Serial.println(R_encval);
-  Serial.print("R_counter: ");
-  Serial.println(R_counter);
-
-  if (L_encval > 3 || L_encval < -3) {        // Four steps forward
-    //int changevalue = 1;
+  if (L_encval > 3 || L_encval < -3) {
     int changevalue = (int)(L_encval/3);
     unsigned long deltaT = micros() - L_lastReadTime;
-    L_rpm = (changevalue/RESOLUTION) * 60/(deltaT/1000)
+    float L_rpm = (float)(changevalue / RESOLUTION) * 60 / (deltaT / 1000.0);
     L_lastReadTime = micros();
-    L_counter = L_counter + changevalue;              // Update counter
+    L_counter += changevalue;
     L_encval = 0;
   }
+}
 
-  if (R_encval > 3 || R_encval < -3) {        // Four steps forward
-    //int changevalue = 1;
+void read_R_enc() {
+  R_old_AB <<= 2;
+  if (digitalRead(R_ENC_A)) R_old_AB |= 0x02;
+  if (digitalRead(R_ENC_B)) R_old_AB |= 0x01;
+
+  R_encval += enc_states[(R_old_AB & 0x0f)];
+  if (R_encval > 3 || R_encval < -3) {
     int changevalue = (int)(R_encval/3);
     unsigned long deltaT = micros() - R_lastReadTime;
-    R_rpm = (changevalue/RESOLUTION) * 60/(deltaT/1000)
+    float R_rpm = (changevalue / RESOLUTION) * 60 / (deltaT / 1000.0);
     R_lastReadTime = micros();
-    R_counter = R_counter + changevalue;              // Update counter
+    R_counter += changevalue;
     R_encval = 0;
   }
 }
+
 
 void setup() {
   // Set encoder pins and attach interrupts
@@ -78,15 +67,14 @@ void setup() {
   pinMode(L_ENC_B, INPUT_PULLUP);
   pinMode(R_ENC_A, INPUT_PULLUP);
   pinMode(R_ENC_B, INPUT_PULLUP);
-  attachInterrupt(digitalPinToInterrupt(L_ENC_A), read_encoder, CHANGE);
-  attachInterrupt(digitalPinToInterrupt(L_ENC_B), read_encoder, CHANGE);
-  attachInterrupt(digitalPinToInterrupt(R_ENC_A), read_encoder, CHANGE);
-  attachInterrupt(digitalPinToInterrupt(R_ENC_B), read_encoder, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(L_ENC_A), read_L_enc, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(L_ENC_B), read_L_enc, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(R_ENC_A), read_R_enc, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(R_ENC_B), read_R_enc, CHANGE);
 
   // Start the serial monitor to show output
   Serial.begin(115200);
 }
-
 void loop() {
   if (Serial.available()) {
     // READING STUFF FROM UNITY
@@ -94,9 +82,10 @@ void loop() {
   }
   else {
     String data = String(L_counter) + "," + String(R_counter);
-    String x = String(L_rpm) + "," + String(R_rpm);
-    Serial.println(data);
-    Serial.println(x);
+    // String x = String(L_rpm) + "," + String(R_rpm);
+    //Serial.println(data);
+    Serial.println(R_rpm);
+    // Serial.println(x);
     
 
     // String data = String(leftSpeed) + "," + String(rightSpeed);
