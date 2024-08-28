@@ -12,15 +12,18 @@
 #define L_ENC_B 3
 #define R_ENC_A 4
 #define R_ENC_B 5
+#define RESOLUTION 20 // how many "clicks" or counts are in one full 360 degree rotation
 
-unsigned long _lastIncReadTime = micros(); 
-unsigned long _lastDecReadTime = micros(); 
+unsigned long L_lastReadTime = micros();
+unsigned long R_lastReadTime = micros(); 
+
 int _pauseLength = 25000;
 int _fastIncrement = 10;
 
 volatile int L_counter = 0;
 volatile int R_counter = 0;
-
+float L_rpm = 0.0;
+float R_rpm = 0.0;
 
 void read_encoder() {
   static uint8_t L_old_AB = 3;  // Lookup table index
@@ -48,41 +51,24 @@ void read_encoder() {
   Serial.print("R_counter: ");
   Serial.println(R_counter);
 
-  if (L_encval > 3) {        // Four steps forward
-    int changevalue = 1;
-    if ((micros() - _lastIncReadTime) < _pauseLength) {
-      changevalue = _fastIncrement * changevalue; 
-    }
-    _lastIncReadTime = micros();
-    L_counter = L_counter + changevalue;              // Update counter
-    L_encval = 0;
-  } else if (L_encval < -3) {        // Four steps backward
-    int changevalue = -1;
-    if ((micros() - _lastDecReadTime) < _pauseLength) {
-      changevalue = _fastIncrement * changevalue; 
-    }
-    _lastDecReadTime = micros();
+  if (L_encval > 3 || L_encval < -3) {        // Four steps forward
+    //int changevalue = 1;
+    int changevalue = (int)(L_encval/3);
+    unsigned long deltaT = micros() - L_lastReadTime;
+    L_rpm = (changevalue/RESOLUTION) * 60/(deltaT/1000)
+    L_lastReadTime = micros();
     L_counter = L_counter + changevalue;              // Update counter
     L_encval = 0;
   }
 
-  if (R_encval > 3) {        // Four steps forward
-    int changevalue = 1;
-    if ((micros() - _lastIncReadTime) < _pauseLength) {
-      changevalue = _fastIncrement * changevalue; 
-    }
-    _lastIncReadTime = micros();
+  if (R_encval > 3 || R_encval < -3) {        // Four steps forward
+    //int changevalue = 1;
+    int changevalue = (int)(R_encval/3);
+    unsigned long deltaT = micros() - R_lastReadTime;
+    R_rpm = (changevalue/RESOLUTION) * 60/(deltaT/1000)
+    R_lastReadTime = micros();
     R_counter = R_counter + changevalue;              // Update counter
     R_encval = 0;
-  } else if (R_encval < -3) {        // Four steps backward
-    int changevalue = -1;
-    if ((micros() - _lastDecReadTime) < _pauseLength) {
-      changevalue = _fastIncrement * changevalue; 
-    }
-    _lastDecReadTime = micros();
-    R_counter = R_counter + changevalue;              // Update counter
-    R_encval = 0;
-  }
 }
 
 void setup() {
@@ -107,8 +93,9 @@ void loop() {
   }
   else {
     String data = String(L_counter) + "," + String(R_counter);
-
+    String x = String(L_rpm) + "," + String(R_rpm);
     Serial.println(data);
+    Serial.println(x);
     
 
     // String data = String(leftSpeed) + "," + String(rightSpeed);
