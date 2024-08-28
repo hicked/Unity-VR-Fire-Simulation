@@ -8,10 +8,10 @@
 */
 
 // Define rotary encoder pins
-#define L_ENC_A 2
-#define L_ENC_B 3
-#define R_ENC_A 4
-#define R_ENC_B 5
+#define L_ENC_A 4
+#define L_ENC_B 5
+#define R_ENC_A 2
+#define R_ENC_B 3
 #define RESOLUTION 20 // how many "clicks" or counts are in one full 360 degree rotation
 
 unsigned long L_lastReadTime = micros();
