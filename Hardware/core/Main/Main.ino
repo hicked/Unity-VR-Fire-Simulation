@@ -123,7 +123,6 @@ void loop() {
 // void read_encoder() {
 //   // Encoder interrupt routine for both pins. Updates counter
 //   // if they are valid and have rotated a full indent
- 
 //   static uint8_t R_old_AB = 3;  // Lookup table index
 //   static int8_t R_encval = 0;   // Encoder value  
 //   static uint8_t L_old_AB = 3;  // Lookup table index
