@@ -1,4 +1,4 @@
-# Disabled VR Fire Simulation
+# VR Fire Simulation
 This repository serves as a place to store Unity and Arduino Assets (specifically scripts and scenes) for a PhD project.
 This projet serves to test the accesibility of fire escapes for disabled wheel chair users in case of a fire. 
 This simulation will also be done in VR, as to validate whether or not it serves as a valid replacement for escape drills/plans.
