@@ -12,7 +12,6 @@ public class Alarm : Audible
         alarmSource.clip = alarmClip;
     }
     private void Update() {
-        Debug.Log(fireManager.fireParticleSystem.isPlaying);
         if (fireManager.fireParticleSystem.isPlaying && !alarmSource.isPlaying) {
             alarmSource.Play();
         }

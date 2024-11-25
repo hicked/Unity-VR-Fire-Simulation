@@ -82,6 +82,8 @@ public class NPCManager : Audible {
     [SerializeField] public AudioClip walkAudio;
     [SerializeField] public float walkOffset = 0f;
     [SerializeField] public float runOffset = 0f;
+    [SerializeField] public GameObject fire;
+    public bool panicked = false;
 
     //----------------------------------------------------------------------
     public string[] NPCIdleStatesW = new string[] {
@@ -134,7 +136,7 @@ public class NPCManager : Audible {
             int moveVar = Random.Range(-moveVariance, moveVariance);
             yield return new WaitForSeconds(timeBeforeMove + moveVar);
 
-            if (!isWalking && !isRunning && !pathfinder.isPathfinding) {
+            if (isIdle && !pathfinder.isPathfinding) {
                 moveToRandom();
             }
             yield return null;
@@ -162,6 +164,22 @@ public class NPCManager : Audible {
 
 
     private void Update() {
+        // FIRE STUFF!!!!!!!!!!!!
+        // RaycastHit fireHit; 
+        // if (!panicked && Physics.Raycast(transform.position, (fire.transform.position-transform.position), out fireHit)) {
+            
+        //     Debug.Log(fireHit.collider.gameObject);
+        //     if (fireHit.collider.gameObject.layer == LayerMask.NameToLayer("Fire") && fire.GetComponent<FireManager>().fireParticleSystem.isPlaying) {
+                
+        //         Debug.Log("LOS to fire");
+        //         // NPC can see the fire and should be running out of the building
+        //         setPathTo(new Vector3(-40f, 0f, -7.5f));
+        //         panicked = true;
+
+                
+        //     }
+        // }
+
         // Debug.Log($"{transform.position} and {transform.position + transform.forward}");
         if (pathfinder != null) {
             path = pathfinder.GetPath();
@@ -205,9 +223,9 @@ public class NPCManager : Audible {
                 setRandomIdle();
             }
 
-            //if (alarm.isOn) {MoveAlongPath(run=true);}
-            //else { MoveAlongPath();}
-            MoveAlongPath(); // rotates the NPC every time it gets to a point on the path to face the next point on the path
+            if (panicked) {MoveAlongPath(true);}
+            else { MoveAlongPath();}
+            // rotates the NPC every time it gets to a point on the path to face the next point on the path
             // Dont need to move NPC forward since that is automatically done above (isRunning
         }
     }
@@ -304,6 +322,7 @@ public class NPCManager : Audible {
                 isWalking = false;
                 isIdle = true;
                 isRunning = false;
+                panicked = false;
                 return;
             }
             currentPathIndex++;
