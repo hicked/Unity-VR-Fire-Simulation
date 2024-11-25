@@ -164,21 +164,18 @@ public class NPCManager : Audible {
 
 
     private void Update() {
-        // FIRE STUFF!!!!!!!!!!!!
-        // RaycastHit fireHit; 
-        // if (!panicked && Physics.Raycast(transform.position, (fire.transform.position-transform.position), out fireHit)) {
-            
-        //     Debug.Log(fireHit.collider.gameObject);
-        //     if (fireHit.collider.gameObject.layer == LayerMask.NameToLayer("Fire") && fire.GetComponent<FireManager>().fireParticleSystem.isPlaying) {
-                
-        //         Debug.Log("LOS to fire");
-        //         // NPC can see the fire and should be running out of the building
-        //         setPathTo(new Vector3(-40f, 0f, -7.5f));
-        //         panicked = true;
+        // Fire Detection
+        RaycastHit fireHit; 
+        if (fire.GetComponent<FireManager>().fireParticleSystem.isPlaying && !panicked) {
+            if (Physics.Raycast(transform.position, (fire.transform.position-transform.position), out fireHit) && fireHit.collider.gameObject.layer == LayerMask.NameToLayer("Fire")) {
+                Debug.Log("LOS to fire");
+                // NPC can see the fire and should be running out of the building
+                setPathTo(new Vector3(-40f, 0f, -7.5f));
+                panicked = true;
 
                 
-        //     }
-        // }
+            }
+        }
 
         // Debug.Log($"{transform.position} and {transform.position + transform.forward}");
         if (pathfinder != null) {

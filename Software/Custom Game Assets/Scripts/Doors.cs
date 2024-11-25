@@ -10,6 +10,7 @@ public class Doors : Audible, Interactable {
     [SerializeField] public float closeOffset = 0.55f;
     [SerializeField] public float openOffset = 0.55f;
     [SerializeField] private float doorSpeed = 90f;
+    [SerializeField] public float doorswingMultiplier = 3.0f;
 
     [SerializeField] public float openAngle = 90f;
     [SerializeField] public float closedAngle = 0f;
@@ -164,7 +165,7 @@ public class Doors : Audible, Interactable {
 
     public IEnumerator SwingDoor(Vector3 handleVelocity) {
         swinging = true;
-        float velocityMagnitude = handleVelocity.magnitude;
+        float velocityMagnitude = handleVelocity.magnitude*doorswingMultiplier;
         float velocityThreshold = 0.25f; // Adjust this threshold as needed
 
         // If the velocity is below the threshold, do not swing the door

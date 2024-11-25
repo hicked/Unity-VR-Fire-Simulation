@@ -12,6 +12,34 @@
 
 **D**: Patch / Refactoring
 
+## [v.0.6.7.9-beta] - 2024-11-25
+**Author:** Antoine
+*Changes*:
+-   Added a door swing multiplier since doors were not swinging the appropriate amount
+
+*Current Bugs*:
+-   Close door sound now broken
+-   PROJECT TREE CLEANUP STILL NEEDS TO BE COMPLETED: Fire, NPCs, Doors, Lights
+-   `Look rotation viewing vector is zero` "bug", not game breaking
+-   Add different walk and run sounds
+-   Smoke ignoring colliders at X time
+-   Alarm not sounding at the right time
+
+*Next Steps*:
+-   Sequence of events:
+    -   Fire starts (make sure no player in the room)
+        -   Imaginary wall
+        -   Npcs with LOS run out towards exits
+        -   Alarm rings (15 secs after fire ini)
+            -   all other NPCs run out
+        -   close and locks door to fire
+        -   time before death TBD
+-   Last room (3)
+-   Resize objects for more realism (props mostly)
+-   UI/Menu -> only at the end
+-   Make wheelaudio change based on wheel speeds (should be simple)
+-   Make onPhone independant, static
+
 
 ## [v.0.6.7.8-beta] - 2024-08-19
 **Author:** Antoine
@@ -29,6 +57,7 @@
 -   `Look rotation viewing vector is zero` "bug", not game breaking
 -   Add different walk and run sounds
 -   Smoke ignoring colliders at X time
+-   Alarm not sounding at the right time
 
 *Next Steps*:
 -   Sequence of events:
