@@ -19,6 +19,7 @@ public class NPCLocationInfoList {
 
 public class NPCManager : Audible {
     [SerializeField] private LayerMask doorLayer;
+    [SerializeField] private LayerMask fireDetectionLayer;
     [SerializeField] public float NPCHeight = 1.75f;
     [SerializeField] public float NPCRadius = 0.3f;
 
@@ -83,6 +84,7 @@ public class NPCManager : Audible {
     [SerializeField] public float walkOffset = 0f;
     [SerializeField] public float runOffset = 0f;
     [SerializeField] public GameObject fire;
+    [SerializeField] public GameObject alarm;
     public bool panicked = false;
 
     //----------------------------------------------------------------------
@@ -109,6 +111,11 @@ public class NPCManager : Audible {
     public Dictionary<string, float> NPCRunningStates = new Dictionary<string, float>() {
         { "locom_m_jogging_30f", 0.3f},
         { "locom_m_running_20f", 0.3f }
+    };
+
+    public Vector3[] exitLocations = new Vector3[] {
+        new Vector3(17.03f, -23.52f, -22.29f),
+        new Vector3(-29.3f, -23.52f, -7.62f)
     };
     //----------------------------------------------------------------------
 
@@ -165,15 +172,19 @@ public class NPCManager : Audible {
 
     private void Update() {
         // Fire Detection
-        RaycastHit fireHit; 
-        if (fire.GetComponent<FireManager>().fireParticleSystem.isPlaying && !panicked) {
-            if (Physics.Raycast(transform.position, (fire.transform.position-transform.position), out fireHit) && fireHit.collider.gameObject.layer == LayerMask.NameToLayer("Fire")) {
-                Debug.Log("LOS to fire");
-                // NPC can see the fire and should be running out of the building
-                setPathTo(new Vector3(-40f, 0f, -7.5f));
-                panicked = true;
+        if (alarm.GetComponent<Alarm>().alarmSource.isPlaying && !panicked) {
+            panicked = true;
+        }
 
-                
+        if (fire.GetComponent<FireManager>().fireParticleSystem.isPlaying && !panicked) { // if fire is active, but NPC is not panicked
+            RaycastHit fireHit; // hit info for raycast
+            Debug.DrawRay(transform.position + new Vector3(0, NPCHeight/2, 0), fire.transform.position - transform.position, Color.red);
+            if (Physics.CapsuleCast(transform.position + new Vector3(0, NPCHeight/2, 0), transform.position - new Vector3(0, NPCHeight/2, 0), NPCRadius, fire.transform.position - transform.position, out fireHit, Vector3.Distance(transform.position, fire.transform.position), fireDetectionLayer)) {
+                if (fireHit.collider.gameObject == fire) {
+                    Debug.Log("NPC has LOS to fire");
+                    panicked = true;
+                    moveToRandom();
+                }
             }
         }
 
@@ -182,6 +193,20 @@ public class NPCManager : Audible {
             path = pathfinder.GetPath();
             lookatVector = pathfinder.lookatVector;
         }
+
+        if (!pathfinder.isPathfinding && path == null&& panicked) {
+            Vector3 closestPoint = exitLocations[0];
+            float closestDistance = Vector3.Distance(transform.position, exitLocations[0]);
+            for (int i = 1; i < exitLocations.Length; i++) {
+                float distance = Vector3.Distance(transform.position, exitLocations[i]);
+                if (distance < closestDistance) {
+                    closestPoint = exitLocations[i];
+                    closestDistance = distance;
+                }
+            }
+            setPathTo(closestPoint);
+        }
+        
 
         if (path != null) {
             isWalking = true;
@@ -198,6 +223,26 @@ public class NPCManager : Audible {
 
         if (animatorInfo.Length == 1) {
             currentAnimation = animatorInfo[0].clip.name;
+
+            if (panicked && pathfinder != null && !pathfinder.isPathfinding && path == null) {
+                if (exitLocations != null && exitLocations.Length > 0) {
+                    Vector3 closestPoint = exitLocations[0];
+                    float distance = Vector3.Distance(transform.position, exitLocations[0]);
+                    for (int i = 1; i < exitLocations.Length; i++) {
+                        if (Vector3.Distance(transform.position, exitLocations[i]) < distance) {
+                            closestPoint = exitLocations[i];
+                            distance = Vector3.Distance(transform.position, exitLocations[i]);
+                        }
+                    }
+                    setPathTo(closestPoint);
+                } else {
+                    Debug.LogError("exitLocations is not initialized or empty.");
+                }
+            } else if (pathfinder == null) {
+                Debug.LogError("pathfinder is not initialized.");
+            }
+
+
             // Makes sure we have to correct animation based on the state of the NPC
             if (isRunning && !(NPCRunningStates.ContainsKey(currentAnimation))) { //|| NPCRunningStates.ContainsKey(currentAnimation))) { 
                 setRandomRunning();
@@ -220,7 +265,9 @@ public class NPCManager : Audible {
                 setRandomIdle();
             }
 
-            if (panicked) {MoveAlongPath(true);}
+            if (panicked) {
+                MoveAlongPath(true);
+            }
             else { MoveAlongPath();}
             // rotates the NPC every time it gets to a point on the path to face the next point on the path
             // Dont need to move NPC forward since that is automatically done above (isRunning

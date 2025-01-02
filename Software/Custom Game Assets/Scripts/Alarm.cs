@@ -1,10 +1,11 @@
 using UnityEngine;
-
+using System.Collections;
 public class Alarm : Audible
 {
     [SerializeField] public AudioSource alarmSource;
     [SerializeField] private AudioClip alarmClip;
     [SerializeField] public GameObject fire;
+    [SerializeField] private float alarmDelay = 10f;
     private FireManager fireManager;
 
     private void Start() {
@@ -13,11 +14,15 @@ public class Alarm : Audible
     }
     private void Update() {
         if (fireManager.fireParticleSystem.isPlaying && !alarmSource.isPlaying) {
-            alarmSource.Play();
+            StartCoroutine(playSound());
         }
-        else if (fireManager.fireParticleSystem.isPlaying && alarmSource.isPlaying) {
+        else if (!fireManager.fireParticleSystem.isPlaying && alarmSource.isPlaying) {
             alarmSource.Stop();
         }
         
+    }
+    private IEnumerator playSound() {
+        yield return new WaitForSeconds(alarmDelay);
+        alarmSource.Play();
     }
 }

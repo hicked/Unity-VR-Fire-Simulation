@@ -6668,7 +6668,7 @@ PrefabInstance:
     - target: {fileID: 5067755742887398202, guid: f0ac6fb9ada49f24683e3eca20786103,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 16.54
+      value: 17.03
       objectReference: {fileID: 0}
     - target: {fileID: 5067755742887398202, guid: f0ac6fb9ada49f24683e3eca20786103,
         type: 3}
@@ -6678,7 +6678,7 @@ PrefabInstance:
     - target: {fileID: 5067755742887398202, guid: f0ac6fb9ada49f24683e3eca20786103,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -8.62
+      value: -22.58
       objectReference: {fileID: 0}
     - target: {fileID: 5067755742887398202, guid: f0ac6fb9ada49f24683e3eca20786103,
         type: 3}
@@ -6843,6 +6843,9 @@ MonoBehaviour:
   doorLayer:
     serializedVersion: 2
     m_Bits: 256
+  fireDetectionLayer:
+    serializedVersion: 2
+    m_Bits: 4928
   NPCHeight: 1.75
   NPCRadius: 0.4
   timeChangeIdle: 30
@@ -6871,6 +6874,7 @@ MonoBehaviour:
   walkOffset: 0
   runOffset: 0
   fire: {fileID: 7792553365883077841}
+  alarm: {fileID: 804628259}
   panicked: 0
   NPCIdleStatesW:
   - Exercise_warmingUp_170f
@@ -6883,6 +6887,9 @@ MonoBehaviour:
   - idle_phoneTalking_180f
   - idle_m_1_200f
   - idle_m_2_220f
+  exitLocations:
+  - {x: 17.45, y: -23.52, z: -29.29}
+  - {x: -29.3, y: -23.52, z: -7.62}
 --- !u!136 &685819915
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -7044,9 +7051,9 @@ MonoBehaviour:
   tileSize: 1.5
   layer:
     serializedVersion: 2
-    m_Bits: 3008
+    m_Bits: 7104
   NPC: {fileID: 0}
-  maxTilesAllowedToCheck: 10000
+  maxTilesAllowedToCheck: 5000
   isPathfinding: 0
   lookatVector: {x: 0, y: 0, z: 0}
 --- !u!64 &689191186
@@ -8786,6 +8793,9 @@ MonoBehaviour:
   doorLayer:
     serializedVersion: 2
     m_Bits: 256
+  fireDetectionLayer:
+    serializedVersion: 2
+    m_Bits: 4928
   NPCHeight: 1.75
   NPCRadius: 0.4
   timeChangeIdle: 30
@@ -8814,6 +8824,7 @@ MonoBehaviour:
   walkOffset: 0
   runOffset: 0
   fire: {fileID: 7792553365883077841}
+  alarm: {fileID: 804628259}
   panicked: 0
   NPCIdleStatesW:
   - Exercise_warmingUp_170f
@@ -8826,6 +8837,9 @@ MonoBehaviour:
   - idle_phoneTalking_180f
   - idle_m_1_200f
   - idle_m_2_220f
+  exitLocations:
+  - {x: 17.45, y: -23.52, z: -29.29}
+  - {x: -29.3, y: -23.52, z: -7.62}
 --- !u!136 &790958533
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -8987,9 +9001,9 @@ MonoBehaviour:
   tileSize: 1.5
   layer:
     serializedVersion: 2
-    m_Bits: 3008
-  NPC: {fileID: 0}
-  maxTilesAllowedToCheck: 10000
+    m_Bits: 7104
+  NPC: {fileID: 790958529}
+  maxTilesAllowedToCheck: 5000
   isPathfinding: 0
   lookatVector: {x: 0, y: 0, z: 0}
 --- !u!1 &798298081
@@ -9075,6 +9089,12 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 798298081}
   m_Mesh: {fileID: -5440263977055669386, guid: 7a1dd57bd8b6ca44cbf5f922801b2975, type: 3}
+--- !u!1 &804628259 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7425038374684032403, guid: 638ed67f906b31844a7f6eacfcacfe1a,
+    type: 3}
+  m_PrefabInstance: {fileID: 1999563022}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &810261617 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -1374161610312379201, guid: f7cb6eea40fe5124c9b64c33143d2930,
@@ -10443,6 +10463,9 @@ MonoBehaviour:
   doorLayer:
     serializedVersion: 2
     m_Bits: 256
+  fireDetectionLayer:
+    serializedVersion: 2
+    m_Bits: 4928
   NPCHeight: 1.75
   NPCRadius: 0.4
   timeChangeIdle: 30
@@ -10471,6 +10494,7 @@ MonoBehaviour:
   walkOffset: 0
   runOffset: 0
   fire: {fileID: 7792553365883077841}
+  alarm: {fileID: 804628259}
   panicked: 0
   NPCIdleStatesW:
   - Exercise_warmingUp_170f
@@ -10483,6 +10507,9 @@ MonoBehaviour:
   - idle_phoneTalking_180f
   - idle_m_1_200f
   - idle_m_2_220f
+  exitLocations:
+  - {x: 17.45, y: -23.52, z: -29.29}
+  - {x: -29.3, y: -23.52, z: -7.62}
 --- !u!136 &906605409
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -10644,9 +10671,9 @@ MonoBehaviour:
   tileSize: 1.5
   layer:
     serializedVersion: 2
-    m_Bits: 3008
+    m_Bits: 7104
   NPC: {fileID: 0}
-  maxTilesAllowedToCheck: 10000
+  maxTilesAllowedToCheck: 5000
   isPathfinding: 0
   lookatVector: {x: 0, y: 0, z: 0}
 --- !u!1001 &909925852
@@ -11373,12 +11400,15 @@ MonoBehaviour:
   doorLayer:
     serializedVersion: 2
     m_Bits: 256
+  fireDetectionLayer:
+    serializedVersion: 2
+    m_Bits: 4928
   NPCHeight: 1.75
   NPCRadius: 0.4
   timeChangeIdle: 30
   changeIdleVariance: 15
-  timeBeforeMove: 10
-  moveVariance: 5
+  timeBeforeMove: 60
+  moveVariance: 30
   NPCWalkSpeedMultiplier: 2.5
   NPCRunningSpeedMultiplier: 4
   NPCTurnSpeed: 6
@@ -11401,6 +11431,7 @@ MonoBehaviour:
   walkOffset: 0
   runOffset: 0
   fire: {fileID: 7792553365883077841}
+  alarm: {fileID: 804628259}
   panicked: 0
   NPCIdleStatesW:
   - Exercise_warmingUp_170f
@@ -11414,6 +11445,9 @@ MonoBehaviour:
   - idle_selfcheck_1_300f
   - idle_m_1_200f
   - idle_m_2_220f
+  exitLocations:
+  - {x: 17.45, y: -23.52, z: -29.29}
+  - {x: -29.3, y: -23.52, z: -7.62}
 --- !u!136 &966587623
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -11575,9 +11609,9 @@ MonoBehaviour:
   tileSize: 1.5
   layer:
     serializedVersion: 2
-    m_Bits: 3008
+    m_Bits: 7104
   NPC: {fileID: 0}
-  maxTilesAllowedToCheck: 15000
+  maxTilesAllowedToCheck: 5000
   isPathfinding: 0
   lookatVector: {x: 0, y: 0, z: 0}
 --- !u!1 &974767745 stripped
@@ -14630,24 +14664,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8781078543177559534, guid: 56517b232215f374590483ada1697b11,
         type: 3}
-      propertyPath: angleSnap
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8781078543177559534, guid: 56517b232215f374590483ada1697b11,
-        type: 3}
-      propertyPath: swingAmount
-      value: 0.25
-      objectReference: {fileID: 0}
-    - target: {fileID: 8781078543177559534, guid: 56517b232215f374590483ada1697b11,
-        type: 3}
       propertyPath: audioListener
       value: 
       objectReference: {fileID: 1344989486}
-    - target: {fileID: 8781078543177559534, guid: 56517b232215f374590483ada1697b11,
-        type: 3}
-      propertyPath: swingMultiplier
-      value: 0.25
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -15511,6 +15530,9 @@ MonoBehaviour:
   doorLayer:
     serializedVersion: 2
     m_Bits: 256
+  fireDetectionLayer:
+    serializedVersion: 2
+    m_Bits: 4928
   NPCHeight: 1.75
   NPCRadius: 0.4
   timeChangeIdle: 30
@@ -15539,6 +15561,7 @@ MonoBehaviour:
   walkOffset: 0.75
   runOffset: 0
   fire: {fileID: 7792553365883077841}
+  alarm: {fileID: 804628259}
   panicked: 0
   NPCIdleStatesW:
   - Exercise_warmingUp_170f
@@ -15551,6 +15574,9 @@ MonoBehaviour:
   - idle_phoneTalking_180f
   - idle_m_1_200f
   - idle_m_2_220f
+  exitLocations:
+  - {x: 17.45, y: -23.52, z: -29.29}
+  - {x: -29.3, y: -23.52, z: -7.62}
 --- !u!136 &1104556573
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -15712,9 +15738,9 @@ MonoBehaviour:
   tileSize: 1.5
   layer:
     serializedVersion: 2
-    m_Bits: 3008
+    m_Bits: 7104
   NPC: {fileID: 0}
-  maxTilesAllowedToCheck: 10000
+  maxTilesAllowedToCheck: 5000
   isPathfinding: 0
   lookatVector: {x: 0, y: 0, z: 0}
 --- !u!4 &1116534051 stripped
@@ -19837,6 +19863,12 @@ Transform:
   - {fileID: 685819908}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!108 &1416118041 stripped
+Light:
+  m_CorrespondingSourceObject: {fileID: 7373624460961781507, guid: 4e65e8996b8271e40b8342b53e2ee8a0,
+    type: 3}
+  m_PrefabInstance: {fileID: 3048769319515570430}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1424584082
 GameObject:
   m_ObjectHideFlags: 0
@@ -20484,37 +20516,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 8878067240379179972}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1465346589
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1465346590}
-  m_Layer: 0
-  m_Name: Alarm
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1465346590
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1465346589}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -10.504682, y: 12.915269, z: -2.1072595}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1465814683 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -1063203228461421988, guid: f7cb6eea40fe5124c9b64c33143d2930,
@@ -21223,6 +21224,9 @@ MonoBehaviour:
   doorLayer:
     serializedVersion: 2
     m_Bits: 256
+  fireDetectionLayer:
+    serializedVersion: 2
+    m_Bits: 4928
   NPCHeight: 1.75
   NPCRadius: 0.4
   timeChangeIdle: 30
@@ -21251,6 +21255,7 @@ MonoBehaviour:
   walkOffset: 0
   runOffset: 0
   fire: {fileID: 7792553365883077841}
+  alarm: {fileID: 804628259}
   panicked: 0
   NPCIdleStatesW:
   - Exercise_warmingUp_170f
@@ -21263,6 +21268,9 @@ MonoBehaviour:
   - idle_phoneTalking_180f
   - idle_m_1_200f
   - idle_m_2_220f
+  exitLocations:
+  - {x: 17.45, y: -23.52, z: -29.29}
+  - {x: -29.3, y: -23.52, z: -7.62}
 --- !u!136 &1495330853
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -21424,9 +21432,9 @@ MonoBehaviour:
   tileSize: 1.5
   layer:
     serializedVersion: 2
-    m_Bits: 3008
-  NPC: {fileID: 0}
-  maxTilesAllowedToCheck: 10000
+    m_Bits: 7104
+  NPC: {fileID: 1495330848}
+  maxTilesAllowedToCheck: 5000
   isPathfinding: 0
   lookatVector: {x: 0, y: 0, z: 0}
 --- !u!1001 &1500305653
@@ -22438,6 +22446,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 559248682}
     m_Modifications:
+    - target: {fileID: -6256273157146163375, guid: 156fe1fae1ddc71419d3ae1fbf6b7f16,
+        type: 3}
+      propertyPath: pointLights.Array.data[0]
+      value: 
+      objectReference: {fileID: 1416118041}
     - target: {fileID: 5112680155792041722, guid: 156fe1fae1ddc71419d3ae1fbf6b7f16,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -22451,7 +22464,7 @@ PrefabInstance:
     - target: {fileID: 5112680155792041722, guid: 156fe1fae1ddc71419d3ae1fbf6b7f16,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -12.650047
+      value: -12.6339
       objectReference: {fileID: 0}
     - target: {fileID: 5112680155792041722, guid: 156fe1fae1ddc71419d3ae1fbf6b7f16,
         type: 3}
@@ -25397,6 +25410,9 @@ MonoBehaviour:
   doorLayer:
     serializedVersion: 2
     m_Bits: 256
+  fireDetectionLayer:
+    serializedVersion: 2
+    m_Bits: 4928
   NPCHeight: 1.75
   NPCRadius: 0.4
   timeChangeIdle: 30
@@ -25425,6 +25441,7 @@ MonoBehaviour:
   walkOffset: 0
   runOffset: 0
   fire: {fileID: 7792553365883077841}
+  alarm: {fileID: 804628259}
   panicked: 0
   NPCIdleStatesW:
   - Exercise_warmingUp_170f
@@ -25437,6 +25454,9 @@ MonoBehaviour:
   - idle_phoneTalking_180f
   - idle_m_1_200f
   - idle_m_2_220f
+  exitLocations:
+  - {x: 17.45, y: -23.52, z: -29.29}
+  - {x: -29.3, y: -23.52, z: -7.62}
 --- !u!136 &1761021523
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -25598,9 +25618,9 @@ MonoBehaviour:
   tileSize: 1.5
   layer:
     serializedVersion: 2
-    m_Bits: 3008
+    m_Bits: 7104
   NPC: {fileID: 0}
-  maxTilesAllowedToCheck: 10000
+  maxTilesAllowedToCheck: 5000
   isPathfinding: 0
   lookatVector: {x: 0, y: 0, z: 0}
 --- !u!4 &1772532959 stripped
@@ -27078,6 +27098,9 @@ MonoBehaviour:
   doorLayer:
     serializedVersion: 2
     m_Bits: 256
+  fireDetectionLayer:
+    serializedVersion: 2
+    m_Bits: 4928
   NPCHeight: 1.75
   NPCRadius: 0.4
   timeChangeIdle: 30
@@ -27106,6 +27129,7 @@ MonoBehaviour:
   walkOffset: 0
   runOffset: 0
   fire: {fileID: 7792553365883077841}
+  alarm: {fileID: 804628259}
   panicked: 0
   NPCIdleStatesW:
   - Exercise_warmingUp_170f
@@ -27118,6 +27142,9 @@ MonoBehaviour:
   - idle_phoneTalking_180f
   - idle_m_1_200f
   - idle_m_2_220f
+  exitLocations:
+  - {x: 17.45, y: -23.52, z: -29.29}
+  - {x: -29.3, y: -23.52, z: -7.62}
 --- !u!136 &1876443901
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -27279,9 +27306,9 @@ MonoBehaviour:
   tileSize: 1.5
   layer:
     serializedVersion: 2
-    m_Bits: 3008
+    m_Bits: 7104
   NPC: {fileID: 0}
-  maxTilesAllowedToCheck: 10000
+  maxTilesAllowedToCheck: 5000
   isPathfinding: 0
   lookatVector: {x: 0, y: 0, z: 0}
 --- !u!1001 &1879537135
@@ -34184,4 +34211,3 @@ SceneRoots:
   - {fileID: 299975230}
   - {fileID: 134919093}
   - {fileID: 1362576201}
-  - {fileID: 1465346590}

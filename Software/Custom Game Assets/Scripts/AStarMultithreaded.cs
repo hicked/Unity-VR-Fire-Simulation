@@ -31,7 +31,7 @@ public class AStarMultithreaded : Threadable {
     }
 
     [SerializeField] public float tileSize = 1f;
-    [SerializeField] private LayerMask layer;
+    [SerializeField] public LayerMask layer;
     [SerializeField] public NPCManager NPC;
     [SerializeField] private int maxTilesAllowedToCheck = 5000;
     private float NPCHeight;

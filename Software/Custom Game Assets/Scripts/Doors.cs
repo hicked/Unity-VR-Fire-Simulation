@@ -131,7 +131,7 @@ public class Doors : Audible, Interactable {
     public void Close() {
         targetRotation = closedAngle;
         movedByNPC = true;
-        //StartCoroutine(closeSoundCoroutine());
+        StartCoroutine(closeSoundCoroutine());
     }
 
 
