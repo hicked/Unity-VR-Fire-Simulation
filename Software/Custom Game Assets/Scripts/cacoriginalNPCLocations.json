@@ -1,0 +1,25 @@
+{
+    "idleLocationsList": [
+        {"position": {"x": -36.0, "y": 0.0, "z": -9.4}, "isSpotTaken": false},
+        {"position": {"x": -36.0, "y": 0.0, "z": -6.1}, "isSpotTaken": false},
+        {"position": {"x": -28.69, "y": 0.0, "z": -9.56}, "isSpotTaken": false},
+        {"position": {"x": -28.51, "y": 0.0, "z": -6.0}, "isSpotTaken": false},
+        {"position": {"x": -13.9, "y": 0.0, "z": -6.0}, "isSpotTaken": false},
+        {"position": {"x": -13.9, "y": 0.0, "z": -9.6}, "isSpotTaken": false},
+        {"position": {"x": -5.3, "y": 0.0, "z": -9.7}, "isSpotTaken": false},
+        {"position": {"x": -5.3, "y": 0.0, "z": -6.0}, "isSpotTaken": false},
+        {"position": {"x": 1.4, "y": 0.0, "z": -9.4}, "isSpotTaken": false},
+        {"position": {"x": 6.0, "y": 0.0, "z": -5.9}, "isSpotTaken": false},
+        {"position": {"x": 2.75, "y": 0.0, "z": -10.9}, "isSpotTaken": false},
+        {"position": {"x": 2.8, "y": 0.0, "z": -23.5}, "isSpotTaken": false},
+        {"position": {"x": 6.3, "y": 0.0, "z": -23.5}, "isSpotTaken": false},
+        
+        {"position": {"x": -3.5, "y": 0.0, "z": 4.2}, "isSpotTaken": false},
+        {"position": {"x": 1.19, "y": 0.0, "z": 4.1}, "isSpotTaken": false},
+        {"position": {"x": 2.5, "y": 0.0, "z": 2.4}, "isSpotTaken": false},
+        {"position": {"x": 2.3, "y": 0.0, "z": -2.2}, "isSpotTaken": false},
+        {"position": {"x": -1.8, "y": 0.0, "z": -4.2}, "isSpotTaken": false},
+        {"position": {"x": 1.0, "y": 0.0, "z": -0.6}, "isSpotTaken": false},
+        {"position": {"x": -0.5, "y": 0.0, "z": -1.4}, "isSpotTaken": false}
+    ]
+}

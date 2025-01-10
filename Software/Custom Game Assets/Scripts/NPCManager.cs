@@ -114,8 +114,8 @@ public class NPCManager : Audible {
     };
 
     public Vector3[] exitLocations = new Vector3[] {
-        new Vector3(17.03f, -23.52f, -22.29f),
-        new Vector3(-29.3f, -23.52f, -7.62f)
+        new Vector3(5f, 0f, -22.29f),
+        new Vector3(-35f, 0f, -9f)
     };
     //----------------------------------------------------------------------
 
@@ -172,6 +172,7 @@ public class NPCManager : Audible {
 
     private void Update() {
         // Fire Detection
+        //Debug.Log(this.transform.position);
         if (alarm.GetComponent<Alarm>().alarmSource.isPlaying && !panicked) {
             panicked = true;
         }
@@ -183,18 +184,13 @@ public class NPCManager : Audible {
                 if (fireHit.collider.gameObject == fire) {
                     Debug.Log("NPC has LOS to fire");
                     panicked = true;
-                    moveToRandom();
+                    // setPathTo(new Vector3(5f, 0f, -23f));
                 }
             }
         }
 
-        // Debug.Log($"{transform.position} and {transform.position + transform.forward}");
-        if (pathfinder != null) {
-            path = pathfinder.GetPath();
-            lookatVector = pathfinder.lookatVector;
-        }
-
-        if (!pathfinder.isPathfinding && path == null&& panicked) {
+        
+        if (!pathfinder.isPathfinding && path == null && panicked) {
             Vector3 closestPoint = exitLocations[0];
             float closestDistance = Vector3.Distance(transform.position, exitLocations[0]);
             for (int i = 1; i < exitLocations.Length; i++) {
@@ -205,6 +201,12 @@ public class NPCManager : Audible {
                 }
             }
             setPathTo(closestPoint);
+        }
+
+        // Debug.Log($"{transform.position} and {transform.position + transform.forward}");
+        if (pathfinder != null) {
+            path = pathfinder.GetPath();
+            lookatVector = pathfinder.lookatVector;
         }
         
 
@@ -223,26 +225,6 @@ public class NPCManager : Audible {
 
         if (animatorInfo.Length == 1) {
             currentAnimation = animatorInfo[0].clip.name;
-
-            if (panicked && pathfinder != null && !pathfinder.isPathfinding && path == null) {
-                if (exitLocations != null && exitLocations.Length > 0) {
-                    Vector3 closestPoint = exitLocations[0];
-                    float distance = Vector3.Distance(transform.position, exitLocations[0]);
-                    for (int i = 1; i < exitLocations.Length; i++) {
-                        if (Vector3.Distance(transform.position, exitLocations[i]) < distance) {
-                            closestPoint = exitLocations[i];
-                            distance = Vector3.Distance(transform.position, exitLocations[i]);
-                        }
-                    }
-                    setPathTo(closestPoint);
-                } else {
-                    Debug.LogError("exitLocations is not initialized or empty.");
-                }
-            } else if (pathfinder == null) {
-                Debug.LogError("pathfinder is not initialized.");
-            }
-
-
             // Makes sure we have to correct animation based on the state of the NPC
             if (isRunning && !(NPCRunningStates.ContainsKey(currentAnimation))) { //|| NPCRunningStates.ContainsKey(currentAnimation))) { 
                 setRandomRunning();
@@ -366,7 +348,6 @@ public class NPCManager : Audible {
                 isWalking = false;
                 isIdle = true;
                 isRunning = false;
-                panicked = false;
                 return;
             }
             currentPathIndex++;

@@ -192,6 +192,7 @@ public class AStarMultithreaded : Threadable {
     }
 
     private void FindPathThread(Vector3 start, Vector3 end) {
+        Debug.Log($"Finding path from {start} to {end}");
         isPathfinding = true;
 
         path = null;
@@ -362,5 +363,6 @@ public class AStarMultithreaded : Threadable {
 
     public void SetPath(List<Location> paramPath) {
         this.path = paramPath;
+        Debug.Log(paramPath);
     }
 }  
