@@ -43,7 +43,7 @@ public class AStarMultithreaded : Threadable {
     private HashSet<Location> closedList = new HashSet<Location>();
     private Dictionary<Location, Location> cameFrom = new Dictionary<Location, Location>();
     private List<Location> validNeighbors = new List<Location>();
-    private List<Location> path = null;
+    public List<Location> path = null;
     Location currentLocation;
     private Vector3[] directions = {
         new Vector3(1f, 0f, 0f),
@@ -193,6 +193,12 @@ public class AStarMultithreaded : Threadable {
 
     private void FindPathThread(Vector3 start, Vector3 end) {
         Debug.Log($"Finding path from {start} to {end}");
+
+        if (NPC == null) {
+            Debug.LogError("NPC is not initialized.");
+            return;
+        }
+
         isPathfinding = true;
 
         path = null;
@@ -223,20 +229,28 @@ public class AStarMultithreaded : Threadable {
                     currentLocation = openList[i];
                 }
             }
-            lock (openList){
+            lock (openList) {
                 openList.Remove(currentLocation);
             }
-            lock (closedList){
+            lock (closedList) {
                 closedList.Add(currentLocation);
             }
 
             if (Vector3.Distance(currentLocation.vector, end) <= tileSize &&
                 !IsBlocked(currentLocation.vector, currentLocation.vector - end, (currentLocation.vector - end).magnitude, layer)) {
 
+                if (cameFrom == null) {
+                    Debug.LogError("cameFrom dictionary is not initialized.");
+                    return;
+                }
+
                 cameFrom[endLocation] = currentLocation;
                 currentLocation = endLocation;
                 Action setPath = () => {
                     path = ReconstructPath(cameFrom, currentLocation);
+                    if (path == null) {
+                        Debug.LogError("Reconstructed path is null.");
+                    }
                 };
 
                 QueueFunction(setPath);
@@ -247,6 +261,11 @@ public class AStarMultithreaded : Threadable {
                         lookatVector += direction;
                     }
                 }
+
+                if (lookatVector == end) {
+                    lookatVector = Vector3.forward;
+                }
+                
                 isPathfinding = false;
                 NPC.ChangeLocationStatus();
                 return;

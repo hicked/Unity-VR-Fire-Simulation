@@ -1,65 +1,246 @@
-/* Based on Oleg Mazurov's code for rotary encoder interrupt service routines for AVR micros
-   here https://chome.nerpa.tech/mcu/reading-rotary-encoder-on-arduino/
-   and using interrupts https://chome.nerpa.tech/mcu/rotary-encoder-interrupt-service-routine-for-avr-micros/
+// #include <FastLED.h>
+// #include "brake.h"
+// #include "signals.h"
 
-   This example does not use the port read method. Tested with Nano and ESP32
-   both encoder A and B pins must be connected to interrupt enabled pins, see here for more info:
-   https://www.arduino.cc/reference/en/language/functions/external-interrupts/attachinterrupt/
-*/
+// #define LED_DATA_PIN 7
+// #define NUM_LEDS 66
+// #define LED_TYPE WS2812B
+// #define GLOBAL_BRIGHTNESS 255
 
-// Define rotary encoder pins
-#define L_ENC_A 6
-#define L_ENC_B 7
-#define R_ENC_A 2
-#define R_ENC_B 3
-#define RESOLUTION 20 // how many "clicks" or counts are in one full 360 degree rotation
+// // Brightness configuration
+// #define MIN_GYRO 0
+// #define MAX_GYRO 100
 
-unsigned long L_lastReadTime = micros();
-unsigned long R_lastReadTime = micros(); 
+// // Encoder configuration
+// #define ENCODER_PIN_A   3
+// #define ENCODER_PIN_B   2
+// #define ENCODER_CLICK_PIN 8
 
-volatile int L_counter = 0;
-volatile int R_counter = 0;
-float L_rpm = 0.0;
-float R_rpm = 0.0;
+// int encoderPosition = 0; // Tracks the encoder position
+// bool prevA = 1;
+// bool prevB = 1;
+// bool signal = false;
+// bool prevSignal = false;
 
-static uint8_t L_old_AB = 3;  // Lookup table index for left encoder
-static uint8_t R_old_AB = 3;  // Lookup table index for right encoder
-static int8_t L_encval = 0;   // Encoder value for left encoder
-static int8_t R_encval = 0;   // Encoder value for right encoder  
-static const int8_t enc_states[]  = {0,-1,1,0,1,0,0,-1,-1,0,0,1,0,1,-1,0}; // Lookup table
+// CRGB leds[NUM_LEDS];
+// Brake brake(leds, NUM_LEDS);
+// Signals signals(leds, NUM_LEDS);
 
-void read_L_enc() {
-  L_old_AB <<= 2;
-  if (digitalRead(L_ENC_A)) L_old_AB |= 0x02;
-  if (digitalRead(L_ENC_B)) L_old_AB |= 0x01;
+// void setup() {
+//     FastLED.addLeds<LED_TYPE, LED_DATA_PIN, RGB>(leds, NUM_LEDS);
+//     FastLED.clear();
+//     FastLED.setBrightness(GLOBAL_BRIGHTNESS);
+//     FastLED.show();
 
-  L_encval += enc_states[(L_old_AB & 0x0f)];
-  if (L_encval > 3 || L_encval < -3) {
-    int changevalue = (int)(L_encval/3);
-    unsigned long deltaT = micros() - L_lastReadTime;
-    float L_rpm = (float)(changevalue / RESOLUTION) * 60 / (deltaT / 1000.0);
-    L_lastReadTime = micros();
-    L_counter += changevalue;
-    L_encval = 0;
-  }
+//     // Initialize Serial for debugging
+//     Serial.begin(115200);
+//     Serial.println("Starting...");
+
+//     // Setup encoder pins
+//     pinMode(ENCODER_PIN_A, INPUT_PULLUP);
+//     pinMode(ENCODER_PIN_B, INPUT_PULLUP);
+//     pinMode(ENCODER_CLICK_PIN, INPUT_PULLUP);
+
+//     // Attach interrupts to encoder pins
+//     attachInterrupt(digitalPinToInterrupt(ENCODER_PIN_A), handleEncoderA, CHANGE);
+//     attachInterrupt(digitalPinToInterrupt(ENCODER_PIN_B), handleEncoderB, CHANGE);
+// }
+
+// void loop() {
+//     // Prevent encoder values from going beyond the limits
+//     if (encoderPosition < -100) {
+//         encoderPosition = -100;
+//     } else if (encoderPosition > 100) {
+//         encoderPosition = 100; // Limit to max value of 100
+//     }
+
+//     // Determine if accelerating based on encoder position
+//     if (encoderPosition < 0) {
+//         brake.accelerating = true;
+//         brake.numActiveLEDs = map(-encoderPosition, MIN_GYRO, MAX_GYRO, 0, NUM_LEDS / 2);
+//         brake.active_brightness = map(-encoderPosition, MIN_GYRO, MAX_GYRO, brake.minBrakeBrightness, brake.maxBrakeBrightness);
+//     } else {
+//         brake.accelerating = false;
+//         brake.numActiveLEDs = map(encoderPosition, MIN_GYRO, MAX_GYRO, 0, NUM_LEDS / 2);
+//         brake.active_brightness = map(encoderPosition, MIN_GYRO, MAX_GYRO, brake.minBrakeBrightness, brake.maxBrakeBrightness);
+//     }
+
+//     // Handle flashing if braking is initiated
+//     brake.Update();
+//     signals.Update();
+
+//     // Debug output
+//     // Serial.print("encoderPosition: ");
+//     // Serial.print(encoderPosition);
+//     // Serial.print(" | Active Brightness: ");
+//     // Serial.print(brake.active_brightness);
+//     // Serial.print(" | Number of LEDs On: ");
+//     // Serial.println(brake.numActiveLEDs * 2);
+//     Serial.println();
+// }
+
+// // Interrupt Service Routine for ENCODER_PIN_A
+// void handleEncoderA() {
+//     updateEncoder();
+// }
+
+// // Interrupt Service Routine for ENCODER_PIN_B
+// void handleEncoderB() {
+//     updateEncoder();
+// }
+
+// // Function to update encoder position
+// void updateEncoder() {
+//     signal = digitalRead(ENCODER_CLICK_PIN) == LOW;
+//     if (prevSignal == false && signal == true) {
+//         Serial.print("trying");
+//         signals.left = !signals.left;
+//     } 
+//     prevSignal = signal;
+    
+//     bool A = digitalRead(ENCODER_PIN_A);
+//     bool B = digitalRead(ENCODER_PIN_B);
+
+//     if (B != prevB) {
+//         encoderPosition += (B - prevB) * (A ? +1 : -1);
+//     } else if (A != prevA) {
+//         encoderPosition += (A - prevA) * (B ? -1 : +1);
+//     }
+
+//     prevA = A;
+//     prevB = B;
+// }
+#include <FastLED.h>
+#include "brake.h"
+#include "signals.h"
+
+#define LED_DATA_PIN 7
+#define NUM_LEDS 66
+#define LED_TYPE WS2812B
+#define GLOBAL_BRIGHTNESS 255
+
+// Brightness configuration
+#define MIN_GYRO 0
+#define MAX_GYRO 100
+
+// Encoder configuration
+#define ENCODER_PIN_A   3
+#define ENCODER_PIN_B   2
+#define ENCODER_CLICK_PIN 8
+
+int encoderPosition = 0; // Tracks the encoder position
+bool prevA = 1;
+bool prevB = 1;
+bool prevClickState = HIGH;
+unsigned long lastDebounceTime = 0;
+unsigned long debounceDelay = 50;
+
+CRGB leds[NUM_LEDS];
+
+Signals signals(leds, NUM_LEDS);
+Brake brake(&signals, leds, NUM_LEDS);
+
+void setup() {
+    FastLED.addLeds<LED_TYPE, LED_DATA_PIN, RGB>(leds, NUM_LEDS);
+    FastLED.clear();
+    FastLED.setBrightness(GLOBAL_BRIGHTNESS);
+    FastLED.show();
+
+    // Initialize Serial for debugging
+    Serial.begin(115200);
+    while (!Serial) {
+        ; // Wait for serial port to connect. Needed for native USB port only
+    }
+    Serial.println("Starting...");
+
+    // Setup encoder pins
+    pinMode(ENCODER_PIN_A, INPUT_PULLUP);
+    pinMode(ENCODER_PIN_B, INPUT_PULLUP);
+    pinMode(ENCODER_CLICK_PIN, INPUT_PULLUP);
+
+    // Attach interrupts to encoder pins
+    attachInterrupt(digitalPinToInterrupt(ENCODER_PIN_A), handleEncoderA, CHANGE);
+    attachInterrupt(digitalPinToInterrupt(ENCODER_PIN_B), handleEncoderB, CHANGE);
+
+    Serial.println("Setup complete");
 }
 
-void read_R_enc() {
-  R_old_AB <<= 2;
-  if (digitalRead(R_ENC_A)) R_old_AB |= 0x02;
-  if (digitalRead(R_ENC_B)) R_old_AB |= 0x01;
+void loop() {
+    // Prevent encoder values from going beyond the limits
+    if (encoderPosition < -100) {
+        encoderPosition = -100;
+    } else if (encoderPosition > 100) {
+        encoderPosition = 100; // Limit to max value of 100
+    }
 
-  R_encval += enc_states[(R_old_AB & 0x0f)];
-  if (R_encval > 3 || R_encval < -3) {
-    int changevalue = (int)(R_encval/3);
-    unsigned long deltaT = micros() - R_lastReadTime;
-    float R_rpm = (changevalue / RESOLUTION) * 60 / (deltaT / 1000.0);
-    R_lastReadTime = micros();
-    R_counter += changevalue;
-    R_encval = 0;
-  }
+    // Determine if accelerating based on encoder position
+    if (encoderPosition < 0) {
+        brake.accelerating = true;
+        brake.numActiveLEDs = map(-encoderPosition, MIN_GYRO, MAX_GYRO, 0, NUM_LEDS / 2);
+        brake.active_brightness = map(-encoderPosition, MIN_GYRO, MAX_GYRO, MIN_BRAKE_BRIGHTNESS, MAX_BRAKE_BRIGHTNESS);
+    } else {
+        brake.accelerating = false;
+        brake.numActiveLEDs = map(encoderPosition, MIN_GYRO, MAX_GYRO, 0, NUM_LEDS / 2);
+        brake.active_brightness = map(encoderPosition, MIN_GYRO, MAX_GYRO, MIN_BRAKE_BRIGHTNESS, MAX_BRAKE_BRIGHTNESS);
+    }
+
+    // Debounce the encoder click
+    bool currentClickState = digitalRead(ENCODER_CLICK_PIN);
+
+    if (currentClickState == LOW && prevClickState == HIGH) {
+        signals.left = !signals.left;
+    }
+    
+    prevClickState = currentClickState;
+    
+    brake.Update();
+    signals.Update();
+    if (SHOW_MARIO && brake.accelerating && brake.numActiveLEDs > MARIO_STAR_THRESHHOLD) {
+        brake.MarioStar();
+    }
+    else if (brake.flashCount == 0) {
+        brake.UpdateBrakeLEDs();
+        signals.UpdateSignals();
+    }  
+    else { // handled outside brake.update() since we want it to go OVER the turn signals
+        brake.FlashRedLEDs();
+    }
+    FastLED.show();
+
+    // Debug output
+    // Serial.print("encoderPosition: ");
+    // Serial.print(encoderPosition);
+    // Serial.print(" | Active Brightness: ");
+    // Serial.print(brake.active_brightness);
+    // Serial.print(" | Number of LEDs On: ");
+    // Serial.println(brake.numActiveLEDs * 2);
+
+    // Serial.println("Loop end");
 }
 
+// Interrupt Service Routine for ENCODER_PIN_A
+void handleEncoderA() {
+    updateEncoder();
+}
+
+// Interrupt Service Routine for ENCODER_PIN_B
+void handleEncoderB() {
+    updateEncoder();
+}
+// Function to update encoder position
+void updateEncoder() {
+    bool A = digitalRead(ENCODER_PIN_A);
+    bool B = digitalRead(ENCODER_PIN_B);
+
+    if (B != prevB) {
+        encoderPosition += (B - prevB) * (A ? +1 : -1);
+    } else if (A != prevA) {
+        encoderPosition += (A - prevA) * (B ? -1 : +1);
+    }
+
+    prevA = A;
+    prevB = B;
+}
 
 void setup() {
   // Set encoder pins and attach interrupts

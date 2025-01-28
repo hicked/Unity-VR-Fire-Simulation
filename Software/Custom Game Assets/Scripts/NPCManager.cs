@@ -29,13 +29,13 @@ public class NPCManager : Audible {
     [SerializeField] private int moveVariance = 30;
 
     [SerializeField] private float NPCWalkSpeedMultiplier = 1.5f;
-    [SerializeField] private float NPCRunningSpeedMultiplier = 2.5f;
+    [SerializeField] private float NPCRunningSpeedMultiplier = 5.5f;
     [SerializeField] private float NPCTurnSpeed = 6f;
 
     [SerializeField] private int pointsBeforeOpenDoor = 3; // how many tiles away will the door open on an NPCs path
     [SerializeField] private float timeSpentOpenByNPC = 1.5f;
 
-    [SerializeField] private float crossFadeDuration = 1f;
+    [SerializeField] private float crossFadeDuration = 1.5f;
 
     [SerializeField] public bool onPhone;
     [SerializeField] public bool isMan;
@@ -44,6 +44,7 @@ public class NPCManager : Audible {
     public int previousNPCLocationIndex = -1; // set the value as negative since null isnt a thing
     public int tentativeNPCLocationIndex;
 
+    public bool isCurrentlyPathfinding = false;
     public bool isIdle = true;
     public bool isWalking = false;
     public bool isRunning = false;
@@ -143,7 +144,7 @@ public class NPCManager : Audible {
             int moveVar = Random.Range(-moveVariance, moveVariance);
             yield return new WaitForSeconds(timeBeforeMove + moveVar);
 
-            if (isIdle && !pathfinder.isPathfinding) {
+            if (isIdle && !isCurrentlyPathfinding) { // if it isnt idle, or is walking along a path, dont change idles
                 moveToRandom();
             }
             yield return null;
@@ -184,13 +185,13 @@ public class NPCManager : Audible {
                 if (fireHit.collider.gameObject == fire) {
                     Debug.Log("NPC has LOS to fire");
                     panicked = true;
-                    // setPathTo(new Vector3(5f, 0f, -23f));
+                    Debug.Log("Pathfinding out of the room");
+                    setPathTo(new Vector3(-4f, 0f, -8f));
                 }
             }
         }
-
         
-        if (!pathfinder.isPathfinding && path == null && panicked) {
+        if (!isCurrentlyPathfinding && path == null && panicked) {
             Vector3 closestPoint = exitLocations[0];
             float closestDistance = Vector3.Distance(transform.position, exitLocations[0]);
             for (int i = 1; i < exitLocations.Length; i++) {
@@ -200,6 +201,7 @@ public class NPCManager : Audible {
                     closestDistance = distance;
                 }
             }
+            Debug.Log("Pathfinding to exit");
             setPathTo(closestPoint);
         }
 
@@ -207,18 +209,6 @@ public class NPCManager : Audible {
         if (pathfinder != null) {
             path = pathfinder.GetPath();
             lookatVector = pathfinder.lookatVector;
-        }
-        
-
-        if (path != null) {
-            isWalking = true;
-            isIdle = false;
-            isRunning = false;
-        }
-        else if (path == null) {
-            isWalking = false;
-            isIdle = true;
-            isRunning = false;
         }
         
         animatorInfo = animator.GetCurrentAnimatorClipInfo(0);
@@ -303,6 +293,10 @@ public class NPCManager : Audible {
 
     private void setPathTo(Vector3 location) {
         //Debug.Log("Setting path to " + location);
+        if (isCurrentlyPathfinding) {
+            return;
+        }
+        isCurrentlyPathfinding = true;
         pathfinder.FindPath(transform.position, location);
         currentPathIndex = 0;
     }
@@ -322,7 +316,6 @@ public class NPCManager : Audible {
             isIdle = false;
             isRunning = true;
         }
-
         Vector3 targetPosition = new Vector3(path[currentPathIndex].x, transform.position.y, path[currentPathIndex].z); // next point along path to reach
 
         Vector3 direction = targetPosition - transform.position; // directional vector towards the point
@@ -333,10 +326,11 @@ public class NPCManager : Audible {
         // Smoothly rotate towards the target position
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * NPCTurnSpeed);
 
-
         // Move the NPC
-        transform.position += direction.normalized * Time.deltaTime * (isRunning ? NPCRunningSpeedMultiplier : NPCWalkSpeedMultiplier);
-
+        Vector3 movement = (direction.normalized * (isRunning ? NPCRunningSpeedMultiplier : NPCWalkSpeedMultiplier) * Time.deltaTime);
+        transform.position += movement;
+        
+        
         // Check if the NPC is close enough to the target position
         if (distanceToTarget < 0.1f) {
             if (currentPathIndex == path.Count - 1) {
@@ -348,6 +342,7 @@ public class NPCManager : Audible {
                 isWalking = false;
                 isIdle = true;
                 isRunning = false;
+                isCurrentlyPathfinding = false;
                 return;
             }
             currentPathIndex++;
