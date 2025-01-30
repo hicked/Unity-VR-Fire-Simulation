@@ -114,10 +114,25 @@ public class NPCManager : Audible {
         { "locom_m_running_20f", 0.3f }
     };
 
-    public Vector3[] exitLocations = new Vector3[] {
-        new Vector3(5f, 0f, -22.29f),
-        new Vector3(-35f, 0f, -9f)
+    Dictionary<Vector3, Vector3[]> exitPaths = new Dictionary<Vector3, Vector3[]>() {
+        {new Vector3(5f, 0f, -22.29f), new Vector3[] {
+            new Vector3(-27f, 0f, -7.5f),
+            new Vector3(-15.5f, 0f, -7.5f),
+            new Vector3(-4f, 0f, -7.5f)
+        }},
+        {new Vector3(-35f, 0f, -9f), new Vector3[] {
+            new Vector3(-4f, 0f, -7.5f),
+            new Vector3(-15.5f, 0f, -7.5f),
+            new Vector3(-27f, 0f, -7.5f)
+        }},
     };
+    int currentExitIndex = 0;
+    Vector3 closestExit = new Vector3(0f, 0f, 0f);
+
+    // public Vector3[] exitLocations = new Vector3[] {
+    //     new Vector3(5f, 0f, -22.29f),
+    //     new Vector3(-35f, 0f, -9f)
+    // };
     //----------------------------------------------------------------------
 
     AnimatorClipInfo[] animatorInfo;
@@ -176,6 +191,8 @@ public class NPCManager : Audible {
         //Debug.Log(this.transform.position);
         if (alarm.GetComponent<Alarm>().alarmSource.isPlaying && !panicked) {
             panicked = true;
+            Debug.Log("NPC detected alarm");
+            setPathToNearestExitCheckpoint();
         }
 
         if (fire.GetComponent<FireManager>().fireParticleSystem.isPlaying && !panicked) { // if fire is active, but NPC is not panicked
@@ -183,26 +200,24 @@ public class NPCManager : Audible {
             Debug.DrawRay(transform.position + new Vector3(0, NPCHeight/2, 0), fire.transform.position - transform.position, Color.red);
             if (Physics.CapsuleCast(transform.position + new Vector3(0, NPCHeight/2, 0), transform.position - new Vector3(0, NPCHeight/2, 0), NPCRadius, fire.transform.position - transform.position, out fireHit, Vector3.Distance(transform.position, fire.transform.position), fireDetectionLayer)) {
                 if (fireHit.collider.gameObject == fire) {
-                    Debug.Log("NPC has LOS to fire");
                     panicked = true;
-                    Debug.Log("Pathfinding out of the room");
-                    setPathTo(new Vector3(-4f, 0f, -8f));
+                    Debug.Log("NPC has LOS to fire");
+                    setPathToNearestExitCheckpoint();
                 }
             }
         }
         
-        if (!isCurrentlyPathfinding && path == null && panicked) {
-            Vector3 closestPoint = exitLocations[0];
-            float closestDistance = Vector3.Distance(transform.position, exitLocations[0]);
-            for (int i = 1; i < exitLocations.Length; i++) {
-                float distance = Vector3.Distance(transform.position, exitLocations[i]);
-                if (distance < closestDistance) {
-                    closestPoint = exitLocations[i];
-                    closestDistance = distance;
-                }
+        if (!isCurrentlyPathfinding && panicked) {
+            if (Vector3.Distance(transform.position, closestExit) < 0.1f) {
+                Destroy(gameObject);
             }
-            Debug.Log("Pathfinding to exit");
-            setPathTo(closestPoint);
+            else if (currentExitIndex >= exitPaths[closestExit].Length) { // reached the end of the path, just go to the exit
+                setPathTo(closestExit);
+            }
+            else {
+                setPathTo(exitPaths[closestExit][currentExitIndex]);
+                currentExitIndex++;
+            }
         }
 
         // Debug.Log($"{transform.position} and {transform.position + transform.forward}");
@@ -290,7 +305,26 @@ public class NPCManager : Audible {
         File.WriteAllText(NPCLocationsFilePath, updatedJson); // Update the path as necessary
     }
 
+    private void setPathToNearestExitCheckpoint() {
+        List<Vector3> locationKeys = new List<Vector3>(exitPaths.Keys);
+        closestExit = locationKeys[0];
+        for (int i = 1; i < locationKeys.Count; i++) {
+            if (Vector3.Distance(transform.position, locationKeys[i]) < Vector3.Distance(transform.position, closestExit)) {
+                closestExit = locationKeys[i];
+            }
+        }
 
+        Debug.Log("Closest Exit: " + closestExit);
+        Vector3 closestPoint = exitPaths[closestExit][0];
+        for (int i = 1; i < exitPaths[closestExit].Length; i++) {
+            if (Vector3.Distance(transform.position, exitPaths[closestExit][i]) < Vector3.Distance(transform.position, closestPoint)) {
+                closestPoint = exitPaths[closestExit][i];
+            }
+        }
+
+        Debug.Log("Closest Point: " + closestPoint);
+        currentExitIndex = new List<Vector3>(exitPaths[closestExit]).IndexOf(closestPoint);
+    }
     private void setPathTo(Vector3 location) {
         //Debug.Log("Setting path to " + location);
         if (isCurrentlyPathfinding) {
@@ -316,7 +350,9 @@ public class NPCManager : Audible {
             isIdle = false;
             isRunning = true;
         }
-        Vector3 targetPosition = new Vector3(path[currentPathIndex].x, transform.position.y, path[currentPathIndex].z); // next point along path to reach
+
+        
+        Vector3 targetPosition = new Vector3(path[currentPathIndex].x, 0f, path[currentPathIndex].z); // next point along path to reach
 
         Vector3 direction = targetPosition - transform.position; // directional vector towards the point
         float distanceToTarget = direction.magnitude;
@@ -348,7 +384,7 @@ public class NPCManager : Audible {
             currentPathIndex++;
         }
 
-        for (int i = pointsBeforeOpenDoor; i >= 0; i--) {
+        for (int i = run ? pointsBeforeOpenDoor*2:pointsBeforeOpenDoor; i >= 0; i--) {
             // Tries to open a door sum number of points on the path away, if it fails, reduces the number of point away by 1 and tried again
             // Does this until it reaches 0 which will be between the next point, and the previous point
             // Might be smart to change "pointsBeforeOpenDoor" actively with tile size, but for now it can be manual

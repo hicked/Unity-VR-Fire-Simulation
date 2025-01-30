@@ -6668,7 +6668,7 @@ PrefabInstance:
     - target: {fileID: 5067755742887398202, guid: f0ac6fb9ada49f24683e3eca20786103,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -35.42
+      value: -34.86
       objectReference: {fileID: 0}
     - target: {fileID: 5067755742887398202, guid: f0ac6fb9ada49f24683e3eca20786103,
         type: 3}
@@ -6678,7 +6678,7 @@ PrefabInstance:
     - target: {fileID: 5067755742887398202, guid: f0ac6fb9ada49f24683e3eca20786103,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -8.83
+      value: -7.06
       objectReference: {fileID: 0}
     - target: {fileID: 5067755742887398202, guid: f0ac6fb9ada49f24683e3eca20786103,
         type: 3}
@@ -6748,7 +6748,7 @@ PrefabInstance:
     - target: {fileID: 5557327951299580288, guid: f0ac6fb9ada49f24683e3eca20786103,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6265362778501788183, guid: f0ac6fb9ada49f24683e3eca20786103,
         type: 3}
@@ -6863,6 +6863,7 @@ MonoBehaviour:
   NPCLocationIndex: 0
   previousNPCLocationIndex: -1
   tentativeNPCLocationIndex: 0
+  isCurrentlyPathfinding: 0
   isIdle: 1
   isWalking: 0
   isRunning: 0
@@ -6887,9 +6888,6 @@ MonoBehaviour:
   - idle_phoneTalking_180f
   - idle_m_1_200f
   - idle_m_2_220f
-  exitLocations:
-  - {x: 17.45, y: -23.52, z: -29.29}
-  - {x: -29.3, y: -23.52, z: -7.62}
 --- !u!136 &685819915
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -8248,7 +8246,7 @@ PrefabInstance:
     - target: {fileID: 2100208028559941110, guid: f71041fd118fbb34aa9d2dd6a1d96fce,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -5.87
+      value: -14.22
       objectReference: {fileID: 0}
     - target: {fileID: 2100208028559941110, guid: f71041fd118fbb34aa9d2dd6a1d96fce,
         type: 3}
@@ -8258,7 +8256,7 @@ PrefabInstance:
     - target: {fileID: 2100208028559941110, guid: f71041fd118fbb34aa9d2dd6a1d96fce,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -16.78
+      value: 3.18
       objectReference: {fileID: 0}
     - target: {fileID: 2100208028559941110, guid: f71041fd118fbb34aa9d2dd6a1d96fce,
         type: 3}
@@ -8628,7 +8626,7 @@ PrefabInstance:
     - target: {fileID: 5986958801767457440, guid: 87a7b985b15a4244091de35d7df9169a,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6073252102561887968, guid: 87a7b985b15a4244091de35d7df9169a,
         type: 3}
@@ -8818,6 +8816,7 @@ MonoBehaviour:
   NPCLocationIndex: 0
   previousNPCLocationIndex: -1
   tentativeNPCLocationIndex: 0
+  isCurrentlyPathfinding: 0
   isIdle: 1
   isWalking: 0
   isRunning: 0
@@ -8842,9 +8841,6 @@ MonoBehaviour:
   - idle_phoneTalking_180f
   - idle_m_1_200f
   - idle_m_2_220f
-  exitLocations:
-  - {x: 17.45, y: -23.52, z: -29.29}
-  - {x: -29.3, y: -23.52, z: -7.62}
 --- !u!136 &790958533
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -10173,7 +10169,7 @@ PrefabInstance:
     - target: {fileID: 568985597124981416, guid: 2435736d6adca23458edd7c80c901e3e,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -7.438
+      value: -5.42
       objectReference: {fileID: 0}
     - target: {fileID: 568985597124981416, guid: 2435736d6adca23458edd7c80c901e3e,
         type: 3}
@@ -10183,7 +10179,7 @@ PrefabInstance:
     - target: {fileID: 568985597124981416, guid: 2435736d6adca23458edd7c80c901e3e,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -11.552
+      value: -13.26
       objectReference: {fileID: 0}
     - target: {fileID: 568985597124981416, guid: 2435736d6adca23458edd7c80c901e3e,
         type: 3}
@@ -10243,7 +10239,7 @@ PrefabInstance:
     - target: {fileID: 913845681951795218, guid: 2435736d6adca23458edd7c80c901e3e,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 944684095800602908, guid: 2435736d6adca23458edd7c80c901e3e,
         type: 3}
@@ -10488,6 +10484,7 @@ MonoBehaviour:
   NPCLocationIndex: 0
   previousNPCLocationIndex: -1
   tentativeNPCLocationIndex: 0
+  isCurrentlyPathfinding: 0
   isIdle: 1
   isWalking: 0
   isRunning: 0
@@ -10512,9 +10509,6 @@ MonoBehaviour:
   - idle_phoneTalking_180f
   - idle_m_1_200f
   - idle_m_2_220f
-  exitLocations:
-  - {x: 17.45, y: -23.52, z: -29.29}
-  - {x: -29.3, y: -23.52, z: -7.62}
 --- !u!136 &906605409
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -11415,16 +11409,17 @@ MonoBehaviour:
   timeBeforeMove: 60
   moveVariance: 30
   NPCWalkSpeedMultiplier: 2.5
-  NPCRunningSpeedMultiplier: 4
+  NPCRunningSpeedMultiplier: 6
   NPCTurnSpeed: 6
   pointsBeforeOpenDoor: 3
   timeSpentOpenByNPC: 2
-  crossFadeDuration: 1
+  crossFadeDuration: 0.5
   onPhone: 0
   isMan: 1
   NPCLocationIndex: 0
   previousNPCLocationIndex: -1
   tentativeNPCLocationIndex: 0
+  isCurrentlyPathfinding: 0
   isIdle: 1
   isWalking: 0
   isRunning: 0
@@ -11450,9 +11445,6 @@ MonoBehaviour:
   - idle_selfcheck_1_300f
   - idle_m_1_200f
   - idle_m_2_220f
-  exitLocations:
-  - {x: 17.45, y: -23.52, z: -29.29}
-  - {x: -29.3, y: -23.52, z: -7.62}
 --- !u!136 &966587623
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -15375,7 +15367,7 @@ PrefabInstance:
     - target: {fileID: 6993270559495516286, guid: 314b13a2c4f89c74299eabc2a4c725c7,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7372501814652593214, guid: 314b13a2c4f89c74299eabc2a4c725c7,
         type: 3}
@@ -15555,6 +15547,7 @@ MonoBehaviour:
   NPCLocationIndex: 0
   previousNPCLocationIndex: -1
   tentativeNPCLocationIndex: 0
+  isCurrentlyPathfinding: 0
   isIdle: 1
   isWalking: 0
   isRunning: 0
@@ -15579,9 +15572,6 @@ MonoBehaviour:
   - idle_phoneTalking_180f
   - idle_m_1_200f
   - idle_m_2_220f
-  exitLocations:
-  - {x: 17.45, y: -23.52, z: -29.29}
-  - {x: -29.3, y: -23.52, z: -7.62}
 --- !u!136 &1104556573
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -20919,7 +20909,7 @@ PrefabInstance:
     - target: {fileID: 186757882122740016, guid: bcc8732b8b44622449c23934f89e68c0,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 226850885270714430, guid: bcc8732b8b44622449c23934f89e68c0,
         type: 3}
@@ -21249,6 +21239,7 @@ MonoBehaviour:
   NPCLocationIndex: 0
   previousNPCLocationIndex: -1
   tentativeNPCLocationIndex: 0
+  isCurrentlyPathfinding: 0
   isIdle: 1
   isWalking: 0
   isRunning: 0
@@ -21273,9 +21264,6 @@ MonoBehaviour:
   - idle_phoneTalking_180f
   - idle_m_1_200f
   - idle_m_2_220f
-  exitLocations:
-  - {x: 17.45, y: -23.52, z: -29.29}
-  - {x: -29.3, y: -23.52, z: -7.62}
 --- !u!136 &1495330853
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -25245,7 +25233,7 @@ PrefabInstance:
     - target: {fileID: 5776691538091650739, guid: bae26acf817c6dc4e82f95d9ef4ab46a,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -3.27
+      value: -2.97
       objectReference: {fileID: 0}
     - target: {fileID: 5776691538091650739, guid: bae26acf817c6dc4e82f95d9ef4ab46a,
         type: 3}
@@ -25255,7 +25243,7 @@ PrefabInstance:
     - target: {fileID: 5776691538091650739, guid: bae26acf817c6dc4e82f95d9ef4ab46a,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -18.14
+      value: -18.45
       objectReference: {fileID: 0}
     - target: {fileID: 5776691538091650739, guid: bae26acf817c6dc4e82f95d9ef4ab46a,
         type: 3}
@@ -25325,7 +25313,7 @@ PrefabInstance:
     - target: {fileID: 6584613354768528393, guid: bae26acf817c6dc4e82f95d9ef4ab46a,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6646269780412227657, guid: bae26acf817c6dc4e82f95d9ef4ab46a,
         type: 3}
@@ -25435,6 +25423,7 @@ MonoBehaviour:
   NPCLocationIndex: 0
   previousNPCLocationIndex: -1
   tentativeNPCLocationIndex: 0
+  isCurrentlyPathfinding: 0
   isIdle: 1
   isWalking: 0
   isRunning: 0
@@ -25459,9 +25448,6 @@ MonoBehaviour:
   - idle_phoneTalking_180f
   - idle_m_1_200f
   - idle_m_2_220f
-  exitLocations:
-  - {x: 17.45, y: -23.52, z: -29.29}
-  - {x: -29.3, y: -23.52, z: -7.62}
 --- !u!136 &1761021523
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -26938,7 +26924,7 @@ PrefabInstance:
     - target: {fileID: 7156330664774647248, guid: bcc8c8f342f71a7439ac0579aa86f030,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -4.499999
+      value: -21.48
       objectReference: {fileID: 0}
     - target: {fileID: 7156330664774647248, guid: bcc8c8f342f71a7439ac0579aa86f030,
         type: 3}
@@ -26948,7 +26934,7 @@ PrefabInstance:
     - target: {fileID: 7156330664774647248, guid: bcc8c8f342f71a7439ac0579aa86f030,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -17.91
+      value: -17.74
       objectReference: {fileID: 0}
     - target: {fileID: 7156330664774647248, guid: bcc8c8f342f71a7439ac0579aa86f030,
         type: 3}
@@ -27013,7 +26999,7 @@ PrefabInstance:
     - target: {fileID: 7501788059647666026, guid: bcc8c8f342f71a7439ac0579aa86f030,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7524111919617231996, guid: bcc8c8f342f71a7439ac0579aa86f030,
         type: 3}
@@ -27123,6 +27109,7 @@ MonoBehaviour:
   NPCLocationIndex: 0
   previousNPCLocationIndex: -1
   tentativeNPCLocationIndex: 0
+  isCurrentlyPathfinding: 0
   isIdle: 1
   isWalking: 0
   isRunning: 0
@@ -27147,9 +27134,6 @@ MonoBehaviour:
   - idle_phoneTalking_180f
   - idle_m_1_200f
   - idle_m_2_220f
-  exitLocations:
-  - {x: 17.45, y: -23.52, z: -29.29}
-  - {x: -29.3, y: -23.52, z: -7.62}
 --- !u!136 &1876443901
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -33419,6 +33403,16 @@ PrefabInstance:
       propertyPath: explosionParticleSystem
       value: 
       objectReference: {fileID: 4361799309541569}
+    - target: {fileID: 5669679580275523097, guid: cdcf80314b65f114989b70851760770a,
+        type: 3}
+      propertyPath: maxTimeBeforeInstantiation
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 5669679580275523097, guid: cdcf80314b65f114989b70851760770a,
+        type: 3}
+      propertyPath: minTimeBeforeInstantiation
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 6903932769099179947, guid: cdcf80314b65f114989b70851760770a,
         type: 3}
       propertyPath: m_LocalPosition.x
