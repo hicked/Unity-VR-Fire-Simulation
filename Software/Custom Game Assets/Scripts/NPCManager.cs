@@ -40,6 +40,8 @@ public class NPCManager : Audible {
     [SerializeField] public bool onPhone;
     [SerializeField] public bool isMan;
 
+    [SerializeField] public float maxRandomMoveDistance = 20f;
+
     public int NPCLocationIndex;
     public int previousNPCLocationIndex = -1; // set the value as negative since null isnt a thing
     public int tentativeNPCLocationIndex;
@@ -114,25 +116,19 @@ public class NPCManager : Audible {
         { "locom_m_running_20f", 0.3f }
     };
 
-    Dictionary<Vector3, Vector3[]> exitPaths = new Dictionary<Vector3, Vector3[]>() {
-        {new Vector3(5f, 0f, -22.29f), new Vector3[] {
-            new Vector3(-27f, 0f, -7.5f),
-            new Vector3(-15.5f, 0f, -7.5f),
-            new Vector3(-4f, 0f, -7.5f)
-        }},
-        {new Vector3(-35f, 0f, -9f), new Vector3[] {
-            new Vector3(-4f, 0f, -7.5f),
-            new Vector3(-15.5f, 0f, -7.5f),
-            new Vector3(-27f, 0f, -7.5f)
-        }},
-    };
-    int currentExitIndex = 0;
-    Vector3 closestExit = new Vector3(0f, 0f, 0f);
+    //----------------------------------------------------------------------
+    private Vector3[] outsideRoomLocations = new Vector3[] {
+        new Vector3(-27f, 0f, -7.5f),
+        new Vector3(-15.5f, 0f, -7.5f),
+        new Vector3(-4f, 0f, -7.5f)
 
-    // public Vector3[] exitLocations = new Vector3[] {
-    //     new Vector3(5f, 0f, -22.29f),
-    //     new Vector3(-35f, 0f, -9f)
-    // };
+    };
+    private Vector3[] exitLocations = new Vector3[] {
+        new Vector3(4f, 0f, -22f),
+        new Vector3(-35f, 0f, -7f)
+    };
+
+    private Vector3 closestOutsideRoomLocation;
     //----------------------------------------------------------------------
 
     AnimatorClipInfo[] animatorInfo;
@@ -189,10 +185,10 @@ public class NPCManager : Audible {
     private void Update() {
         // Fire Detection
         //Debug.Log(this.transform.position);
-        if (alarm.GetComponent<Alarm>().alarmSource.isPlaying && !panicked) {
+        if (alarm.GetComponent<Alarm>().isPlaying && !panicked) {
             panicked = true;
             Debug.Log("NPC detected alarm");
-            setPathToNearestExitCheckpoint();
+            setPathOutsideRoom();
         }
 
         if (fire.GetComponent<FireManager>().fireParticleSystem.isPlaying && !panicked) { // if fire is active, but NPC is not panicked
@@ -202,21 +198,25 @@ public class NPCManager : Audible {
                 if (fireHit.collider.gameObject == fire) {
                     panicked = true;
                     Debug.Log("NPC has LOS to fire");
-                    setPathToNearestExitCheckpoint();
+                    setPathOutsideRoom();
                 }
             }
         }
         
         if (!isCurrentlyPathfinding && panicked) {
+            Vector3 closestExit = exitLocations[0];
+            for (int i = 1; i < exitLocations.Length; i++) {
+                if (Vector3.Distance(transform.position, exitLocations[i]) < Vector3.Distance(transform.position, closestExit)) {
+                    closestExit = exitLocations[i];
+                }
+            }
+            Debug.Log("Closest Exit: " + closestExit);
+
             if (Vector3.Distance(transform.position, closestExit) < 0.1f) {
                 Destroy(gameObject);
             }
-            else if (currentExitIndex >= exitPaths[closestExit].Length) { // reached the end of the path, just go to the exit
-                setPathTo(closestExit);
-            }
             else {
-                setPathTo(exitPaths[closestExit][currentExitIndex]);
-                currentExitIndex++;
+                setPathTo(closestExit, curPosition: new Vector3(closestOutsideRoomLocation.x, 0.5f, closestOutsideRoomLocation.z));
             }
         }
 
@@ -274,8 +274,10 @@ public class NPCManager : Audible {
         List<int> availableLocationsIndices = new List<int>();
         for (int i = 0; i < idleLocations.Count; i++) {
             if (!idleLocations[i].isSpotTaken) {
-                availableLocations.Add(idleLocations[i]);
-                availableLocationsIndices.Add(i);
+                if (Vector3.Distance(transform.position, idleLocations[i].position) < maxRandomMoveDistance) {
+                    availableLocations.Add(idleLocations[i]);
+                    availableLocationsIndices.Add(i);
+                }
             }
         }
 
@@ -305,34 +307,25 @@ public class NPCManager : Audible {
         File.WriteAllText(NPCLocationsFilePath, updatedJson); // Update the path as necessary
     }
 
-    private void setPathToNearestExitCheckpoint() {
-        List<Vector3> locationKeys = new List<Vector3>(exitPaths.Keys);
-        closestExit = locationKeys[0];
-        for (int i = 1; i < locationKeys.Count; i++) {
-            if (Vector3.Distance(transform.position, locationKeys[i]) < Vector3.Distance(transform.position, closestExit)) {
-                closestExit = locationKeys[i];
+    private void setPathOutsideRoom() {
+        closestOutsideRoomLocation = outsideRoomLocations[0];
+        for (int i = 1; i < outsideRoomLocations.Length; i++) {
+            if (Vector3.Distance(transform.position, outsideRoomLocations[i]) < Vector3.Distance(transform.position, closestOutsideRoomLocation)) {
+                closestOutsideRoomLocation = outsideRoomLocations[i];
             }
         }
 
-        Debug.Log("Closest Exit: " + closestExit);
-        Vector3 closestPoint = exitPaths[closestExit][0];
-        for (int i = 1; i < exitPaths[closestExit].Length; i++) {
-            if (Vector3.Distance(transform.position, exitPaths[closestExit][i]) < Vector3.Distance(transform.position, closestPoint)) {
-                closestPoint = exitPaths[closestExit][i];
-            }
-        }
-
-        Debug.Log("Closest Point: " + closestPoint);
-        currentExitIndex = new List<Vector3>(exitPaths[closestExit]).IndexOf(closestPoint);
+        setPathTo(closestOutsideRoomLocation);
     }
-    private void setPathTo(Vector3 location) {
+
+    private void setPathTo(Vector3 location, Vector3? curPosition = null) {
         //Debug.Log("Setting path to " + location);
         if (isCurrentlyPathfinding) {
             return;
         }
         isCurrentlyPathfinding = true;
-        pathfinder.FindPath(transform.position, location);
-        currentPathIndex = 0;
+        Vector3 startPosition = curPosition ?? transform.position;
+        pathfinder.FindPath(startPosition, location);
     }
 
     private void MoveAlongPath(bool run = false) { // default param of walking not running

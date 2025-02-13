@@ -509,6 +509,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Alarm
       objectReference: {fileID: 0}
+    - target: {fileID: 7425038374684032403, guid: 638ed67f906b31844a7f6eacfcacfe1a,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8054688340341900553, guid: 638ed67f906b31844a7f6eacfcacfe1a,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2129,6 +2134,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Alarm
+      objectReference: {fileID: 0}
+    - target: {fileID: 7425038374684032403, guid: 638ed67f906b31844a7f6eacfcacfe1a,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8054688340341900553, guid: 638ed67f906b31844a7f6eacfcacfe1a,
         type: 3}
@@ -18091,6 +18101,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Alarm
       objectReference: {fileID: 0}
+    - target: {fileID: 7425038374684032403, guid: 638ed67f906b31844a7f6eacfcacfe1a,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8054688340341900553, guid: 638ed67f906b31844a7f6eacfcacfe1a,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -19994,6 +20009,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Alarm
       objectReference: {fileID: 0}
+    - target: {fileID: 7425038374684032403, guid: 638ed67f906b31844a7f6eacfcacfe1a,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8054688340341900553, guid: 638ed67f906b31844a7f6eacfcacfe1a,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -21754,6 +21774,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Alarm
+      objectReference: {fileID: 0}
+    - target: {fileID: 7425038374684032403, guid: 638ed67f906b31844a7f6eacfcacfe1a,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8054688340341900553, guid: 638ed67f906b31844a7f6eacfcacfe1a,
         type: 3}

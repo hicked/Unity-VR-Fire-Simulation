@@ -75,6 +75,7 @@ public class AStarMultithreaded : Threadable {
     }
 
     private void Update() {
+        Debug.Log(activePathfindingThreads.Count);
         runQueuedFunctions();
 
         List<Thread> threadsToRemove = new List<Thread>();
@@ -150,35 +151,6 @@ public class AStarMultithreaded : Threadable {
         while (physicsResults.TryDequeue(out PhysicsResult result)) {
             result.Request.Callback(result);
         }
-
-
-
-
-        // while (physicsRequests.TryDequeue(out PhysicsRequest request)) {
-        //     RaycastHit hitInfo;
-            
-        //     bool hit = Physics.CapsuleCast(
-        //         new Vector3(request.Location.x, request.Location.y + NPCHeight / 2f, request.Location.z),
-        //         new Vector3(request.Location.x, request.Location.y - NPCHeight / 2f, request.Location.z),
-        //         NPCRadius * 1.2f,
-        //         request.Direction,
-        //         out hitInfo,
-        //         request.Distance,
-        //         request.Layer
-        //     );
-
-        //     // Queue the result back
-        //     physicsResults.Enqueue(new PhysicsResult {
-        //         Hit = hit,
-        //         HitInfo = hitInfo,
-        //         Request = request
-        //     });
-        // }
-
-        // // Process results and invoke callbacks
-        // while (physicsResults.TryDequeue(out PhysicsResult result)) {
-        //     result.Request.Callback(result);
-        // }
     }
 
     public void FindPath(Vector3 start, Vector3 end) {
@@ -382,6 +354,5 @@ public class AStarMultithreaded : Threadable {
 
     public void SetPath(List<Location> paramPath) {
         this.path = paramPath;
-        Debug.Log(paramPath);
     }
 }  

@@ -12,6 +12,7 @@ public class Doors : Audible, Interactable {
     [SerializeField] private float doorSpeed = 90f;
     [SerializeField] public float doorswingMultiplier = 3.0f;
 
+    [SerializeField] public bool isDoorClosed = false;
     [SerializeField] public float openAngle = 90f;
     [SerializeField] public float closedAngle = 0f;
     [SerializeField] private float angleSnap = 5f; // door will snap closed if the angle is less than this
@@ -42,9 +43,11 @@ public class Doors : Audible, Interactable {
         else {
             if (angle == openAngle) {
                 Close();
+                isDoorClosed = true;
             }
             else {
                 Open();
+                isDoorClosed = false;
             }
         }
     }
@@ -68,25 +71,28 @@ public class Doors : Audible, Interactable {
                 doorRigidBody.velocity = Vector3.zero; // Stop any residual movement
                 doorRigidBody.angularVelocity = Vector3.zero; // Stop any residual rotation
             }
-            
             else if (angle > targetRotation) {
                 angle -= 1f * doorSpeed * Time.deltaTime;
                 doorHinge.limits = new JointLimits { min = -angle-0.1f, max = -angle+0.1f };
+                isDoorClosed = true;
             }
             else if (angle < targetRotation) {
                 angle += 1f * doorSpeed * Time.deltaTime;
                 doorHinge.limits = new JointLimits { min = -angle-0.1f, max = -angle+0.1f };
+                isDoorClosed = false;
             }
         }
-
         else if (!(handleScript.IsGrabbed()) && (doorHinge.limits.max != -closedAngle) && (Mathf.Abs(angle - closedAngle) < angleSnap)) { // this means the player has let go of the door handle
-            angle = closedAngle; // Ensure exact alignment
-            doorHinge.limits = new JointLimits { min = -angle-0.1f, max = -angle+0.1f }; 
-            
-            StartCoroutine(closeSoundCoroutine());
+            if (!isDoorClosed) { // make sure its not already closed (by keyboard interaction)
+                angle = closedAngle; // Ensure exact alignment
+                doorHinge.limits = new JointLimits { min = -angle-0.1f, max = -angle+0.1f }; 
+                
+                StartCoroutine(closeSoundCoroutine());
+                isDoorClosed = true;
+            }
         }
         
-        else if (handleScript.IsGrabbed()) { // this means the player is holding the door handle
+        if (handleScript.IsGrabbed()) { // this means the player is holding the door handle
             Vector3 hingeLocation = new Vector3(this.transform.position.x, 0f, this.transform.position.z);
             Vector3 handleLocation = new Vector3(doorHandle.transform.position.x, 0f, doorHandle.transform.position.z);
 
@@ -96,7 +102,6 @@ public class Doors : Audible, Interactable {
             // Debug.DrawLine(hingeLocation, handleLocation, Color.yellow);
             Debug.DrawLine(hingeLocation, closedVector, Color.red);
             Debug.DrawLine(hingeLocation, handleLocation, Color.yellow);
-
 
             // Now calculate the angle between the closedVector and the dir vector
             angle = Vector3.Angle(closedVector, dir);
@@ -109,7 +114,6 @@ public class Doors : Audible, Interactable {
                 doorRigidBody.angularVelocity = Vector3.zero; // Stop any residual rotation
             }
         }
-
         else if (swinging) {
             if (angle >= closedAngle && angle <= openAngle) {
                 doorHinge.limits = new JointLimits { min = -angle-0.1f, max = -angle+0.1f };
@@ -124,12 +128,14 @@ public class Doors : Audible, Interactable {
     // These two functions directly change the doors target angle, which is will move toward.
     public void Open() {
         targetRotation = openAngle;
+        isDoorClosed = false;
         movedByNPC = true;
         StartCoroutine(openSoundCoroutine());
     }
 
     public void Close() {
         targetRotation = closedAngle;
+        isDoorClosed = true;
         movedByNPC = true;
         StartCoroutine(closeSoundCoroutine());
     }
@@ -137,10 +143,9 @@ public class Doors : Audible, Interactable {
 
     // Open the door for a set amount of time
     public void OpenDoorTemporarily(float timeOpen) {
-        if (temporaryOpenCoroutine != null) { // ensures it is not already in the process of opening/closing
-            StopCoroutine(temporaryOpenCoroutine);
+        if (temporaryOpenCoroutine == null) { // ensures it is not already in the process of opening/closing
+            temporaryOpenCoroutine = StartCoroutine(TemporaryOpenCoroutine(timeOpen));
         }
-        temporaryOpenCoroutine = StartCoroutine(TemporaryOpenCoroutine(timeOpen));
     }
 
     private IEnumerator TemporaryOpenCoroutine(float timeOpen) {
@@ -156,11 +161,14 @@ public class Doors : Audible, Interactable {
         yield return new WaitForSeconds(closeOffset);
         doorAudioSource.clip = closeDoorClip;
         doorAudioSource.Play();
+        Debug.Log("Playing close sound");
+
     }
     private IEnumerator openSoundCoroutine() {
         yield return new WaitForSeconds(openOffset);
         doorAudioSource.clip = openDoorClip;
         doorAudioSource.Play();
+        Debug.Log("Playing open sound");
     }
 
     public IEnumerator SwingDoor(Vector3 handleVelocity) {

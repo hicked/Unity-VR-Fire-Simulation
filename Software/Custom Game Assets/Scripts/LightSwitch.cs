@@ -35,11 +35,4 @@ public class LightSwitch : XRSimpleInteractable {
         }
         transform.Rotate(transform.up, 180, Space.World); // flip the switch
     }
-
-    private IEnumerator blah() {
-        while (true) {
-            yield return new WaitForSeconds(10);
-            Interact();
-        }
-    }
 }
