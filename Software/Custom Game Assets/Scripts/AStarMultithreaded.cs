@@ -10,11 +10,15 @@ using System;
 
 public class AStarMultithreaded : Threadable {
     [SerializeField] public static int maxPathfindingThreads = 5;
-    private static List<Thread> activePathfindingThreads = new List<Thread>();
-    private static Queue<Thread> queuedPathfindingThreads = new Queue<Thread>();
-    
+    private static List<PathfindingRequest> activePathfindingRequests = new List<PathfindingRequest>();
+    private static Queue<PathfindingRequest> queuedPathfindingRequests = new Queue<PathfindingRequest>();
     private ConcurrentQueue<PhysicsRequest> physicsRequests = new ConcurrentQueue<PhysicsRequest>();
     private ConcurrentQueue<PhysicsResult> physicsResults = new ConcurrentQueue<PhysicsResult>();
+
+    public class PathfindingRequest {
+        public Thread Thread { get; set; }
+        public NPCManager NPC { get; set; }
+    }
 
     private class PhysicsRequest {
         public Vector3 Location;
@@ -75,27 +79,28 @@ public class AStarMultithreaded : Threadable {
     }
 
     private void Update() {
-        Debug.Log(activePathfindingThreads.Count);
         runQueuedFunctions();
 
-        List<Thread> threadsToRemove = new List<Thread>();
+        List<PathfindingRequest> requestsToRemove = new List<PathfindingRequest>();
 
         // Process pathfinding threads and manage thread pools
-        for (int i = 0; i < activePathfindingThreads.Count; i++) {
-            if (!activePathfindingThreads[i].IsAlive) {
-                threadsToRemove.Add(activePathfindingThreads[i]);
-                activePathfindingThreads.RemoveAt(i);
+        for (int i = 0; i < activePathfindingRequests.Count; i++) {
+            if (!activePathfindingRequests[i].Thread.IsAlive) {
+                requestsToRemove.Add(activePathfindingRequests[i]);
+                activePathfindingRequests.RemoveAt(i);
             }
         }
-        foreach (Thread thread in threadsToRemove) {
-            DestroyThread(thread);
+        foreach (PathfindingRequest request in requestsToRemove) {
+            DestroyThread(request.Thread);
+            request.NPC.isInQueue = false; // Reset the isInQueue flag
         }
 
-        if (activePathfindingThreads.Count < maxPathfindingThreads && queuedPathfindingThreads.Count > 0) {
-            while ((maxPathfindingThreads - activePathfindingThreads.Count) > 0 && queuedPathfindingThreads.Count != 0) {
-                Thread threadToStart = queuedPathfindingThreads.Dequeue();
-                threadToStart.Start();
-                activePathfindingThreads.Add(threadToStart);
+        if (activePathfindingRequests.Count < maxPathfindingThreads && queuedPathfindingRequests.Count > 0) {
+            while ((maxPathfindingThreads - activePathfindingRequests.Count) > 0 && queuedPathfindingRequests.Count != 0) {
+                PathfindingRequest requestToStart = queuedPathfindingRequests.Dequeue();
+                requestToStart.Thread.Start();
+                activePathfindingRequests.Add(requestToStart);
+                requestToStart.NPC.isInQueue = false; // Reset the isInQueue flag
             }
         }
 
@@ -155,11 +160,13 @@ public class AStarMultithreaded : Threadable {
 
     public void FindPath(Vector3 start, Vector3 end) {
         Thread pathfindingThread = new Thread(() => FindPathThread(start, end));
-        if (activePathfindingThreads.Count < maxPathfindingThreads) {
+        PathfindingRequest request = new PathfindingRequest { Thread = pathfindingThread, NPC = NPC };
+        if (activePathfindingRequests.Count < maxPathfindingThreads) {
             pathfindingThread.Start();
-            activePathfindingThreads.Add(pathfindingThread);
+            activePathfindingRequests.Add(request);
         } else {
-            queuedPathfindingThreads.Enqueue(pathfindingThread);
+            queuedPathfindingRequests.Enqueue(request);
+            NPC.isInQueue = true;
         }
     }
 
@@ -218,28 +225,35 @@ public class AStarMultithreaded : Threadable {
 
                 cameFrom[endLocation] = currentLocation;
                 currentLocation = endLocation;
-                Action setPath = () => {
-                    path = ReconstructPath(cameFrom, currentLocation);
-                    if (path == null) {
-                        Debug.LogError("Reconstructed path is null.");
-                    }
-                };
 
-                QueueFunction(setPath);
-
-                lookatVector = end;
+                lookatVector = Vector3.zero;
                 foreach (Vector3 direction in directions) {
                     if (!IsBlocked(end, direction, 2f, layer)) {
                         lookatVector += direction;
                     }
                 }
 
-                if (lookatVector == end) {
-                    lookatVector = Vector3.forward;
-                }
                 
                 isPathfinding = false;
                 NPC.ChangeLocationStatus();
+
+                 Action setPathAndLookat = () => {
+                    NPC.path = ReconstructPath(cameFrom, currentLocation);
+                    
+                    if (lookatVector == Vector3.zero) {
+                        NPC.lookatVector = NPC.gameObject.transform.forward;
+                    }
+                    else {
+                        NPC.lookatVector = lookatVector;
+                    }
+
+                    NPC.currentPathIndex = 0;
+                    if (NPC.path == null) {
+                        Debug.LogError("Reconstructed path is null.");
+                    }
+                };
+
+                QueueFunction(setPathAndLookat);
                 return;
             }
 
@@ -326,8 +340,6 @@ public class AStarMultithreaded : Threadable {
         return new List<Location>(validNeighbors); // Return a new list to avoid modification during iteration elsewhere
     }
 
-
-
     private List<Location> ReconstructPath(Dictionary<Location, Location> cameFrom, Location current) {
         List<Location> totalPath = new List<Location> { current };
         while (cameFrom.ContainsKey(current)) {
@@ -343,7 +355,6 @@ public class AStarMultithreaded : Threadable {
     }
 
     public void DestroyThread(Thread pathfindingThread) {
-        activePathfindingThreads.Remove(pathfindingThread);
         pathfindingThread.Join();
         pathfindingThread.Abort();
     }
@@ -355,4 +366,4 @@ public class AStarMultithreaded : Threadable {
     public void SetPath(List<Location> paramPath) {
         this.path = paramPath;
     }
-}  
+}

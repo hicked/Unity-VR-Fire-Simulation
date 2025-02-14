@@ -45,8 +45,6 @@ public class NPCManager : Audible {
     public int NPCLocationIndex;
     public int previousNPCLocationIndex = -1; // set the value as negative since null isnt a thing
     public int tentativeNPCLocationIndex;
-
-    public bool isCurrentlyPathfinding = false;
     public bool isIdle = true;
     public bool isWalking = false;
     public bool isRunning = false;
@@ -89,6 +87,7 @@ public class NPCManager : Audible {
     [SerializeField] public GameObject fire;
     [SerializeField] public GameObject alarm;
     public bool panicked = false;
+    [SerializeField] public bool isExiting = false;
 
     //----------------------------------------------------------------------
     public string[] NPCIdleStatesW = new string[] {
@@ -124,19 +123,23 @@ public class NPCManager : Audible {
 
     };
     private Vector3[] exitLocations = new Vector3[] {
-        new Vector3(4f, 0f, -22f),
-        new Vector3(-35f, 0f, -7f)
+        new Vector3(4.5f, 0f, -28f),
+        new Vector3(-41f, 0f, -7.5f)
     };
 
     private Vector3 closestOutsideRoomLocation;
+    private Vector3 closestExit;
+    public bool isInQueue = false;
     //----------------------------------------------------------------------
 
     AnimatorClipInfo[] animatorInfo;
     string currentAnimation;
-    private List<Location> path;
-    private Vector3 lookatVector;
-    private int currentPathIndex;
+    public List<Location> path;
+    public Vector3 lookatVector;
+    public int currentPathIndex;
     private AStarMultithreaded pathfinder;
+
+    private Vector3 randOffsetVector = new Vector3(0, 0, 0); // random vector with offset outside of room when escaping fire
 
     private IEnumerator IdleCoroutine() {
         while (true) {
@@ -155,7 +158,7 @@ public class NPCManager : Audible {
             int moveVar = Random.Range(-moveVariance, moveVariance);
             yield return new WaitForSeconds(timeBeforeMove + moveVar);
 
-            if (isIdle && !isCurrentlyPathfinding) { // if it isnt idle, or is walking along a path, dont change idles
+            if (isIdle && !pathfinder.isPathfinding && !panicked) { // if it isnt idle, or is walking along a path, dont change idles
                 moveToRandom();
             }
             yield return null;
@@ -183,17 +186,41 @@ public class NPCManager : Audible {
 
 
     private void Update() {
+        // if (path != null) {
+        //     if (path.Count > 0) {
+        //         for (int i = 0; i < path.Count - 1; i++) {
+        //             Debug.DrawLine(new Vector3(path[i].x, 0f, path[i].z), new Vector3(path[i + 1].x, 0f, path[i + 1].z), Color.green);
+        //         }
+        //     }
+        // }
+        
+        
+        if (isExiting && path == null) { // if is exiting and has reached the exit
+            for (int i = 0; i < exitLocations.Length; i++) {
+                if (Vector3.Distance(transform.position, exitLocations[i]) < 0.1f && panicked) {
+                    Destroy(gameObject);
+                }
+            }
+        }
+
+        animatorInfo = animator.GetCurrentAnimatorClipInfo(0);
+
+        
         // Fire Detection
-        //Debug.Log(this.transform.position);
-        if (alarm.GetComponent<Alarm>().isPlaying && !panicked) {
-            panicked = true;
-            Debug.Log("NPC detected alarm");
-            setPathOutsideRoom();
+        if (panicked && (!isExiting && path !=null && (currentPathIndex == path.Count-2))) { //|| (isExiting && path == null && !isInQueue)) { // if panicked and is ending path
+            closestExit = exitLocations[0];
+            for (int i = 1; i < exitLocations.Length; i++) {
+                if (Vector3.Distance(closestOutsideRoomLocation + randOffsetVector, exitLocations[i]) < Vector3.Distance(closestOutsideRoomLocation + randOffsetVector, closestExit)) {
+                    closestExit = exitLocations[i];
+                }
+            }
+            setPathTo(closestExit, curPosition: closestOutsideRoomLocation + randOffsetVector);
+            isExiting = true;
+            Debug.Log("NPC is moving to exit");
         }
 
         if (fire.GetComponent<FireManager>().fireParticleSystem.isPlaying && !panicked) { // if fire is active, but NPC is not panicked
             RaycastHit fireHit; // hit info for raycast
-            Debug.DrawRay(transform.position + new Vector3(0, NPCHeight/2, 0), fire.transform.position - transform.position, Color.red);
             if (Physics.CapsuleCast(transform.position + new Vector3(0, NPCHeight/2, 0), transform.position - new Vector3(0, NPCHeight/2, 0), NPCRadius, fire.transform.position - transform.position, out fireHit, Vector3.Distance(transform.position, fire.transform.position), fireDetectionLayer)) {
                 if (fireHit.collider.gameObject == fire) {
                     panicked = true;
@@ -202,31 +229,13 @@ public class NPCManager : Audible {
                 }
             }
         }
-        
-        if (!isCurrentlyPathfinding && panicked) {
-            Vector3 closestExit = exitLocations[0];
-            for (int i = 1; i < exitLocations.Length; i++) {
-                if (Vector3.Distance(transform.position, exitLocations[i]) < Vector3.Distance(transform.position, closestExit)) {
-                    closestExit = exitLocations[i];
-                }
-            }
-            Debug.Log("Closest Exit: " + closestExit);
 
-            if (Vector3.Distance(transform.position, closestExit) < 0.1f) {
-                Destroy(gameObject);
-            }
-            else {
-                setPathTo(closestExit, curPosition: new Vector3(closestOutsideRoomLocation.x, 0.5f, closestOutsideRoomLocation.z));
-            }
+        if (alarm.GetComponent<Alarm>().isPlaying && !panicked) {
+            panicked = true;
+            Debug.Log("NPC detected alarm");
+            setPathOutsideRoom();
         }
 
-        // Debug.Log($"{transform.position} and {transform.position + transform.forward}");
-        if (pathfinder != null) {
-            path = pathfinder.GetPath();
-            lookatVector = pathfinder.lookatVector;
-        }
-        
-        animatorInfo = animator.GetCurrentAnimatorClipInfo(0);
 
         if (animatorInfo.Length == 1) {
             currentAnimation = animatorInfo[0].clip.name;
@@ -307,7 +316,15 @@ public class NPCManager : Audible {
         File.WriteAllText(NPCLocationsFilePath, updatedJson); // Update the path as necessary
     }
 
-    private void setPathOutsideRoom() {
+    private void setPathOutsideRoom() { // could also set the path to exit if it is closer instead
+        closestExit = exitLocations[0];
+        for (int i = 1; i < exitLocations.Length; i++) {
+            if (Vector3.Distance(transform.position, exitLocations[i]) < Vector3.Distance(transform.position, closestExit)) {
+                closestExit = exitLocations[i];
+            }
+        }
+        float exitDistance = Vector3.Distance(transform.position, closestExit);
+
         closestOutsideRoomLocation = outsideRoomLocations[0];
         for (int i = 1; i < outsideRoomLocations.Length; i++) {
             if (Vector3.Distance(transform.position, outsideRoomLocations[i]) < Vector3.Distance(transform.position, closestOutsideRoomLocation)) {
@@ -315,15 +332,24 @@ public class NPCManager : Audible {
             }
         }
 
-        setPathTo(closestOutsideRoomLocation);
+        if (exitDistance < Vector3.Distance(transform.position, closestOutsideRoomLocation)) {
+            isExiting = true;
+            setPathTo(closestExit);
+        }
+        else {
+            int randOffsetX = Random.Range(-2, 2);
+            int randOffsetZ = Random.Range(-2, 2);
+            randOffsetVector = new Vector3(randOffsetX, 0, randOffsetZ);
+            setPathTo(closestOutsideRoomLocation + randOffsetVector);
+        }
     }
 
     private void setPathTo(Vector3 location, Vector3? curPosition = null) {
         //Debug.Log("Setting path to " + location);
-        if (isCurrentlyPathfinding) {
+        if (isInQueue) { // if has already queued a pathfinding request, or is currently pathfinding
+            Debug.Log("Pathfinding already in queue");
             return;
         }
-        isCurrentlyPathfinding = true;
         Vector3 startPosition = curPosition ?? transform.position;
         pathfinder.FindPath(startPosition, location);
     }
@@ -345,7 +371,7 @@ public class NPCManager : Audible {
         }
 
         
-        Vector3 targetPosition = new Vector3(path[currentPathIndex].x, 0f, path[currentPathIndex].z); // next point along path to reach
+        Vector3 targetPosition = path[currentPathIndex].vector; // next point along path to reach
 
         Vector3 direction = targetPosition - transform.position; // directional vector towards the point
         float distanceToTarget = direction.magnitude;
@@ -364,17 +390,20 @@ public class NPCManager : Audible {
         if (distanceToTarget < 0.1f) {
             if (currentPathIndex == path.Count - 1) {
                 // Smooth rotation of npc once reached the end location
-                targetRotation = Quaternion.LookRotation(lookatVector - transform.position);
+                Debug.Log("lookatVector: " + lookatVector);
+                
+                targetRotation = Quaternion.LookRotation(lookatVector);
                 StartCoroutine(RotateToFinalDirectionCoroutine(targetRotation));
 
-                pathfinder.SetPath(null);
                 isWalking = false;
                 isIdle = true;
                 isRunning = false;
-                isCurrentlyPathfinding = false;
+                path = null;
                 return;
             }
-            currentPathIndex++;
+            else {
+                currentPathIndex++;
+            }
         }
 
         for (int i = run ? pointsBeforeOpenDoor*2:pointsBeforeOpenDoor; i >= 0; i--) {
@@ -384,7 +413,7 @@ public class NPCManager : Audible {
             try {
                 if (isBlockedByDoor(path[currentPathIndex + i - 1].vector + new Vector3(0, 1, 0), path[currentPathIndex + i].vector + new Vector3(0, 1, 0))) {
                     Doors door = lastDoorBlocked.GetComponent<Doors>();
-                    door.OpenDoorTemporarily(timeSpentOpenByNPC);
+                    door.OpenDoorTemporarily(timeSpentOpenByNPC * (run ? 1.5f : 1f));
                     break;
                 }
             }
@@ -402,6 +431,7 @@ public class NPCManager : Audible {
         }
         return hit;
     }
+
 
     private IEnumerator RotateToFinalDirectionCoroutine(Quaternion finalTargetRotation) {
         while (true) {

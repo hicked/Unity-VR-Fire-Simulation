@@ -161,14 +161,11 @@ public class Doors : Audible, Interactable {
         yield return new WaitForSeconds(closeOffset);
         doorAudioSource.clip = closeDoorClip;
         doorAudioSource.Play();
-        Debug.Log("Playing close sound");
-
     }
     private IEnumerator openSoundCoroutine() {
         yield return new WaitForSeconds(openOffset);
         doorAudioSource.clip = openDoorClip;
         doorAudioSource.Play();
-        Debug.Log("Playing open sound");
     }
 
     public IEnumerator SwingDoor(Vector3 handleVelocity) {
