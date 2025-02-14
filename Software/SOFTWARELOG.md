@@ -12,6 +12,43 @@
 
 **D**: Patch / Refactoring
 
+## [v.0.7.0.0-beta] - 2025-02-214
+**Author:** Antoine
+*Changes*:
+-   NPCs now pathfind to exit when they either hear the alarm or see the fire
+-   The alarm sounds shortly after the fire starts
+-   Barrier is created preventing player from going into the room with the fire once all npcs/players have left the room  
+-   NPCs now are destroyed when they get to one of the exits
+
+- Fixed Close door sound being broken
+- Fixed alarm not sounding at the right time
+- Fixed Red doors not being keyboard or VR interactable
+- Fixed lookat rotation not rotating NPC when arrived at location
+- Fixed bugs with A* queue
+
+*Current Bugs*:
+-   **Work on making pathfinding to exit more fluid. They should have more urgency since they are leaving the building due to a fire. Need to look into the queuing systems**
+-   PROJECT TREE CLEANUP STILL NEEDS TO BE COMPLETED: Fire, NPCs, Doors, Lights
+-   `Look rotation viewing vector is zero` "bug", not game breaking
+-   Add different walk and run sounds
+-   Smoke ignoring colliders at X time
+
+*Next Steps*:
+-   Sequence of events:
+    -   Fire starts (make sure no player in the room)
+        -   Imaginary wall
+        -   Npcs with LOS run out towards exits
+        -   Alarm rings (15 secs after fire ini)
+            -   all other NPCs run out
+        -   close and locks door to fire
+        -   time before death TBD
+-   Last room (3)
+-   Resize objects for more realism (props mostly)
+-   UI/Menu -> only at the end
+-   Make wheelaudio change based on wheel speeds (should be simple)
+-   Make onPhone independant, static
+
+
 ## [v.0.6.7.9-beta] - 2024-11-25
 **Author:** Antoine
 *Changes*:
