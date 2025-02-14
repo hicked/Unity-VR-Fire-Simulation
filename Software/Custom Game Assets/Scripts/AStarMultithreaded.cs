@@ -9,7 +9,7 @@ using UnityEngine;
 using System;
 
 public class AStarMultithreaded : Threadable {
-    [SerializeField] public static int maxPathfindingThreads = 5;
+    [SerializeField] public static int maxPathfindingThreads = 8;
     private static List<PathfindingRequest> activePathfindingRequests = new List<PathfindingRequest>();
     private static Queue<PathfindingRequest> queuedPathfindingRequests = new Queue<PathfindingRequest>();
     private ConcurrentQueue<PhysicsRequest> physicsRequests = new ConcurrentQueue<PhysicsRequest>();
@@ -37,7 +37,8 @@ public class AStarMultithreaded : Threadable {
     [SerializeField] public float tileSize = 1f;
     [SerializeField] public LayerMask layer;
     [SerializeField] public NPCManager NPC;
-    [SerializeField] private int maxTilesAllowedToCheck = 5000;
+    [SerializeField] private int maxTilesAllowedToCheck = 15000; // note that most is regulated by other scripts like NPCManager
+    // This is wost case scenario, it will quit after this many tiles are checked
     private float NPCHeight;
     private float NPCRadius;
     public bool isPathfinding;
@@ -92,11 +93,10 @@ public class AStarMultithreaded : Threadable {
         }
         foreach (PathfindingRequest request in requestsToRemove) {
             DestroyThread(request.Thread);
-            request.NPC.isInQueue = false; // Reset the isInQueue flag
         }
 
         if (activePathfindingRequests.Count < maxPathfindingThreads && queuedPathfindingRequests.Count > 0) {
-            while ((maxPathfindingThreads - activePathfindingRequests.Count) > 0 && queuedPathfindingRequests.Count != 0) {
+            while ((maxPathfindingThreads - activePathfindingRequests.Count) >= 0 && queuedPathfindingRequests.Count != 0) {
                 PathfindingRequest requestToStart = queuedPathfindingRequests.Dequeue();
                 requestToStart.Thread.Start();
                 activePathfindingRequests.Add(requestToStart);
@@ -196,7 +196,6 @@ public class AStarMultithreaded : Threadable {
                 isPathfinding = false;
                 Action debugTooFar = () => {
                     Debug.Log($"Checked too many tiles, assuming no path possible to get to location {end} from {start} with NPC {NPC}");
-                    NPC.moveToRandom();
                 };
                 QueueFunction(debugTooFar);
                 return;
@@ -279,7 +278,6 @@ public class AStarMultithreaded : Threadable {
         isPathfinding = false;
         Action debugNoPath = () => {
             Debug.Log($"No path could be found from {start} to {end}");
-            NPC.moveToRandom();
         };
         QueueFunction(debugNoPath);
     }

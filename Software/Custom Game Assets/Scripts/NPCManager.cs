@@ -207,7 +207,7 @@ public class NPCManager : Audible {
 
         
         // Fire Detection
-        if (panicked && (!isExiting && path !=null && (currentPathIndex == path.Count-2))) { //|| (isExiting && path == null && !isInQueue)) { // if panicked and is ending path
+        if (panicked && path == null && !pathfinder.isPathfinding && !isInQueue && !isExiting) { //|| (isExiting && path == null && !isInQueue)) { // if panicked and is ending path
             closestExit = exitLocations[0];
             for (int i = 1; i < exitLocations.Length; i++) {
                 if (Vector3.Distance(closestOutsideRoomLocation + randOffsetVector, exitLocations[i]) < Vector3.Distance(closestOutsideRoomLocation + randOffsetVector, closestExit)) {
