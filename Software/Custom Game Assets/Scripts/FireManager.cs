@@ -14,16 +14,28 @@ public class FireManager : Audible {
     [SerializeField] private ParticleSystem explosionParticleSystem;
     [SerializeField] private int minTimeBeforeInstantiation = 10;
     [SerializeField] private int maxTimeBeforeInstantiation = 30;
+    [SerializeField] private GameObject player;
+    [SerializeField] private float distance = 25f;
     private int waitTime;
 
     private IEnumerator startFire() {    
-        yield return new WaitForSeconds(waitTime);
-        fireLight.enabled = true;
-        explosionAudioSource.Play();
-        explosionParticleSystem.Play();
-        yield return new WaitForSeconds(fireDelay);
-        fireAudioSource.Play();
-        fireParticleSystem.Play();
+        while (true) {
+            yield return new WaitForSeconds(waitTime);
+            RaycastHit playerRaycastHit; // hit info for raycast
+            Vector3 playerHeightOffset = new Vector3(0, player.GetComponent<BoxCollider>().size.y / 2, 0);
+            Debug.DrawRay(this.transform.position + playerHeightOffset, player.transform.position - (this.transform.position + playerHeightOffset), Color.red, 10f);
+            if (Physics.Raycast(this.transform.position + playerHeightOffset, player.transform.position - (this.transform.position + playerHeightOffset), out playerRaycastHit, distance)) {
+                if (playerRaycastHit.collider.gameObject != player) {
+                    fireLight.enabled = true;
+                    explosionAudioSource.Play();
+                    explosionParticleSystem.Play();
+                    yield return new WaitForSeconds(fireDelay);
+                    fireAudioSource.Play();
+                    fireParticleSystem.Play();
+                    break;
+                }
+            }
+        }
     }
     void Start () {
         audioSource = fireAudioSource; // from audible class

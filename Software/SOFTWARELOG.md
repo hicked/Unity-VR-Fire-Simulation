@@ -12,6 +12,38 @@
 
 **D**: Patch / Refactoring
 
+## [v.0.7.1.0-beta] - 2025-02-214
+**Author:** Antoine
+*Changes*:
+-   Added new stairway door asset
+-   Added main lobby this will contain a few items in the future to demo the controls and whatnot
+-   Added `SceneLoader` script for collider that switched scenes
+
+*Current Bugs*:
+-   **Work on making pathfinding to exit more fluid. They should have more urgency since they are leaving the building due to a fire. Need to look into the queuing systems**
+-   PROJECT TREE CLEANUP STILL NEEDS TO BE COMPLETED: Fire, NPCs, Doors, Lights
+-   `Look rotation viewing vector is zero` "bug", not game breaking
+-   Add different walk and run sounds BROKEN
+-   Smoke ignoring colliders at X time
+-   Fix stairway door prefab asset folder with copies
+-   enqueue points when pathfinding
+
+*Next Steps*:
+-   Sequence of events:
+    -   Fire starts (make sure no player in the room)
+        -   Imaginary wall
+        -   Npcs with LOS run out towards exits
+        -   Alarm rings (15 secs after fire ini)
+            -   all other NPCs run out
+        -   close and locks door to fire
+        -   time before death TBD
+-   Last room (3)
+-   Resize objects for more realism (props mostly)
+-   UI/Menu -> only at the end
+-   Make wheelaudio change based on wheel speeds (should be simple)
+-   Make onPhone independant, static
+
+
 ## [v.0.7.0.0-beta] - 2025-02-214
 **Author:** Antoine
 *Changes*:
