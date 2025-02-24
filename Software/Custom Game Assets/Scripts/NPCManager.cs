@@ -87,11 +87,12 @@ public class NPCManager : Audible {
     [SerializeField] public GameObject fire;
     [SerializeField] public GameObject alarm;
     public bool panicked = false;
-    [SerializeField] public bool isExiting = false;
 
     //----------------------------------------------------------------------
     public string[] NPCIdleStatesW = new string[] {
         "Exercise_warmingUp_170f",
+        "idle_f_1_150f",
+        "idle_f_2_190f",
         "idle_f_1_150f",
         "idle_f_2_190f",
         "idle_phoneTalking_180f",
@@ -101,6 +102,8 @@ public class NPCManager : Audible {
     public string[] NPCIdleStatesM = new string[] {
         "Exercise_warmingUp_170f",
         "idle_phoneTalking_180f",
+        "idle_m_1_200f",
+        "idle_m_2_220f",
         "idle_m_1_200f",
         "idle_m_2_220f"};
     
@@ -116,30 +119,41 @@ public class NPCManager : Audible {
     };
 
     //----------------------------------------------------------------------
+
     private Vector3[] outsideRoomLocations = new Vector3[] {
         new Vector3(-27f, 0f, -7.5f),
         new Vector3(-15.5f, 0f, -7.5f),
         new Vector3(-4f, 0f, -7.5f)
-
     };
-    private Vector3[] exitLocations = new Vector3[] {
-        new Vector3(4.5f, 0f, -28f),
-        new Vector3(-41f, 0f, -7.5f)
-    };
-
     private Vector3 closestOutsideRoomLocation;
-    private Vector3 closestExit;
-    public bool isInQueue = false;
+
+    private List<List<Vector3>> exitPaths = new List<List<Vector3>> {
+        new List<Vector3>{
+            new Vector3(-27f, 0f, -7.5f),
+            new Vector3(-15.5f, 0f, -7.5f),
+            new Vector3(-3.5f, 0f, -7.5f),
+            new Vector3(4.5f, 0f, -7.5f),
+            new Vector3(4.5f, 0f, -28f)
+        },
+        new List<Vector3> {
+            new Vector3(4.5f, 0f, -7.5f),
+            new Vector3(-3.5f, 0f, -7.5f),
+            new Vector3(-15.5f, 0f, -7.5f),
+            new Vector3(-27f, 0f, -7.5f),
+            new Vector3(-41, 0f, -7.5f),
+        }
+    };
+    private List<Vector3> closestExitPath;
+
     //----------------------------------------------------------------------
 
     AnimatorClipInfo[] animatorInfo;
     string currentAnimation;
-    public List<Location> path;
+    [SerializeField] public List<Location> path;
+    public List<List<Vector3>> pathfindingRequestsQueue = new List<List<Vector3>>(); // queue of pathfinding requests
     public Vector3 lookatVector;
     public int currentPathIndex;
     private AStarMultithreaded pathfinder;
-
-    private Vector3 randOffsetVector = new Vector3(0, 0, 0); // random vector with offset outside of room when escaping fire
 
     private IEnumerator IdleCoroutine() {
         while (true) {
@@ -158,7 +172,7 @@ public class NPCManager : Audible {
             int moveVar = Random.Range(-moveVariance, moveVariance);
             yield return new WaitForSeconds(timeBeforeMove + moveVar);
 
-            if (isIdle && !pathfinder.isPathfinding && !panicked) { // if it isnt idle, or is walking along a path, dont change idles
+            if (!panicked) { // if it isnt idle, or is walking along a path, dont change idles
                 moveToRandom();
             }
             yield return null;
@@ -186,37 +200,11 @@ public class NPCManager : Audible {
 
 
     private void Update() {
-        // if (path != null) {
-        //     if (path.Count > 0) {
-        //         for (int i = 0; i < path.Count - 1; i++) {
-        //             Debug.DrawLine(new Vector3(path[i].x, 0f, path[i].z), new Vector3(path[i + 1].x, 0f, path[i + 1].z), Color.green);
-        //         }
-        //     }
-        // }
         
-        
-        if (isExiting && path == null) { // if is exiting and has reached the exit
-            for (int i = 0; i < exitLocations.Length; i++) {
-                if (Vector3.Distance(transform.position, exitLocations[i]) < 0.1f && panicked) {
-                    Destroy(gameObject);
-                }
-            }
-        }
-
-        animatorInfo = animator.GetCurrentAnimatorClipInfo(0);
-
-        
-        // Fire Detection
-        if (panicked && path == null && !pathfinder.isPathfinding && !isInQueue && !isExiting) { //|| (isExiting && path == null && !isInQueue)) { // if panicked and is ending path
-            closestExit = exitLocations[0];
-            for (int i = 1; i < exitLocations.Length; i++) {
-                if (Vector3.Distance(closestOutsideRoomLocation + randOffsetVector, exitLocations[i]) < Vector3.Distance(closestOutsideRoomLocation + randOffsetVector, closestExit)) {
-                    closestExit = exitLocations[i];
-                }
-            }
-            setPathTo(closestExit, curPosition: closestOutsideRoomLocation + randOffsetVector);
-            isExiting = true;
-            Debug.Log("NPC is moving to exit");
+        if (pathfindingRequestsQueue.Count > 0 && !pathfinder.isPathfinding) { // if there are pathfinding requests in the queue, and the pathfinder is not currently pathfinding
+            List<Vector3> pathfindingRequest = pathfindingRequestsQueue.First();
+            pathfinder.FindPath(pathfindingRequest.First(), pathfindingRequest.Last());
+            pathfindingRequestsQueue.RemoveAt(0);
         }
 
         if (fire.GetComponent<FireManager>().fireParticleSystem.isPlaying && !panicked) { // if fire is active, but NPC is not panicked
@@ -225,7 +213,6 @@ public class NPCManager : Audible {
                 if (fireHit.collider.gameObject == fire) {
                     panicked = true;
                     Debug.Log("NPC has LOS to fire");
-                    setPathOutsideRoom();
                 }
             }
         }
@@ -233,9 +220,37 @@ public class NPCManager : Audible {
         if (alarm.GetComponent<Alarm>().isPlaying && !panicked) {
             panicked = true;
             Debug.Log("NPC detected alarm");
+        }
+        
+         // Fire Detection
+        if (panicked && closestExitPath == null) { //|| (isExiting && path == null && !isInQueue)) { // if panicked and is ending path
+            closestExitPath = exitPaths.First();
+            for (int i = 1; i < exitPaths.Count; i++) {
+                List<Vector3> exitPath = exitPaths[i];
+                if (Vector3.Distance(transform.position, exitPath.Last()) < Vector3.Distance(transform.position, closestExitPath.Last())) {
+                    closestExitPath = exitPaths[i];
+                }
+            }
+            Debug.Log(closestExitPath.Last());
             setPathOutsideRoom();
+
+            Vector3 closestStartingPoint = closestExitPath.First();
+            for (int i = 1; i < closestExitPath.Count; i++) {
+                if (Vector3.Distance(closestOutsideRoomLocation, closestExitPath[i]) < Vector3.Distance(closestOutsideRoomLocation, closestStartingPoint)) {
+                    closestStartingPoint = closestExitPath[i];
+                }
+            }
+            Debug.Log("Closest starting point: " + closestStartingPoint);
+            int startingIndex = closestExitPath.IndexOf(closestStartingPoint);
+
+            setPathTo(closestExitPath[startingIndex], closestOutsideRoomLocation);
+            for (int i = startingIndex; i < closestExitPath.Count - 1; i++) {
+                setPathTo(closestExitPath[i+1], closestExitPath[i]);
+            }
+            Debug.Log("NPC is moving to exit");
         }
 
+        animatorInfo = animator.GetCurrentAnimatorClipInfo(0);
 
         if (animatorInfo.Length == 1) {
             currentAnimation = animatorInfo[0].clip.name;
@@ -316,46 +331,25 @@ public class NPCManager : Audible {
         File.WriteAllText(NPCLocationsFilePath, updatedJson); // Update the path as necessary
     }
 
-    private void setPathOutsideRoom() { // could also set the path to exit if it is closer instead
-        closestExit = exitLocations[0];
-        for (int i = 1; i < exitLocations.Length; i++) {
-            if (Vector3.Distance(transform.position, exitLocations[i]) < Vector3.Distance(transform.position, closestExit)) {
-                closestExit = exitLocations[i];
-            }
-        }
-        float exitDistance = Vector3.Distance(transform.position, closestExit);
-
-        closestOutsideRoomLocation = outsideRoomLocations[0];
-        for (int i = 1; i < outsideRoomLocations.Length; i++) {
-            if (Vector3.Distance(transform.position, outsideRoomLocations[i]) < Vector3.Distance(transform.position, closestOutsideRoomLocation)) {
-                closestOutsideRoomLocation = outsideRoomLocations[i];
-            }
-        }
-
-        if (exitDistance < Vector3.Distance(transform.position, closestOutsideRoomLocation)) {
-            isExiting = true;
-            setPathTo(closestExit);
-        }
-        else {
-            int randOffsetX = Random.Range(-2, 2);
-            int randOffsetZ = Random.Range(-2, 2);
-            randOffsetVector = new Vector3(randOffsetX, 0, randOffsetZ);
-            setPathTo(closestOutsideRoomLocation + randOffsetVector);
-        }
-    }
 
     private void setPathTo(Vector3 location, Vector3? curPosition = null) {
         //Debug.Log("Setting path to " + location);
-        if (isInQueue) { // if has already queued a pathfinding request, or is currently pathfinding
-            Debug.Log("Pathfinding already in queue");
-            return;
+        if (pathfindingRequestsQueue.Count > 0) { // if has already queued a pathfinding request, or is currently pathfinding
+            List<Vector3> lastPathfindingRequest = pathfindingRequestsQueue.Last();
+            Vector3 lastPathfindingRequestEndLocation = lastPathfindingRequest.ElementAt(1);
+            pathfindingRequestsQueue.Add(new List<Vector3> { lastPathfindingRequestEndLocation, location });
         }
-        Vector3 startPosition = curPosition ?? transform.position;
-        pathfinder.FindPath(startPosition, location);
+        else if (pathfinder.isPathfinding) {
+            pathfindingRequestsQueue.Add(new List<Vector3> { path.Last().vector, location });
+        }
+        else {
+            Vector3 startPosition = curPosition ?? transform.position;
+            pathfindingRequestsQueue.Add(new List<Vector3> { startPosition, location });
+        }
     }
 
     private void MoveAlongPath(bool run = false) { // default param of walking not running
-        if (path == null || path.Count == 0 || currentPathIndex > path.Count - 1) {
+        if (path == null || path.Count == 0) {
             return;
         }
 
@@ -370,8 +364,8 @@ public class NPCManager : Audible {
             isRunning = true;
         }
 
-        
-        Vector3 targetPosition = path[currentPathIndex].vector; // next point along path to reach
+        Location nextLocation = path.ElementAt(0); 
+        Vector3 targetPosition = nextLocation.vector; // next point along path to reach
 
         Vector3 direction = targetPosition - transform.position; // directional vector towards the point
         float distanceToTarget = direction.magnitude;
@@ -388,9 +382,12 @@ public class NPCManager : Audible {
         
         // Check if the NPC is close enough to the target position
         if (distanceToTarget < 0.1f) {
-            if (currentPathIndex == path.Count - 1) {
+            if (path.Count == 1 && !pathfinder.isPathfinding) { // if it is the last point on the path
                 // Smooth rotation of npc once reached the end location
-                Debug.Log("lookatVector: " + lookatVector);
+                if (panicked) {
+                    Destroy(gameObject);
+                }
+                // Debug.Log("lookatVector: " + lookatVector);
                 
                 targetRotation = Quaternion.LookRotation(lookatVector);
                 StartCoroutine(RotateToFinalDirectionCoroutine(targetRotation));
@@ -398,11 +395,10 @@ public class NPCManager : Audible {
                 isWalking = false;
                 isIdle = true;
                 isRunning = false;
-                path = null;
-                return;
+                path.RemoveAt(0);
             }
             else {
-                currentPathIndex++;
+                path.RemoveAt(0);
             }
         }
 
@@ -411,7 +407,7 @@ public class NPCManager : Audible {
             // Does this until it reaches 0 which will be between the next point, and the previous point
             // Might be smart to change "pointsBeforeOpenDoor" actively with tile size, but for now it can be manual
             try {
-                if (isBlockedByDoor(path[currentPathIndex + i - 1].vector + new Vector3(0, 1, 0), path[currentPathIndex + i].vector + new Vector3(0, 1, 0))) {
+                if (isBlockedByDoor(path[i - 1].vector + new Vector3(0, 1, 0), path[i].vector + new Vector3(0, 1, 0))) {
                     Doors door = lastDoorBlocked.GetComponent<Doors>();
                     door.OpenDoorTemporarily(timeSpentOpenByNPC * (run ? 1.5f : 1f));
                     break;
@@ -421,6 +417,80 @@ public class NPCManager : Audible {
                 continue;
             }
         }
+    }
+
+    private void setPathOutsideRoom() {
+        // // do raycast around the room until it finds a door that is unlocked
+        // GameObject closestDoor = null;
+        // RaycastHit hitInfo;
+        // List<Vector3> directions = new List<Vector3> {
+        //     //every 10 degrees
+        //     new Vector3(0, 0, 1),
+        //     new Vector3(0.1736482f, 0, 0.9848078f),
+        //     new Vector3(0.3420201f, 0, 0.9396926f),
+        //     new Vector3(0.5f, 0, 0.8660254f),
+        //     new Vector3(0.6427876f, 0, 0.7660444f),
+        //     new Vector3(0.7660444f, 0, 0.6427876f),
+        //     new Vector3(0.8660254f, 0, 0.5f),
+        //     new Vector3(0.9396926f, 0, 0.3420201f),
+        //     new Vector3(0.9848078f, 0, 0.1736482f),
+        //     new Vector3(1, 0, 0),
+        //     new Vector3(0.9848078f, 0, -0.1736482f),
+        //     new Vector3(0.9396926f, 0, -0.3420201f),
+        //     new Vector3(0.8660254f, 0, -0.5f),
+        //     new Vector3(0.7660444f, 0, -0.6427876f),
+        //     new Vector3(0.6427876f, 0, -0.7660444f),
+        //     new Vector3(0.5f, 0, -0.8660254f),
+        //     new Vector3(0.3420201f, 0, -0.9396926f),
+        //     new Vector3(0.1736482f, 0, -0.9848078f),
+        //     new Vector3(0, 0, -1),
+        //     new Vector3(-0.1736482f, 0, -0.9848078f),
+        //     new Vector3(-0.3420201f, 0, -0.9396926f),
+        //     new Vector3(-0.5f, 0, -0.8660254f),
+        //     new Vector3(-0.6427876f, 0, -0.7660444f),
+        //     new Vector3(-0.7660444f, 0, -0.6427876f),
+        //     new Vector3(-0.8660254f, 0, -0.5f),
+        //     new Vector3(-0.9396926f, 0, -0.3420201f),
+        //     new Vector3(-0.9848078f, 0, -0.1736482f),
+        //     new Vector3(-1, 0, 0),
+        //     new Vector3(-0.9848078f, 0, 0.1736482f),
+        //     new Vector3(-0.9396926f, 0, 0.3420201f),
+        //     new Vector3(-0.8660254f, 0, 0.5f),
+        //     new Vector3(-0.7660444f, 0, 0.6427876f),
+        //     new Vector3(-0.6427876f, 0, 0.7660444f),
+        //     new Vector3(-0.5f, 0, 0.8660254f),
+        //     new Vector3(-0.3420201f, 0, 0.9396926f),
+        //     new Vector3(-0.1736482f, 0, 0.9848078f)
+        // };
+        // foreach (Vector3 direction in directions) {
+        //     if (Physics.Raycast(transform.position + new Vector3(0, 1, 0), direction, out hitInfo, 100f, doorLayer)) {
+        //         if (hitInfo.collider.gameObject.GetComponent<Doors>().handleScript.isLocked) {
+        //             closestDoor = hitInfo.collider.gameObject;
+        //             break;
+        //         }
+        //     }
+        // }
+
+        // if (closestDoor != null) {
+        //     closestOutsideRoomLocation = outsideRoomLocations[0];
+        //     for (int i = 1; i < outsideRoomLocations.Length; i++) {
+        //         if (Vector3.Distance(closestDoor.transform.position, outsideRoomLocations[i]) < Vector3.Distance(closestDoor.transform.position, closestOutsideRoomLocation)) {
+        //             closestOutsideRoomLocation = outsideRoomLocations[i];
+        //         }
+        //     }
+
+        //     setPathTo(closestOutsideRoomLocation);
+        // } else {
+            // find the nearest location to the npc
+            closestOutsideRoomLocation = outsideRoomLocations[0];
+            for (int i = 1; i < outsideRoomLocations.Length; i++) {
+                if (Vector3.Distance(transform.position, outsideRoomLocations[i]) < Vector3.Distance(transform.position, closestOutsideRoomLocation)) {
+                    closestOutsideRoomLocation = outsideRoomLocations[i];
+                }
+            }
+            
+            setPathTo(closestOutsideRoomLocation);
+        // }
     }
 
     public bool isBlockedByDoor(Vector3 start, Vector3 end) {

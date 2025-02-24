@@ -17,7 +17,7 @@ public class Doors : Audible, Interactable {
     [SerializeField] public float closedAngle = 0f;
     [SerializeField] private float angleSnap = 5f; // door will snap closed if the angle is less than this
     [SerializeField] public GameObject doorHandle;
-    private DoorHandle handleScript;
+    public DoorHandle handleScript;
     [SerializeField] private HingeJoint doorHinge;
     private Rigidbody doorRigidBody; // MIGHT NOT NEED THIS TO RESET VELOCITY OF DOOR MIGHT NEED HINGEJOINT VELOCITY
     private Vector3 closedVector;

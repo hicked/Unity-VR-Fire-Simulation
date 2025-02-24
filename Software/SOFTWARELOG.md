@@ -12,19 +12,22 @@
 
 **D**: Patch / Refactoring
 
-## [v.0.7.1.0-beta] - 2025-02-214
+## [v.0.8.1p.0-beta] - 2025-02-214
 **Author:** Antoine
 *Changes*:
+-   NPCs queue now works and they properly run out when fire is detected or the alarm sounds
+-   Barrier is now setup and works properly
+-   Room door opens when fire starts just so player can see the fire and smoke can come out
+-   Added props to lobby. Will have to add demo instructions
 -   Added new stairway door asset
 -   Added main lobby this will contain a few items in the future to demo the controls and whatnot
 -   Added `SceneLoader` script for collider that switched scenes
 
 *Current Bugs*:
--   **Work on making pathfinding to exit more fluid. They should have more urgency since they are leaving the building due to a fire. Need to look into the queuing systems**
+-   **Work on making pathfinding to exit more fluid. They should have more urgency since they are leaving the building due to a fire
 -   PROJECT TREE CLEANUP STILL NEEDS TO BE COMPLETED: Fire, NPCs, Doors, Lights
 -   `Look rotation viewing vector is zero` "bug", not game breaking
 -   Add different walk and run sounds BROKEN
--   Smoke ignoring colliders at X time
 -   Fix stairway door prefab asset folder with copies
 -   enqueue points when pathfinding
 
@@ -42,6 +45,9 @@
 -   UI/Menu -> only at the end
 -   Make wheelaudio change based on wheel speeds (should be simple)
 -   Make onPhone independant, static
+-   Fix Walking sound effect not working
+-   Add demo instructions
+-   Add end screen
 
 
 ## [v.0.7.0.0-beta] - 2025-02-214

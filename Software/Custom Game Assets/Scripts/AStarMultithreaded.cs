@@ -100,7 +100,6 @@ public class AStarMultithreaded : Threadable {
                 PathfindingRequest requestToStart = queuedPathfindingRequests.Dequeue();
                 requestToStart.Thread.Start();
                 activePathfindingRequests.Add(requestToStart);
-                requestToStart.NPC.isInQueue = false; // Reset the isInQueue flag
             }
         }
 
@@ -166,7 +165,6 @@ public class AStarMultithreaded : Threadable {
             activePathfindingRequests.Add(request);
         } else {
             queuedPathfindingRequests.Enqueue(request);
-            NPC.isInQueue = true;
         }
     }
 
@@ -193,9 +191,9 @@ public class AStarMultithreaded : Threadable {
 
         while (openList.Count > 0) {
             if (openList.Count > maxTilesAllowedToCheck) {
-                isPathfinding = false;
                 Action debugTooFar = () => {
                     Debug.Log($"Checked too many tiles, assuming no path possible to get to location {end} from {start} with NPC {NPC}");
+                    isPathfinding = false;
                 };
                 QueueFunction(debugTooFar);
                 return;
@@ -231,13 +229,13 @@ public class AStarMultithreaded : Threadable {
                         lookatVector += direction;
                     }
                 }
-
                 
-                isPathfinding = false;
                 NPC.ChangeLocationStatus();
 
-                 Action setPathAndLookat = () => {
-                    NPC.path = ReconstructPath(cameFrom, currentLocation);
+                Action setPathAndLookat = () => {
+                    Debug.Log("Done");
+                    isPathfinding = false;
+                    NPC.path.AddRange(ReconstructPath(cameFrom, currentLocation));
                     
                     if (lookatVector == Vector3.zero) {
                         NPC.lookatVector = NPC.gameObject.transform.forward;
@@ -246,7 +244,6 @@ public class AStarMultithreaded : Threadable {
                         NPC.lookatVector = lookatVector;
                     }
 
-                    NPC.currentPathIndex = 0;
                     if (NPC.path == null) {
                         Debug.LogError("Reconstructed path is null.");
                     }
@@ -275,9 +272,10 @@ public class AStarMultithreaded : Threadable {
                 neighbor.f = neighbor.g + neighbor.h;
             }
         }
-        isPathfinding = false;
+        
         Action debugNoPath = () => {
             Debug.Log($"No path could be found from {start} to {end}");
+            isPathfinding = false;
         };
         QueueFunction(debugNoPath);
     }

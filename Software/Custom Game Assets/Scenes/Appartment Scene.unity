@@ -6699,7 +6699,7 @@ PrefabInstance:
     - target: {fileID: 5067755742887398202, guid: f0ac6fb9ada49f24683e3eca20786103,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -29.41
+      value: -26.95
       objectReference: {fileID: 0}
     - target: {fileID: 5067755742887398202, guid: f0ac6fb9ada49f24683e3eca20786103,
         type: 3}
@@ -6709,27 +6709,27 @@ PrefabInstance:
     - target: {fileID: 5067755742887398202, guid: f0ac6fb9ada49f24683e3eca20786103,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -17.6
+      value: -19.405
       objectReference: {fileID: 0}
     - target: {fileID: 5067755742887398202, guid: f0ac6fb9ada49f24683e3eca20786103,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.8717707
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5067755742887398202, guid: f0ac6fb9ada49f24683e3eca20786103,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5067755742887398202, guid: f0ac6fb9ada49f24683e3eca20786103,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.48991418
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5067755742887398202, guid: f0ac6fb9ada49f24683e3eca20786103,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5067755742887398202, guid: f0ac6fb9ada49f24683e3eca20786103,
         type: 3}
@@ -6739,7 +6739,7 @@ PrefabInstance:
     - target: {fileID: 5067755742887398202, guid: f0ac6fb9ada49f24683e3eca20786103,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: -58.67
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5067755742887398202, guid: f0ac6fb9ada49f24683e3eca20786103,
         type: 3}
@@ -6884,7 +6884,7 @@ MonoBehaviour:
   timeBeforeMove: 60
   moveVariance: 30
   NPCWalkSpeedMultiplier: 2.5
-  NPCRunningSpeedMultiplier: 4
+  NPCRunningSpeedMultiplier: 4.5
   NPCTurnSpeed: 6
   pointsBeforeOpenDoor: 3
   timeSpentOpenByNPC: 2
@@ -6908,7 +6908,6 @@ MonoBehaviour:
   fire: {fileID: 7792553365883077841}
   alarm: {fileID: 1708508964}
   panicked: 0
-  isExiting: 0
   NPCIdleStatesW:
   - Exercise_warmingUp_170f
   - idle_f_1_150f
@@ -6920,7 +6919,6 @@ MonoBehaviour:
   - idle_phoneTalking_180f
   - idle_m_1_200f
   - idle_m_2_220f
-  isInQueue: 0
   lookatVector: {x: 0, y: 0, z: 0}
   currentPathIndex: 0
 --- !u!136 &685819915
@@ -8281,7 +8279,7 @@ PrefabInstance:
     - target: {fileID: 2100208028559941110, guid: f71041fd118fbb34aa9d2dd6a1d96fce,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -10.53
+      value: -25.49
       objectReference: {fileID: 0}
     - target: {fileID: 2100208028559941110, guid: f71041fd118fbb34aa9d2dd6a1d96fce,
         type: 3}
@@ -8291,27 +8289,27 @@ PrefabInstance:
     - target: {fileID: 2100208028559941110, guid: f71041fd118fbb34aa9d2dd6a1d96fce,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.48
+      value: -9.69
       objectReference: {fileID: 0}
     - target: {fileID: 2100208028559941110, guid: f71041fd118fbb34aa9d2dd6a1d96fce,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.9452761
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2100208028559941110, guid: f71041fd118fbb34aa9d2dd6a1d96fce,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2100208028559941110, guid: f71041fd118fbb34aa9d2dd6a1d96fce,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.32627168
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2100208028559941110, guid: f71041fd118fbb34aa9d2dd6a1d96fce,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2100208028559941110, guid: f71041fd118fbb34aa9d2dd6a1d96fce,
         type: 3}
@@ -8321,7 +8319,7 @@ PrefabInstance:
     - target: {fileID: 2100208028559941110, guid: f71041fd118fbb34aa9d2dd6a1d96fce,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 38.085
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2100208028559941110, guid: f71041fd118fbb34aa9d2dd6a1d96fce,
         type: 3}
@@ -8686,7 +8684,7 @@ PrefabInstance:
     - target: {fileID: 6367566384277174298, guid: 87a7b985b15a4244091de35d7df9169a,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -35.69
+      value: -35.97
       objectReference: {fileID: 0}
     - target: {fileID: 6367566384277174298, guid: 87a7b985b15a4244091de35d7df9169a,
         type: 3}
@@ -8696,27 +8694,27 @@ PrefabInstance:
     - target: {fileID: 6367566384277174298, guid: 87a7b985b15a4244091de35d7df9169a,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -9.11
+      value: -9.28
       objectReference: {fileID: 0}
     - target: {fileID: 6367566384277174298, guid: 87a7b985b15a4244091de35d7df9169a,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.87111294
+      value: 0.92387956
       objectReference: {fileID: 0}
     - target: {fileID: 6367566384277174298, guid: 87a7b985b15a4244091de35d7df9169a,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6367566384277174298, guid: 87a7b985b15a4244091de35d7df9169a,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.49108276
+      value: 0.38268343
       objectReference: {fileID: 0}
     - target: {fileID: 6367566384277174298, guid: 87a7b985b15a4244091de35d7df9169a,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6367566384277174298, guid: 87a7b985b15a4244091de35d7df9169a,
         type: 3}
@@ -8726,7 +8724,7 @@ PrefabInstance:
     - target: {fileID: 6367566384277174298, guid: 87a7b985b15a4244091de35d7df9169a,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: -58.824
+      value: 45
       objectReference: {fileID: 0}
     - target: {fileID: 6367566384277174298, guid: 87a7b985b15a4244091de35d7df9169a,
         type: 3}
@@ -8841,7 +8839,7 @@ MonoBehaviour:
   timeBeforeMove: 60
   moveVariance: 30
   NPCWalkSpeedMultiplier: 2.5
-  NPCRunningSpeedMultiplier: 4
+  NPCRunningSpeedMultiplier: 3
   NPCTurnSpeed: 6
   pointsBeforeOpenDoor: 3
   timeSpentOpenByNPC: 2
@@ -8865,7 +8863,6 @@ MonoBehaviour:
   fire: {fileID: 7792553365883077841}
   alarm: {fileID: 1708508964}
   panicked: 0
-  isExiting: 0
   NPCIdleStatesW:
   - Exercise_warmingUp_170f
   - idle_f_1_150f
@@ -8877,7 +8874,6 @@ MonoBehaviour:
   - idle_phoneTalking_180f
   - idle_m_1_200f
   - idle_m_2_220f
-  isInQueue: 0
   lookatVector: {x: 0, y: 0, z: 0}
   currentPathIndex: 0
 --- !u!136 &790958533
@@ -10212,7 +10208,7 @@ PrefabInstance:
     - target: {fileID: 568985597124981416, guid: 2435736d6adca23458edd7c80c901e3e,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -5.42
+      value: -8.63
       objectReference: {fileID: 0}
     - target: {fileID: 568985597124981416, guid: 2435736d6adca23458edd7c80c901e3e,
         type: 3}
@@ -10222,27 +10218,27 @@ PrefabInstance:
     - target: {fileID: 568985597124981416, guid: 2435736d6adca23458edd7c80c901e3e,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -13.26
+      value: -11.51
       objectReference: {fileID: 0}
     - target: {fileID: 568985597124981416, guid: 2435736d6adca23458edd7c80c901e3e,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.21562035
+      value: 0.30070582
       objectReference: {fileID: 0}
     - target: {fileID: 568985597124981416, guid: 2435736d6adca23458edd7c80c901e3e,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 568985597124981416, guid: 2435736d6adca23458edd7c80c901e3e,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.9764773
+      value: 0.953717
       objectReference: {fileID: 0}
     - target: {fileID: 568985597124981416, guid: 2435736d6adca23458edd7c80c901e3e,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 568985597124981416, guid: 2435736d6adca23458edd7c80c901e3e,
         type: 3}
@@ -10252,7 +10248,7 @@ PrefabInstance:
     - target: {fileID: 568985597124981416, guid: 2435736d6adca23458edd7c80c901e3e,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 155.096
+      value: 145
       objectReference: {fileID: 0}
     - target: {fileID: 568985597124981416, guid: 2435736d6adca23458edd7c80c901e3e,
         type: 3}
@@ -10517,7 +10513,7 @@ MonoBehaviour:
   timeBeforeMove: 60
   moveVariance: 30
   NPCWalkSpeedMultiplier: 2.5
-  NPCRunningSpeedMultiplier: 4
+  NPCRunningSpeedMultiplier: 4.5
   NPCTurnSpeed: 6
   pointsBeforeOpenDoor: 3
   timeSpentOpenByNPC: 2
@@ -10541,7 +10537,6 @@ MonoBehaviour:
   fire: {fileID: 7792553365883077841}
   alarm: {fileID: 1708508964}
   panicked: 0
-  isExiting: 0
   NPCIdleStatesW:
   - Exercise_warmingUp_170f
   - idle_f_1_150f
@@ -10553,7 +10548,6 @@ MonoBehaviour:
   - idle_phoneTalking_180f
   - idle_m_1_200f
   - idle_m_2_220f
-  isInQueue: 0
   lookatVector: {x: 0, y: 0, z: 0}
   currentPathIndex: 0
 --- !u!136 &906605409
@@ -11480,7 +11474,6 @@ MonoBehaviour:
   fire: {fileID: 7792553365883077841}
   alarm: {fileID: 1708508964}
   panicked: 0
-  isExiting: 0
   NPCIdleStatesW:
   - Exercise_warmingUp_170f
   - idle_f_1_150f
@@ -11493,7 +11486,6 @@ MonoBehaviour:
   - idle_selfcheck_1_300f
   - idle_m_1_200f
   - idle_m_2_220f
-  isInQueue: 0
   lookatVector: {x: 0, y: 0, z: 0}
   currentPathIndex: 0
 --- !u!136 &966587623
@@ -15430,7 +15422,7 @@ PrefabInstance:
     - target: {fileID: 7658026095892835012, guid: 314b13a2c4f89c74299eabc2a4c725c7,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -19.79
+      value: -19.71
       objectReference: {fileID: 0}
     - target: {fileID: 7658026095892835012, guid: 314b13a2c4f89c74299eabc2a4c725c7,
         type: 3}
@@ -15440,27 +15432,27 @@ PrefabInstance:
     - target: {fileID: 7658026095892835012, guid: 314b13a2c4f89c74299eabc2a4c725c7,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 2.39
+      value: -3.94
       objectReference: {fileID: 0}
     - target: {fileID: 7658026095892835012, guid: 314b13a2c4f89c74299eabc2a4c725c7,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.3371924
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7658026095892835012, guid: 314b13a2c4f89c74299eabc2a4c725c7,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7658026095892835012, guid: 314b13a2c4f89c74299eabc2a4c725c7,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.9414358
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7658026095892835012, guid: 314b13a2c4f89c74299eabc2a4c725c7,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7658026095892835012, guid: 314b13a2c4f89c74299eabc2a4c725c7,
         type: 3}
@@ -15470,7 +15462,7 @@ PrefabInstance:
     - target: {fileID: 7658026095892835012, guid: 314b13a2c4f89c74299eabc2a4c725c7,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: -219.412
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7658026095892835012, guid: 314b13a2c4f89c74299eabc2a4c725c7,
         type: 3}
@@ -15575,7 +15567,7 @@ MonoBehaviour:
   timeBeforeMove: 60
   moveVariance: 30
   NPCWalkSpeedMultiplier: 2.5
-  NPCRunningSpeedMultiplier: 4
+  NPCRunningSpeedMultiplier: 5.5
   NPCTurnSpeed: 6
   pointsBeforeOpenDoor: 3
   timeSpentOpenByNPC: 2
@@ -15599,7 +15591,6 @@ MonoBehaviour:
   fire: {fileID: 7792553365883077841}
   alarm: {fileID: 1708508964}
   panicked: 0
-  isExiting: 0
   NPCIdleStatesW:
   - Exercise_warmingUp_170f
   - idle_f_1_150f
@@ -15611,7 +15602,6 @@ MonoBehaviour:
   - idle_phoneTalking_180f
   - idle_m_1_200f
   - idle_m_2_220f
-  isInQueue: 0
   lookatVector: {x: 0, y: 0, z: 0}
   currentPathIndex: 0
 --- !u!136 &1104556573
@@ -18933,6 +18923,12 @@ MonoBehaviour:
   distance: 25
   numNPCHit: 0
   playerHit: 0
+--- !u!1 &1363781061 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4960342325203696080, guid: 56517b232215f374590483ada1697b11,
+    type: 3}
+  m_PrefabInstance: {fileID: 1963092863}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1372068264
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -20947,7 +20943,7 @@ PrefabInstance:
     - target: {fileID: 710636224206764938, guid: bcc8732b8b44622449c23934f89e68c0,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.57
+      value: 1.91
       objectReference: {fileID: 0}
     - target: {fileID: 710636224206764938, guid: bcc8732b8b44622449c23934f89e68c0,
         type: 3}
@@ -20957,27 +20953,27 @@ PrefabInstance:
     - target: {fileID: 710636224206764938, guid: bcc8732b8b44622449c23934f89e68c0,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -2.03
+      value: -2.06
       objectReference: {fileID: 0}
     - target: {fileID: 710636224206764938, guid: bcc8732b8b44622449c23934f89e68c0,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.38312116
+      value: 0.92387956
       objectReference: {fileID: 0}
     - target: {fileID: 710636224206764938, guid: bcc8732b8b44622449c23934f89e68c0,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 710636224206764938, guid: bcc8732b8b44622449c23934f89e68c0,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.9236982
+      value: -0.38268343
       objectReference: {fileID: 0}
     - target: {fileID: 710636224206764938, guid: bcc8732b8b44622449c23934f89e68c0,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 710636224206764938, guid: bcc8732b8b44622449c23934f89e68c0,
         type: 3}
@@ -20987,7 +20983,7 @@ PrefabInstance:
     - target: {fileID: 710636224206764938, guid: bcc8732b8b44622449c23934f89e68c0,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: -134.946
+      value: -45
       objectReference: {fileID: 0}
     - target: {fileID: 710636224206764938, guid: bcc8732b8b44622449c23934f89e68c0,
         type: 3}
@@ -21261,7 +21257,6 @@ MonoBehaviour:
   fire: {fileID: 7792553365883077841}
   alarm: {fileID: 1708508964}
   panicked: 0
-  isExiting: 0
   NPCIdleStatesW:
   - Exercise_warmingUp_170f
   - idle_f_1_150f
@@ -21273,7 +21268,6 @@ MonoBehaviour:
   - idle_phoneTalking_180f
   - idle_m_1_200f
   - idle_m_2_220f
-  isInQueue: 0
   lookatVector: {x: 0, y: 0, z: 0}
   currentPathIndex: 0
 --- !u!136 &1495330853
@@ -24116,7 +24110,7 @@ Transform:
   m_GameObject: {fileID: 1676482338}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.70710677, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -3.95, y: 0, z: -7.8}
+  m_LocalPosition: {x: -6.11, y: 0, z: -6.43}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -25260,7 +25254,7 @@ PrefabInstance:
     - target: {fileID: 5776691538091650739, guid: bae26acf817c6dc4e82f95d9ef4ab46a,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -4.32
+      value: -3.14
       objectReference: {fileID: 0}
     - target: {fileID: 5776691538091650739, guid: bae26acf817c6dc4e82f95d9ef4ab46a,
         type: 3}
@@ -25270,27 +25264,27 @@ PrefabInstance:
     - target: {fileID: 5776691538091650739, guid: bae26acf817c6dc4e82f95d9ef4ab46a,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -17.52
+      value: -18.74
       objectReference: {fileID: 0}
     - target: {fileID: 5776691538091650739, guid: bae26acf817c6dc4e82f95d9ef4ab46a,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.8934979
+      value: 0.92387956
       objectReference: {fileID: 0}
     - target: {fileID: 5776691538091650739, guid: bae26acf817c6dc4e82f95d9ef4ab46a,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5776691538091650739, guid: bae26acf817c6dc4e82f95d9ef4ab46a,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.44906747
+      value: -0.38268343
       objectReference: {fileID: 0}
     - target: {fileID: 5776691538091650739, guid: bae26acf817c6dc4e82f95d9ef4ab46a,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5776691538091650739, guid: bae26acf817c6dc4e82f95d9ef4ab46a,
         type: 3}
@@ -25300,7 +25294,7 @@ PrefabInstance:
     - target: {fileID: 5776691538091650739, guid: bae26acf817c6dc4e82f95d9ef4ab46a,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: -53.368
+      value: -45
       objectReference: {fileID: 0}
     - target: {fileID: 5776691538091650739, guid: bae26acf817c6dc4e82f95d9ef4ab46a,
         type: 3}
@@ -25440,7 +25434,7 @@ MonoBehaviour:
   timeBeforeMove: 60
   moveVariance: 30
   NPCWalkSpeedMultiplier: 2.5
-  NPCRunningSpeedMultiplier: 4
+  NPCRunningSpeedMultiplier: 4.5
   NPCTurnSpeed: 6
   pointsBeforeOpenDoor: 3
   timeSpentOpenByNPC: 2
@@ -25464,7 +25458,6 @@ MonoBehaviour:
   fire: {fileID: 7792553365883077841}
   alarm: {fileID: 1708508964}
   panicked: 0
-  isExiting: 0
   NPCIdleStatesW:
   - Exercise_warmingUp_170f
   - idle_f_1_150f
@@ -25476,7 +25469,6 @@ MonoBehaviour:
   - idle_phoneTalking_180f
   - idle_m_1_200f
   - idle_m_2_220f
-  isInQueue: 0
   lookatVector: {x: 0, y: 0, z: 0}
   currentPathIndex: 0
 --- !u!136 &1761021523
@@ -27130,7 +27122,7 @@ MonoBehaviour:
   timeBeforeMove: 60
   moveVariance: 30
   NPCWalkSpeedMultiplier: 2.5
-  NPCRunningSpeedMultiplier: 4
+  NPCRunningSpeedMultiplier: 5
   NPCTurnSpeed: 6
   pointsBeforeOpenDoor: 3
   timeSpentOpenByNPC: 2
@@ -27154,7 +27146,6 @@ MonoBehaviour:
   fire: {fileID: 7792553365883077841}
   alarm: {fileID: 1708508964}
   panicked: 0
-  isExiting: 0
   NPCIdleStatesW:
   - Exercise_warmingUp_170f
   - idle_f_1_150f
@@ -27166,7 +27157,6 @@ MonoBehaviour:
   - idle_phoneTalking_180f
   - idle_m_1_200f
   - idle_m_2_220f
-  isInQueue: 0
   lookatVector: {x: 0, y: 0, z: 0}
   currentPathIndex: 0
 --- !u!136 &1876443901
@@ -33438,6 +33428,56 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 12
       objectReference: {fileID: 0}
+    - target: {fileID: 3061447220562326007, guid: cdcf80314b65f114989b70851760770a,
+        type: 3}
+      propertyPath: simulationSpeed
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3061447220562326007, guid: cdcf80314b65f114989b70851760770a,
+        type: 3}
+      propertyPath: emitterVelocityMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3061447220562326007, guid: cdcf80314b65f114989b70851760770a,
+        type: 3}
+      propertyPath: CollisionModule.quality
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3061447220562326007, guid: cdcf80314b65f114989b70851760770a,
+        type: 3}
+      propertyPath: InitialModule.maxNumParticles
+      value: 750
+      objectReference: {fileID: 0}
+    - target: {fileID: 3061447220562326007, guid: cdcf80314b65f114989b70851760770a,
+        type: 3}
+      propertyPath: InitialModule.startSpeed.scalar
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3061447220562326007, guid: cdcf80314b65f114989b70851760770a,
+        type: 3}
+      propertyPath: EmissionModule.rateOverTime.scalar
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3061447220562326007, guid: cdcf80314b65f114989b70851760770a,
+        type: 3}
+      propertyPath: InitialModule.startLifetime.scalar
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 3061447220562326007, guid: cdcf80314b65f114989b70851760770a,
+        type: 3}
+      propertyPath: CollisionModule.collidesWith.m_Bits
+      value: 79
+      objectReference: {fileID: 0}
+    - target: {fileID: 3061447220562326007, guid: cdcf80314b65f114989b70851760770a,
+        type: 3}
+      propertyPath: ColorModule.gradient.maxGradient.atime1
+      value: 3277
+      objectReference: {fileID: 0}
+    - target: {fileID: 3061447220562326007, guid: cdcf80314b65f114989b70851760770a,
+        type: 3}
+      propertyPath: ColorModule.gradient.maxGradient.ctime1
+      value: 29491
+      objectReference: {fileID: 0}
     - target: {fileID: 5669679580275523097, guid: cdcf80314b65f114989b70851760770a,
         type: 3}
       propertyPath: player
@@ -33455,9 +33495,19 @@ PrefabInstance:
       objectReference: {fileID: 4361799309541567}
     - target: {fileID: 5669679580275523097, guid: cdcf80314b65f114989b70851760770a,
         type: 3}
+      propertyPath: roomDoors.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5669679580275523097, guid: cdcf80314b65f114989b70851760770a,
+        type: 3}
       propertyPath: explosionParticleSystem
       value: 
       objectReference: {fileID: 4361799309541569}
+    - target: {fileID: 5669679580275523097, guid: cdcf80314b65f114989b70851760770a,
+        type: 3}
+      propertyPath: roomDoors.Array.data[0]
+      value: 
+      objectReference: {fileID: 1363781061}
     - target: {fileID: 5669679580275523097, guid: cdcf80314b65f114989b70851760770a,
         type: 3}
       propertyPath: maxTimeBeforeInstantiation

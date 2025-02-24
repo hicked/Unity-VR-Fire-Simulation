@@ -7,8 +7,14 @@ public class LightSwitch : XRSimpleInteractable {
     [SerializeField] private List<Light> pointLights;
     [SerializeField] private List<AudioClip> switchSounds;
     [SerializeField] public AudioSource switchAudioSource;
+    [SerializeField] private bool cac = false;
 
     // Start is called before the first frame update
+    void Update() {
+        if (cac){
+            Interact();
+        }
+    }
 
     [System.Obsolete("No idea why this is obsolete, but it works.")]
     override protected void OnHoverEntered(XRBaseInteractor interactor) {
