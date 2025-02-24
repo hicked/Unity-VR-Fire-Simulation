@@ -12,7 +12,7 @@
 
 **D**: Patch / Refactoring
 
-## [v.0.8.1p.0-beta] - 2025-02-214
+## [v.0.7.1.0-beta] - 2025-02-214
 **Author:** Antoine
 *Changes*:
 -   NPCs queue now works and they properly run out when fire is detected or the alarm sounds
