@@ -18,6 +18,7 @@ public class NPCLocationInfoList {
 }
 
 public class NPCManager : Audible {
+    private static bool isPathfindingAndPanicked = false;
     [SerializeField] private LayerMask doorLayer;
     [SerializeField] private LayerMask fireDetectionLayer;
     [SerializeField] public float NPCHeight = 1.75f;
@@ -27,6 +28,7 @@ public class NPCManager : Audible {
     [SerializeField] private int changeIdleVariance = 3;
     [SerializeField] private int timeBeforeMove = 60;
     [SerializeField] private int moveVariance = 30;
+    [SerializeField] public float maxRandomMoveDistance = 20f;
 
     [SerializeField] private float NPCWalkSpeedMultiplier = 1.5f;
     [SerializeField] private float NPCRunningSpeedMultiplier = 5.5f;
@@ -39,8 +41,6 @@ public class NPCManager : Audible {
 
     [SerializeField] public bool onPhone;
     [SerializeField] public bool isMan;
-
-    [SerializeField] public float maxRandomMoveDistance = 20f;
 
     public int NPCLocationIndex;
     public int previousNPCLocationIndex = -1; // set the value as negative since null isnt a thing
@@ -90,7 +90,7 @@ public class NPCManager : Audible {
 
     //----------------------------------------------------------------------
     public string[] NPCIdleStatesW = new string[] {
-        "Exercise_warmingUp_170f",
+        //"Exercise_warmingUp_170f",
         "idle_f_1_150f",
         "idle_f_2_190f",
         "idle_f_1_150f",
@@ -100,7 +100,7 @@ public class NPCManager : Audible {
 
     //----------------------------------------------------------------------
     public string[] NPCIdleStatesM = new string[] {
-        "Exercise_warmingUp_170f",
+        //"Exercise_warmingUp_170f",
         "idle_phoneTalking_180f",
         "idle_m_1_200f",
         "idle_m_2_220f",
@@ -114,8 +114,8 @@ public class NPCManager : Audible {
     };
 
     public Dictionary<string, float> NPCRunningStates = new Dictionary<string, float>() {
-        { "locom_m_jogging_30f", 0.3f},
-        { "locom_m_running_20f", 0.3f }
+        { "locom_m_jogging_30f", 0.3f}//,
+        //{ "locom_m_running_20f", 0.3f }
     };
 
     //----------------------------------------------------------------------
@@ -243,10 +243,14 @@ public class NPCManager : Audible {
             Debug.Log("Closest starting point: " + closestStartingPoint);
             int startingIndex = closestExitPath.IndexOf(closestStartingPoint);
 
-            setPathTo(closestExitPath[startingIndex], closestOutsideRoomLocation);
-            for (int i = startingIndex; i < closestExitPath.Count - 1; i++) {
-                setPathTo(closestExitPath[i+1], closestExitPath[i]);
+            if (!NPCManager.isPathfindingAndPanicked) { // locks, we dont want an npc to be waiting on other threads while running out
+                NPCManager.isPathfindingAndPanicked = true;
+                setPathTo(closestExitPath[startingIndex], closestOutsideRoomLocation);
+                for (int i = startingIndex; i < closestExitPath.Count - 1; i++) {
+                    setPathTo(closestExitPath[i+1], closestExitPath[i]);
+                }
             }
+            NPCManager.isPathfindingAndPanicked = false;
             Debug.Log("NPC is moving to exit");
         }
 
@@ -339,7 +343,7 @@ public class NPCManager : Audible {
             Vector3 lastPathfindingRequestEndLocation = lastPathfindingRequest.ElementAt(1);
             pathfindingRequestsQueue.Add(new List<Vector3> { lastPathfindingRequestEndLocation, location });
         }
-        else if (pathfinder.isPathfinding) {
+        if (pathfinder.isPathfinding) {
             pathfindingRequestsQueue.Add(new List<Vector3> { path.Last().vector, location });
         }
         else {
@@ -384,9 +388,6 @@ public class NPCManager : Audible {
         if (distanceToTarget < 0.1f) {
             if (path.Count == 1 && !pathfinder.isPathfinding) { // if it is the last point on the path
                 // Smooth rotation of npc once reached the end location
-                if (panicked) {
-                    Destroy(gameObject);
-                }
                 // Debug.Log("lookatVector: " + lookatVector);
                 
                 targetRotation = Quaternion.LookRotation(lookatVector);
@@ -396,6 +397,10 @@ public class NPCManager : Audible {
                 isIdle = true;
                 isRunning = false;
                 path.RemoveAt(0);
+
+                if (panicked) {
+                    Destroy(gameObject);
+                }
             }
             else {
                 path.RemoveAt(0);

@@ -12,6 +12,23 @@
 
 **D**: Patch / Refactoring
 
+- npc squats remove .
+- remove cop and kid .
+- total npcs 8 .
+- alarm 30 secs .
+- back to lobby after exit door 
+- start fire after 2 mins .
+
+- Arduino encoders ...?
+- smoke generator outside room/make go through door
+- tutorial
+- Elevator door with music
+- add delay elevator door 30 secs
+- exit sign
+
+- not destroying object at exit location
+- npcs running back then forth
+
 ## [v.0.7.1.0-beta] - 2025-02-214
 **Author:** Antoine
 *Changes*:

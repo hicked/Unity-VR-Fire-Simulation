@@ -66,6 +66,8 @@ public class SmokeInteractions : Threadable {
                             Vector3 force = (direction.normalized + Vector3.down/3f) * forceStrength * (interactionRadius - distance) * random.Next(3, 17)/10; // *0.3 -> 1.7
                             particlesWForces[i].velocity += force;
                             particlesWForces[j].velocity -= force;
+                            particlesWForces[i].velocity += new Vector3(0, -0.002f, 0);
+                            particlesWForces[j].velocity -= new Vector3(0, -0.002f, 0);
                         }
                     }
                 }
