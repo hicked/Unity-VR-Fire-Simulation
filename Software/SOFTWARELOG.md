@@ -12,7 +12,7 @@
 
 **D**: Patch / Refactoring
 
-## [v.0.7.2.1-beta] - 2025-02-21
+## [v.0.7.2.1-beta] - 2025-04-14
 **Author:** Antoine
 *Changes*:
 - Encoders now work with arduino. See `HARDWARELOG.MD` for more details (v1.0.0.0)
