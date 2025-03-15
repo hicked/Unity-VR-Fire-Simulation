@@ -12,24 +12,37 @@
 
 **D**: Patch / Refactoring
 
-- npc squats remove .
-- remove cop and kid .
-- total npcs 8 .
-- alarm 30 secs .
-- back to lobby after exit door 
-- start fire after 2 mins .
+## [v.0.7.2.1-beta] - 2025-02-21
+**Author:** Antoine
+*Changes*:
+- Encoders now work with arduino. See `HARDWARELOG.MD` for more details (v1.0.0.0)
+- Fixed bug where NPCs wouldnt get destroyed at end location
+- Removed NPC Squat animation idle
+- Removed Cop and Child from scene
+- Added for total of 8 NPCs
+- Alarm starts after 30 secs
+- Start Fire after 2 mins around
 
-- Arduino encoders ...?
+*Current Bugs*:
+-   **Work on making pathfinding to exit more fluid. They should have more urgency since they are leaving the building due to a fire
+-   PROJECT TREE CLEANUP STILL NEEDS TO BE COMPLETED: Fire, NPCs, Doors, Lights
+-   `Look rotation viewing vector is zero` "bug", not game breaking
+-   Add different walk and run sounds BROKEN
+-   Fix stairway door prefab asset folder with copies
+-   enqueue points when pathfinding
+
+
+*Next Steps*:
+- back to lobby after exit door 
+
 - smoke generator outside room/make go through door
 - tutorial
 - Elevator door with music
 - add delay elevator door 30 secs
 - exit sign
 
-- not destroying object at exit location
-- npcs running back then forth
 
-## [v.0.7.1.0-beta] - 2025-02-214
+## [v.0.7.1.0-beta] - 2025-02-21
 **Author:** Antoine
 *Changes*:
 -   NPCs queue now works and they properly run out when fire is detected or the alarm sounds
@@ -67,7 +80,7 @@
 -   Add end screen
 
 
-## [v.0.7.0.0-beta] - 2025-02-214
+## [v.0.7.0.0-beta] - 2025-02-21
 **Author:** Antoine
 *Changes*:
 -   NPCs now pathfind to exit when they either hear the alarm or see the fire

@@ -169,7 +169,7 @@ public class AStarMultithreaded : Threadable {
     }
 
     private void FindPathThread(Vector3 start, Vector3 end) {
-        Debug.Log($"Finding path from {start} to {end}");
+        //Debug.Log($"Finding path from {start} to {end}");
 
         if (NPC == null) {
             Debug.LogError("NPC is not initialized.");
@@ -233,7 +233,6 @@ public class AStarMultithreaded : Threadable {
                 NPC.ChangeLocationStatus();
 
                 Action setPathAndLookat = () => {
-                    Debug.Log("Done");
                     isPathfinding = false;
                     NPC.path.AddRange(ReconstructPath(cameFrom, currentLocation));
                     

@@ -12,6 +12,13 @@ Date is in YYYY/MM/DD format.
 
 **D**: Patch / Refactoring
 
+## [v.1.0.0.0] - 2025-03-14
+**Author:** Antoine
+- Completely implemented encoder function
+- Now sends data over serial port to unity
+- Ensure unity has the right BAUD rate and COM port or it wont work
+- Ensure Serial monitor is closed or it won't work
+- Does not read any data from unity as of yet (could read something like incline if we want to force the motors to move)
 
 ## [v.0.1.1.2-prealpha] - 2024-08-08
 

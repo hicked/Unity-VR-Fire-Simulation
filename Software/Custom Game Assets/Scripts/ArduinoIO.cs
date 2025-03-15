@@ -25,21 +25,19 @@ public class ArduinoIO : MonoBehaviour
                 if (!string.IsNullOrEmpty(receivedString)) {
                     string[] strSpeeds = receivedString.Split(',');
                     if (strSpeeds.Length == 2) {
-                        if (float.TryParse(strSpeeds[0], out float parsedLeftSpeed)) {
-                            //lock (lockObject) {
-                            leftSpeed = parsedLeftSpeed;
-                            //}
-                        }
+                        lock (lockObject) {
+                            if (float.TryParse(strSpeeds[0], out float parsedLeftSpeed)) {
+                                leftSpeed += parsedLeftSpeed;
+                            }
 
-                        if (float.TryParse(strSpeeds[1], out float parsedRightSpeed)) {
-                            lock (lockObject) {
-                                rightSpeed = parsedRightSpeed;
+                            if (float.TryParse(strSpeeds[1], out float parsedRightSpeed)) {
+                                rightSpeed += parsedRightSpeed;
                             }
                         }
                     }
                 }
             }
-            Thread.Sleep(50);
+            Thread.Sleep(1);
         }
     }
 
@@ -80,5 +78,6 @@ public class ArduinoIO : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update(){}
+    void Update(){
+    }
 }

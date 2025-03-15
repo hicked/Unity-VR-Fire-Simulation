@@ -17,6 +17,7 @@ public class Player : MonoBehaviour {
     [SerializeField] private float lookingSpeed = 5f; // turning speed
     [SerializeField] private float minWheelSpeedBeforeAudio = 0.5f;
     [SerializeField] private float audioFadeDuration = 0.5f;
+    [SerializeField] private float encodeSpeedMultiplier = 1000f;
 
     private IEnumerator currentAudioCoroutine;
     private bool isWheelAudioPlaying = false;
@@ -37,36 +38,6 @@ public class Player : MonoBehaviour {
         spawnPoint = transform.position + new Vector3(0, 1f, 0);
     }
 
-    //KEYBOARD AND MOUSE CONTROLS!!! WASD and mouse to look around
-
-    // private void Update() {
-    //     Vector3 inputVector = new Vector3(0f, 0f, 0f);
-    //     if (Input.GetKey(KeyCode.W) && !isBlocked(transform.forward)) {
-    //         inputVector += transform.forward;
-    //     }
-    //     if (Input.GetKey(KeyCode.A) && !isBlocked(-transform.right)) {
-    //         inputVector -= transform.right;
-    //     }
-    //     if (Input.GetKey(KeyCode.S) && !isBlocked(-transform.forward)) {
-    //         inputVector -= transform.forward;
-    //     }
-    //     if (Input.GetKey(KeyCode.D) && !isBlocked(transform.right)) {
-    //         inputVector += transform.right;
-    //     }
-        
-    //     if (inputVector.sqrMagnitude > 1f) { // ensure that the player is the same speed when moving diag
-    //         inputVector.Normalize();
-    //     }
-
-    //     float speedMultiplier = Input.GetKey(KeyCode.LeftControl) ? sprintSpeedMultiplier : baseSpeedMultiplier;
-    //     transform.position += inputVector * Time.deltaTime * speedMultiplier;
-    
-    //     horizontalRotation = Input.GetAxisRaw("Mouse X");
-
-    //     this.transform.eulerAngles += new Vector3(0, horizontalRotation * lookingSpeed, 0);
-    // }
-
-
     //Wheel Chair control WS up down + Arduino
     private void Update() {
         isBlocked(-transform.up, maxDistance); // updates the room name
@@ -76,37 +47,55 @@ public class Player : MonoBehaviour {
             transform.position = spawnPoint;
         }
 
-        
         leftWheelSpeed = 0f;
         rightWheelSpeed = 0f;
 
         // Arduino inputs
-        //lock (ArduinoIO.lockObject) {
-        if (ArduinoIO.leftSpeed > 0.1f && !isBlocked(transform.forward, maxDistance)) {
-            leftWheelSpeed += ArduinoIO.leftSpeed;
-        }
-        else if (ArduinoIO.leftSpeed < -0.1f && !isBlocked(-transform.forward, maxDistance)) {
-            leftWheelSpeed += ArduinoIO.leftSpeed;
-        }
-        //}
+        lock (ArduinoIO.lockObject) {
+            if (ArduinoIO.leftSpeed != 0) {
+                if (ArduinoIO.leftSpeed > 0 && !isBlocked(transform.forward, maxDistance)) {
+                    leftWheelSpeed += ArduinoIO.leftSpeed * encodeSpeedMultiplier;
+                }
+                else if (ArduinoIO.leftSpeed < 0 && !isBlocked(-transform.forward, maxDistance)) {
+                    leftWheelSpeed += ArduinoIO.leftSpeed * encodeSpeedMultiplier;
+                }
 
-        //lock (ArduinoIO.lockObject) {
-        if (ArduinoIO.rightSpeed > 0.1f && !isBlocked(transform.forward, maxDistance)) {
-            rightWheelSpeed += ArduinoIO.rightSpeed;
-        }
-        else if (ArduinoIO.rightSpeed < -0.1f && !isBlocked(-transform.forward, maxDistance)) {
-            rightWheelSpeed += ArduinoIO.rightSpeed;
-        }
-        //}
+                if (ArduinoIO.rightSpeed > 0 && !isBlocked(transform.forward, maxDistance)) {
+                    rightWheelSpeed += ArduinoIO.rightSpeed * encodeSpeedMultiplier;
+                }
+                else if (ArduinoIO.rightSpeed < 0 && !isBlocked(-transform.forward, maxDistance)) {
+                    rightWheelSpeed += ArduinoIO.rightSpeed * encodeSpeedMultiplier;
+                }
 
+                ArduinoIO.leftSpeed = 0.0f;
+            }
+
+            if (ArduinoIO.rightSpeed != 0) {
+                if (ArduinoIO.rightSpeed > 0 && !isBlocked(transform.forward, maxDistance)) {
+                    rightWheelSpeed += ArduinoIO.rightSpeed * encodeSpeedMultiplier;
+                }
+                else if (ArduinoIO.rightSpeed < 0 && !isBlocked(-transform.forward, maxDistance)) {
+                    rightWheelSpeed += ArduinoIO.rightSpeed * encodeSpeedMultiplier;
+                }
+
+                if (ArduinoIO.leftSpeed > 0 && !isBlocked(transform.forward, maxDistance)) {
+                    leftWheelSpeed += ArduinoIO.leftSpeed * encodeSpeedMultiplier;
+                }
+                else if (ArduinoIO.leftSpeed < 0 && !isBlocked(-transform.forward, maxDistance)) {
+                    leftWheelSpeed += ArduinoIO.leftSpeed * encodeSpeedMultiplier;
+                }
+
+                ArduinoIO.rightSpeed = 0.0f;
+            }
+        }
 
         // WS up down
         // Left wheel
         if (Input.GetKey(KeyCode.W) && !isBlocked(transform.forward, maxDistance)) {
-            leftWheelSpeed = 1f;
+            leftWheelSpeed += 1f;
         }
         if (Input.GetKey(KeyCode.S) && !isBlocked(-transform.forward, maxDistance)) {
-            leftWheelSpeed = -1f;
+            leftWheelSpeed += -1f;
         }
 
         // Right wheel
@@ -118,7 +107,7 @@ public class Player : MonoBehaviour {
         }
         
         // Angular velocity if wheel speeds are different directions + & -
-        float rotationalSpeed = (leftWheelSpeed - rightWheelSpeed)/playerHitBox.size.x; // positive would be clockwise
+        float rotationalSpeed = (leftWheelSpeed - rightWheelSpeed) / playerHitBox.size.x; // positive would be clockwise
         float forwardSpeed = 0f;
 
         // Tangential velocity
@@ -128,7 +117,6 @@ public class Player : MonoBehaviour {
         else if (leftWheelSpeed < 0 && rightWheelSpeed < 0) {
             forwardSpeed = -Mathf.Min(Mathf.Abs(leftWheelSpeed), Mathf.Abs(rightWheelSpeed));
         }
-
 
         // Audio stuff
         if ((leftWheelSpeed != 0 || rightWheelSpeed != 0) && !isWheelAudioPlaying) {
@@ -147,18 +135,13 @@ public class Player : MonoBehaviour {
             StartCoroutine(currentAudioCoroutine);
             isWheelAudioPlaying = false;
         }
-        
 
         // SPEED OF THE WHEEL IMPACTS SPEED THE AUDIO CLIP PLAYS AT
         if (isWheelAudioPlaying) {
             wheelAudioSource.pitch = Mathf.Max(Mathf.Abs(leftWheelSpeed), Mathf.Abs(rightWheelSpeed)) * 1;
             // currently it is times one as this is with keyboard input, but will need to be adjusted for arduino input
-            //
-            // 
-            //
-            //
-            //
         }
+
         // Apply the movement
         transform.position += forwardSpeed * transform.forward * Time.deltaTime * baseSpeedMultiplier;
         transform.eulerAngles += new Vector3(0, rotationalSpeed * Time.deltaTime * lookingSpeed, 0);
@@ -166,17 +149,17 @@ public class Player : MonoBehaviour {
 
     public bool isBlocked(Vector3 dir, float distance) {
         RaycastHit hitInfo = default(RaycastHit);
-            bool hit = Physics.BoxCast(
-                new Vector3(
-                    transform.position.x, 
-                    transform.position.y - playerHitBox.size.y + (playerHitBox.size.y - minHeightBeforeCollisions)/2f + minHeightBeforeCollisions, 
-                    transform.position.z), 
-                new Vector3((playerHitBox.size.x - maxDistance)/2f, (playerHitBox.size.y - minHeightBeforeCollisions)/2f, (playerHitBox.size.z - maxDistance)/2f), // IMOPRTANT: set the y to negative, that way its starts from the top down instead of bottom up
-                dir, 
-                out hitInfo,
-                transform.rotation, 
-                distance,
-                layersForCollisions);
+        bool hit = Physics.BoxCast(
+            new Vector3(
+                transform.position.x, 
+                transform.position.y - playerHitBox.size.y + (playerHitBox.size.y - minHeightBeforeCollisions) / 2f + minHeightBeforeCollisions, 
+                transform.position.z), 
+            new Vector3((playerHitBox.size.x - maxDistance) / 2f, (playerHitBox.size.y - minHeightBeforeCollisions) / 2f, (playerHitBox.size.z - maxDistance) / 2f), // IMOPRTANT: set the y to negative, that way its starts from the top down instead of bottom up
+            dir, 
+            out hitInfo,
+            transform.rotation, 
+            distance,
+            layersForCollisions);
         
         Debug.DrawRay(transform.position, dir * maxDistance, hit ? Color.red : Color.green);
         if (hit) {

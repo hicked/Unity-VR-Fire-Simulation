@@ -240,7 +240,7 @@ public class NPCManager : Audible {
                     closestStartingPoint = closestExitPath[i];
                 }
             }
-            Debug.Log("Closest starting point: " + closestStartingPoint);
+            // Debug.Log("Closest starting point: " + closestStartingPoint);
             int startingIndex = closestExitPath.IndexOf(closestStartingPoint);
 
             if (!NPCManager.isPathfindingAndPanicked) { // locks, we dont want an npc to be waiting on other threads while running out
@@ -251,7 +251,7 @@ public class NPCManager : Audible {
                 }
             }
             NPCManager.isPathfindingAndPanicked = false;
-            Debug.Log("NPC is moving to exit");
+            // Debug.Log("NPC is moving to exit");
         }
 
         animatorInfo = animator.GetCurrentAnimatorClipInfo(0);
